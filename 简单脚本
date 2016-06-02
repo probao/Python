@@ -1,0 +1,18 @@
+###########计算三角形面积##########
+whwu@master:~/script/python> cat areatriangle.py
+#!/usr/bin/env python
+#area_triangle - calculate the area of the cage's window
+
+a = float(input('1st distance:'))
+b = float(input('2nd distance:'))
+c = float(input('3rd distance:'))
+
+s = (a+b+c)/2
+
+area = (s*(s-a)*(s-b)*(s-c))**0.5
+print('area:%0.3f' %area)
+whwu@master:~/script/python> ./areatriangle.py
+1st distance:3
+2nd distance:4
+3rd distance:5
+area:6.000
