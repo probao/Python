@@ -1,0 +1,15 @@
+###############################
+##########python基础###########
+###############################
+
+如何运行python程序
+
+#####交互式#####
+whwu@master:~/script/python> python
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print 'Hello World!'
+Hello World!
+>>>
+Ctrl-D 退出
