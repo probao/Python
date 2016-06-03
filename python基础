@@ -13,3 +13,137 @@ Type "help", "copyright", "credits" or "license" for more information.
 Hello World!
 >>>
 Ctrl-D 退出
+
+#####运行模块文件#####
+whwu@master:~/script/python/example> cat spam.py
+import sys
+print sys.argv
+whwu@master:~/script/python/example> python spam.py -i eggs
+['spam.py', '-i', 'eggs']
+
+
+#####Unix脚本#####
+whwu@master:~/script/python/example> cat charpter1_exam1.py
+#!/usr/bin/env python
+
+print 'the bright side of life.'
+whwu@master:~/script/python/example> ./charpter1_exam1.py
+the bright side of life.
+
+
+
+#####模块文件基础#####
+whwu@master:~/script/python/example> cat myfile.py
+title="The Meaning of Life"
+whwu@master:~/script/python/example> python
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import myfile              #python寻找文件时，它知道应该包括后缀                                            
+>>> print myfile.title
+The Meaning of Life
+>>>
+KeyboardInterrupt
+>>>
+
+whwu@master:~/script/python/example> cat charpter1_exam2.py
+#!/usr/bin/env python
+
+import myfile
+print myfile.title
+whwu@master:~/script/python/example> ./charpter1_exam2.py
+The Meaning of Life
+
+
+
+#######################################
+##########python类型与操作符###########
+#######################################
+
+
+#####数字#####
+按位运算符是把数字看作二进制来进行计算的。Python中的按位运算法则如下：
+
+ 
+按位运算符
+whwu@master:~/script/python/example> python
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 5&3		#按位与   101  11 相同位仅为个位1 ，故结果为 1
+1
+>>> 5|3         #按位或   |  举例： 5|3 = 7  解释： 101  11 出现1的位是 1 1 1，故结果为 111
+7
+>>> 5^3		#按位异或  解释： 101  11 对位相加(不进位)是 1 1 0，故结果为 110
+6
+>>> ~5		#按位反转 解释： 将二进制数+1之后乘以-1，即~x = -(x+1)，-(101 + 1) = -110
+-6
+>>> 5<<2        #按位左移   解释：101 向左移动2位得到 10100 ，即右面多出2位用0补
+20
+>>> 5>>2	#按位右移 解释：101 向右移动2位得到 1，即去掉右面的2位
+1
+
+
+>>> import math  #应用库函数
+>>> pi
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'pi' is not defined
+>>> math pi
+  File "<stdin>", line 1
+    math pi
+          ^
+SyntaxError: invalid syntax
+>>> math.pi
+3.1415926535897931
+>>> abs(-42)
+42
+>>> 2**4
+16
+
+#####字符串####
+
+基本操作
+>>> len('avd')
+3
+>>> 'as'+'234'+'edc'
+'as234edc'
+>>> 'HaHa!'*4
+'HaHa!HaHa!HaHa!HaHa!'
+
+
+
+>>> myjob='hacker'
+>>> for c in myjob:print c   #迭代
+...
+h
+a
+c
+k
+e
+r
+>>> 'k' in myjob     #成员关系
+True
+
+
+>>> s='spam'   #索引和分片
+>>> s[0],s[-1]
+('s', 'm')
+>>> s[1:3]
+'pa'
+>>> s[1:]
+'pam'
+>>> s[-1:]
+'m'
+>>> s[:-1]
+'spa'
+
+
+>>> s    #修改与格式化
+'spam!'
+>>> s=s[:4]+'Burger'+s[-1]
+>>> s
+'spamBurger!'
+>>> 'That is %d %s bird!'% (1,'dead' )
+'That is 1 dead bird!'
+
