@@ -147,3 +147,60 @@ True
 >>> 'That is %d %s bird!'% (1,'dead' )
 'That is 1 dead bird!'
 
+>>> exclamation = "Ni"
+>>> "The knights who say %s!" % exclamation
+'The knights who say Ni!'
+>>> "%d %s %d you" % (1, 'spam', 4)
+'1 spam 4 you'
+>>> "%s -- %s -- %s" % (42, 3.14159, [1, 2, 3])
+'42 -- 3.14159 -- [1, 2, 3]'
+
+
+###字符串工具###
+>>> import string   # 标准模块
+>>> S="spammify"
+>>> string.upper(S) #转化为大写
+'SPAMMIFY'
+>>> string.find(S,"mm") #返回索引的子串
+3
+>>> string.atoi("42"),`42`  #转化字符串
+(42, '42')
+>>> string.atoi("42")+1   # 转化为数字
+43
+>>> "spam"+`42`  # 反引号是字符串
+'spam42'
+
+
+###字符串常量变量###
+>>> mixed="Guido's"   # 单引号在双引号中
+>>> mixed
+"Guido's"
+>>> mixed='Guido"s'   # 双引号在单引号中
+>>> mixed
+'Guido"s'
+>>> mixed='Guido\'s'  # 反斜线转译符
+>>> mixed
+"Guido's"
+
+>>> split="This" "is" "concatenated" #合并邻近的字符串常量
+>>> split
+'Thisisconcatenated'
+>>> split="This" " is " "concatenated"
+>>> split
+'This is concatenated'
+
+
+
+####内置模块sys的argv属性####
+whwu@master:~/script/python/example> cat echo.py
+import sys
+print sys.argv[1:]
+whwu@master:~/script/python/example> python echo.py -a -b -c
+['-a', '-b', '-c']
+
+whwu@master:~/script/python/example> cat echo.py
+import sys
+print sys.argv
+whwu@master:~/script/python/example> python echo.py -a -b -c
+['echo.py', '-a', '-b', '-c']
+
