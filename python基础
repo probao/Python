@@ -204,3 +204,83 @@ print sys.argv
 whwu@master:~/script/python/example> python echo.py -a -b -c
 ['echo.py', '-a', '-b', '-c']
 
+
+
+####列表####
+
+基本操作
+>>> len([1,2,3])	# 长度
+3
+>>> [1,2,3]+[4,5,6]	#合并
+[1, 2, 3, 4, 5, 6]
+>>> ['Ni!']*4		#重复
+['Ni!', 'Ni!', 'Ni!', 'Ni!']
+
+>>> for x in [1,2,3]:print x,	#迭代
+...
+1 2 3
+
+
+索引和分片
+>>> L=['apple','banana','canada','dog']  
+>>> L
+['apple', 'banana', 'canada', 'dog']
+>>> L[2]	#从0开始的偏移
+'canada'
+>>>
+>>> L[-1]       #负偏移：从右数起
+'dog'
+>>> L[1:]       #分片取得片段
+['banana', 'canada', 'dog']
+
+
+
+原位改变列表
+>>> L=['apple','banana','cat','dog']
+>>> L[1]
+'banana'
+>>> L
+['apple', 'banana', 'cat', 'dog']
+>>> L[1]='BANANA'	#索引赋值
+>>> L
+['apple', 'BANANA', 'cat', 'dog']
+>>> L[0:2]=['eat','more']	#分片赋值：删除0,1并插入
+>>> L
+['eat', 'more', 'cat', 'dog']
+>>> L[1:2]=['AB','BC']		#删除1，插入两项
+>>> L
+['eat', 'AB', 'BC', 'cat', 'dog']
+
+>>> L.append('eat')	# append方法调用
+>>> L
+['eat', 'AB', 'BC', 'cat', 'dog', 'eat']
+>>> L.sort()		# 排序列表项
+>>> L
+['AB', 'BC', 'cat', 'dog', 'eat', 'eat']
+
+
+>>> L
+['AB', 'BC', 'cat', 'dog', 'eat', 'eat']
+>>>
+>>>
+>>> del L[-1]	#删除最后一项
+>>> L
+['AB', 'BC', 'cat', 'dog', 'eat']
+>>> del L[1:]	#删除1之后的项
+>>> L
+['AB']
+
+
+字典
+>>> d2={'spam':2,'ham':1,'eggs':3} #建立字典
+>>> d2['spam']	#用键取值
+2
+>>> len(d2)	#字典中的项数
+3
+>>> d2.has_key('ham')	#键成员关系测试
+True
+>>> d2.keys()    #键的列表
+['eggs', 'ham', 'spam']
+
+
+
