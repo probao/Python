@@ -19,4 +19,30 @@ area:6.000
 
 
 
+whwu@master:~/script/python> cat math1.py
+#!/usr/bin/env python
+# a math function
+
+def f(x):
+        if x==0:
+                return x
+        else:
+                return f(x-1)*2+x*x
+
+for x in xrange(1,10):
+        print f(x)
+
+
+whwu@master:~/script/python> ./math1.py
+1
+6
+21
+58
+141
+318
+685
+1434
+2949
+
+
 
