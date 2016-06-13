@@ -1,1 +1,63 @@
+#######################################
+###############基本语句################
+#######################################
+
+赋值
+>>> nudge=1
+>>> wink=2
+>>> A,B=nudge,wink	# 元组
+>>> A,B
+(1, 2)
+>>> [C,D]=[nudge,wink]	# 列表
+>>> C,D
+(1, 2)
+>>> nudge,wink = wink, nudge	# 元组：交换值
+>>> nudge,wink			
+(2, 1)
+
+
+表达式
+print语句
+>>> print 'hello world'
+hello world
+>>> 'hello world'
+'hello world'
+>>> import sys
+>>> sys.stdout.write('hello world\n')
+hello world
+
+
+if语句
+
+>>> if 1:
+...     print 'true'
+...
+...
+true
+>>> if not 1:
+...     print 'true'
+... else:
+...     print 'false'
+...
+false
+>>>
+
+
+>>> choice='ham'
+>>> print{'spam':1.25,		# 一个基于字典的'switch'
+...       'ham':1.99,		# 默认用has_key（）条件
+...       'eggs': 0.99,
+...       'bacon': 1.10}[choice]
+
+
+>>> x='killer rabbit'
+>>> if x=='oger':		# 复合语句 首行以":"缩进语句
+...     print "how's jessica?"	# 一个或多个首行缩进的嵌套语句，这些缩进的语句称之为块（block）或套（suite）
+... elif x=='bugs':
+...     print "what's up doc?"
+... else:
+...     print 'run away!run away!'
+...
+run away!run away!
+
 
