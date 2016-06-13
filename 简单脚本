@@ -18,7 +18,7 @@ whwu@master:~/script/python> ./areatriangle.py
 area:6.000
 
 
-
+###########函数迭代##########
 whwu@master:~/script/python> cat math1.py
 #!/usr/bin/env python
 # a math function
@@ -43,6 +43,24 @@ whwu@master:~/script/python> ./math1.py
 685
 1434
 2949
+
+
+###########斐波那契数列##########
+#!/usr/bin/env python
+# Fibonacci series up to n
+
+a = float(input('number:'))
+
+def fib(n):
+        a,b = 0,1
+        while a < n:
+                print(a),  #print() 后面加一个逗号，表示不换行
+                a,b = b,a+b
+fib(a)
+
+whwu@master:~/script/python> ./math2.py
+number:1000
+0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
 
 
 
