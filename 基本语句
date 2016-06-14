@@ -132,4 +132,43 @@ m
 0 1 2 3 4 5 6 7 8 9
 
 
+----python读取和写入数据----
+一、用Python创建一个新文件，内容是从0到9的整数, 每个数字占一行
+>>> f=open('f.txt','w')
+>>> for i in range(0,10):
+...     f.write(str(i)+'\n')
+...
+>>> f.close()
+whwu@master:~/script/python> cat f.txt
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
 
+二、文件内容追加，从0到9的10个随机整数：
+>>> import random
+>>> f=open('f.txt','a')
+>>> for i in range(0,10):
+...     f.write(str(random.randint(0,9)))
+...
+>>> f.write('\n')
+>>> f.close()
+>>>
+whwu@master:~/script/python> cat f.txt
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+3314668039
