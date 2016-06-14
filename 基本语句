@@ -61,3 +61,75 @@ false
 run away!run away!
 
 
+----语句的界定----
+>>> if (a==b and	# 一句语句两行 可以用括号）
+... c==d):
+...     print 'haha'
+...
+haha
+
+
+>>> a=1
+>>> b=1
+>>> c=2
+>>> d=2
+>>> if a==b \	# 一句语句两行 可以用\
+... and c==d:
+...     print 'ok'
+...
+ok
+
+
+>>> x=1;y=2;print x   #不是一句简单句
+
+
+>>> 2<3,3<2
+(True, False)
+>>> 2 or 3
+2
+>>> 2 or 3, 4 or 5	# 如果真则返回左边的操作符
+(2, 4)
+>>> [] or 3
+3
+>>> [] or []
+[]
+
+
+while循环
+
+一般格式
+while <条件>:		# 循环测试
+	<语句1>		# 循环体
+else:			# 可选的else
+	<语句2>		# 如果不是因为break而退出循环运行
+
+>>> while 1:
+...     print 'Type Ctrl-C to stop me!'
+
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!
+Type Ctrl-C to stop me!^C
+
+>>> x= 'spam'
+>>> while x:
+...     print x
+...     x=x[1:]	# 从x中取出第一个字符
+...
+spam
+pam
+am
+m
+
+>>> a=0;b=10
+>>> while a < b:
+...     print a,
+...     a=a+1
+...
+0 1 2 3 4 5 6 7 8 9
+
+
+
