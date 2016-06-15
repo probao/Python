@@ -132,6 +132,128 @@ m
 0 1 2 3 4 5 6 7 8 9
 
 
+----break continue pass else循环----
+break 跳出最近的包围它的循环（通过整个循环语句）
+continue 跳至最近的包围它的循环顶部（到循环的首行）
+pass 什么都不做：只是一个占位的空语句。
+else循环 运行并且只有在循环正常退出的情况下运行。
+
+一般循环格式
+
+while<条件测试>:
+	<语句>
+	if<条件测试>:break	#现在跳出循环，忽略else
+	if<条件测试>:continue	#现在转到循环顶部
+else：
+	<语句>			#如果我们没遇上break
+
+>>> x=10
+>>> while x>0 :
+...     x=x-1
+...     if x%2 != 0: continue
+...     print x,
+...
+8 6 4 2 0
+
+>>> x=10
+>>> a=1
+>>> tmp=1
+>>> while x>0:	#阶乘
+...     a=a*tmp
+...     tmp=tmp+1
+...     x=x-1
+...
+>>> a
+3628800
+
+
+
+whwu@master:~/script/python/example> cat charpter3_exam1.py
+#!/usr/bin/env python
+# Fibonacci series up to n
+
+a = int(input('number:'))   #a的数字类型是 整形 如果变成float 则会有小数
+
+x=a/2
+
+while x>1:
+        if a%x == 0:
+                print a,'has factor',x
+                break
+        x=x-1
+else:
+        print a,'is prime'
+whwu@master:~/script/python/example> ./charpter3_exam1.py
+number:39
+39 has factor 13
+whwu@master:~/script/python/example> ./charpter3_exam1.py
+number:37
+37 is prime
+
+
+----for循环----
+
+for<目标> in <对象>:	# 该目标赋以对象的项
+	<语句>		# 重复循环体：使用目标
+else:
+	<语句>		# 如果我们没遇上break
+
+>>> for x in ["spam","eggs","ham"]:
+...     print x,
+...
+spam eggs ham
+
+>>> sum=0
+>>> for x in [1,2,3,4]:
+...     sum=sum+x
+...
+>>> sum
+10
+
+
+>>> prod=1
+>>> for item in [1,2,3,4]:
+...     prod=prod*item
+...
+>>> prod
+24
+
+
+for循环也适用于字符串和元组
+>>> for x in S:
+...     sys.stdout.write('%s' %x)
+...
+lumberjack
+
+
+>>> for i in range(6):
+...     for j in range(i):
+...             print '*',
+...     print
+...
+
+*
+* *
+* * *
+* * * *
+* * * * *
+>>> import sys
+>>> for i in range(6):
+...     for j in range(i):
+...             sys.stdout.write('*')  #标准输出
+...     print
+...
+
+*
+**
+***
+****
+*****
+
+
+
+
+
 ----python读取和写入数据----
 一、用Python创建一个新文件，内容是从0到9的整数, 每个数字占一行
 >>> f=open('f.txt','w')
