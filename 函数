@@ -1,0 +1,33 @@
+Enter file contents here#######################################
+#################函数##################
+#######################################
+
+def <名字> (arg1，arg2，。。。，argN）
+	<语句>
+return <值>
+
+>>> def times(x,y): # 生成并赋值函数
+...     return x*y  # 在调用的时候函数体执行
+...
+>>> times(5,5)	# 括号内的参数
+25
+>>> times(5,5.5) # 函数是“无类型的”
+27.5
+>>> times('Ni',4)
+'NiNiNiNi'
+
+
+
+>>> def intersect(seq1, seq2):
+...     res=[]		# 开始为空
+...     for x in seq1:	# 扫描seq1
+...             if x in seq2:	# 公共项？
+...                     res.append(x)	#添加到尾部
+...     return res
+...
+>>> s1='SPAM'
+>>> s2='SCAM'
+>>> intersect(s1,s2)	# 字符串
+['S', 'A', 'M']
+>>> intersect([1,2,3],(1,2,4))	# 混合类型
+[1, 2]
