@@ -251,6 +251,62 @@ lumberjack
 *****
 
 
+>>> items=["aaa",111,(4,5),2.01]
+>>> tests=[(4,5),3.14]
+>>> for key in tests:				# 所有的键
+...     for item in items:			# 所有的项
+...             if item == key:			# 检查是否匹配
+...                     print key,"was found"
+...                     break
+...     else:					# 嵌套的else循环是重要的，它与内部for循环首行的缩进处于同一列，所以它
+...             print key,"not found!"		# 它是与内部循环关联的（而不是if或外部的for）
+...
+(4, 5) was found
+3.14 not found!
+
+--in的操作--
+>>> for key in tests:
+...     if key in items:
+...             print key,"was found"
+...     else:
+...             print key,"not found!"
+...
+(4, 5) was found
+3.14 not found!
+
+
+--求交集--
+>>> seq1="spam"
+>>> seq2="scam"
+>>> res=[]		# 开始为空
+>>> for x in seq1:	# 扫描第一个序列
+...     if x in seq2:	# 是否为公共项？
+...             res.append(x)	# 向结尾添加结果
+...
+>>>
+>>> res
+['s', 'a', 'm']
+>>>
+
+
+--range和计数循环--
+>>> range(5),range(2,5),range(0,10,2)
+([0, 1, 2, 3, 4], [2, 3, 4], [0, 2, 4, 6, 8])
+
+>>> x='spam'
+>>> for item in x:	# 简单的循环
+...     print item,
+...
+s p a m
+
+
+>>> i=0
+>>> while i < len(x):	# while循环
+...     print x[i],
+...     i=i+1
+...
+s p a m
+
 
 
 
