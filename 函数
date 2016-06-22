@@ -104,3 +104,53 @@ return可以返回任何种类的对象，通过在一个元组中
 >>> x,L
 (2, [3, 4])
 
+
+--特殊参数匹配模式--
+
+#example1
+>>> def func(spam,eggs,toast=0,ham=0):
+...     print(spam,eggs,toast,ham)
+...
+>>> func(1,2)
+(1, 2, 0, 0)
+>>> func(1,ham=4,eggs=0) # python通过名字而不是位置匹配，调用者必须为spam和eggs提供值，但它们可以通过位置或名字匹配。
+(1, 0, 0, 4)
+>>> func(spam=4,eggs=0)
+(4, 0, 0, 0)
+>>> func(toast=1,eggs=2,spam=3)
+(3, 2, 1, 0)
+>>> func(1,2,3,4)
+(1, 2, 3, 4)
+
+#example1
+whwu@master:~/script> cat inter2.py
+def intersect(*args):		# 通过*args收集所有的参数
+        res=[]
+        for x in args[0]:
+                for other in args[1:]:
+                        if x not in other:
+                                break
+                else:
+                        res.append(x)
+        return res
+
+
+def union(*args):
+        res=[]
+        for seq in args:
+                for x in seq:
+                        if not x in res:
+                                res.append(x)
+        return res
+
+>>> from inter2 import intersect,union
+>>> s1,s2,s3="SPAM","SCAM","SLAM"
+>>> intersect(s1,s2,s3),union(s1,s2,s3)
+(['S', 'A', 'M'], ['S', 'P', 'A', 'M', 'C', 'L'])
+
+
+
+
+
+
+
