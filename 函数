@@ -270,6 +270,76 @@ stackoverflow上有人说可以这样理解map()：
 上面便是列表推导的过程
 
 
+python的过程
+在python函数中，return语句是可选的。当一个函数无法准确的返回值时，函数就
+跳至尾部并退出。严格地说，所有的函数都返回一个值，若你不能提供一个返回值，
+你的函数自动返回None对象
+
+>>> def addlist(list):
+...     list.append(4)
+...     return list
+...
+>>> list=[1,2,3]
+>>> addlist(list)  #执行函数，结果返回list
+[1, 2, 3, 4]
+
+>>> def addlist(list):
+...     list.append(4)
+...
+>>> addlist(list) #执行函数，结果返回none，空行
+>>> print list
+[1, 2, 3, 4, 4]
+
+
+函数是对象：非直接调用
+>>> def echo(message):	#回显对一个对象的赋值
+...     print message
+...
+>>> x=echo
+>>> x('Hello world!')	# 现在x也引用它
+Hello world!		# 通过添加（）调用对象
+
+
+既然参数通过赋值传递，传递函数参数同传其他参数一样简单。
+被调用者可以在括号中添加参数来调用传递的函数：
+>>> def indirect(func,arg):
+...     func(arg)	# 通过添加（）来调用对象
+...
+>>> indirect(echo,'Hello jello!')	# 传递函数到一个函数
+Hello jello!
+
+
+>>> schedule=[(echo,'Spam!'),(echo,'Ham!')]
+>>> for(func,arg) in schedule:
+...     apply(func,(arg,))
+...
+Spam!
+Ham!
+这段代码简单的遍历了schedule表，每次用一个参数调用echo函数。
+
+函数的常见问题
+
+局部名字静态检测
+Python如何静态地探测局部作用域：是在Python编译代码时检测，而不是通过它们在运行时的赋值。
+>>> x=99
+>>> def selector():
+...     print x
+...
+>>> selector()
+99
+>>> def selector():
+...     print x
+...     x=88
+...
+>>> selector()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 2, in selector
+UnboundLocalError: local variable 'x' referenced before assignment  # 不能对同一个简单的名字同时使用局部和全局的形式。
+
+
+
+
 
 
 
