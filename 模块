@@ -47,3 +47,45 @@ done loading.
 
 #在模块名字空间里的一些名字都是Python为我们加的：例如__file__给出载入的模块文件名，__name__把知道的名字给导入者
 （不带有.py扩展名和路径）
+
+
+##导入只发生一次##
+
+模块在第一次import和from的时候载入并运行。
+运行一个模块的代码生成它的顶层名字。
+以后的import或from操作取一个已经载入的模块。
+
+whwu@master:~/script/python> cat simple.py
+print 'hello'
+spam=1		# 初始化变量
+
+>>> import simple	# 第一次导入：载入并运行代码
+hello
+>>> simple.spam		# 赋值生成一个属性
+1
+>>> simple.spam=2	# 在模块中改变属性
+>>>
+>>> import simple	# 只是取到已经载入的模块
+>>>
+>>> simple.spam		# 代码不重新运行：属性没有改变
+2
+在这个例子中，print和=语句在模块导入的第一次运行，第二个导入不
+不重新运行模块的代码，只是取得python内部模块表中已经生成的模块
+
+
+##import或from都是赋值
+%cat small.py
+x=1
+y=[1,2]
+
+>>> from small import x,y	# 把两个名字拷贝出来
+>>> x=42			# 只改变局部的x
+>>> y[0]=21			# 在远处改变可变的共享对象
+>>>
+>>> import small		# 得到模块名字
+>>> small.x			# small的x不是局部的x
+1
+>>> small.y			# 不过我们共享一个改变了的可变对象
+[21, 2]
+
+
