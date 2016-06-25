@@ -338,6 +338,88 @@ Traceback (most recent call last):
 UnboundLocalError: local variable 'x' referenced before assignment  # 不能对同一个简单的名字同时使用局部和全局的形式。
 
 
+使用默认值保存引用
+
+嵌套的函数对包含它的函数中的任何名字都没有访问权。要得到对嵌套函数的def
+前赋值的名字的访问权，可以把它作为嵌套函数的默认参数。
+
+>>> def outer(x,y):
+...     def inner(a=x,b=y): # 保存outer的x，y的绑定对象
+...             return a**b	# 在这里不能直接使用x，y
+...     return inner
+...
+>>> outer(2,4)
+>>> x=outer(2,4)
+>>> x()
+16
+
+
+>>> def outer(x,y):
+...     return lambda a=x,b=y:a**b
+...
+>>> y=outer(2,5)
+>>> y()
+32
+
+
+>>> def outer(x):
+...     fillin=[None]	# 保存可变的
+...     def inner(i,self=fillin):
+...             print i,
+...             if i:self[0](i-1)	# 假定它是集合
+...     fillin[0]=inner			# 现在插入值
+...     inner(x)
+...
+>>> outer(3)
+3 2 1 0
+
+
+>>> def inner(i):	# 定义模块层次的名字
+...     print i,
+...     if i:inner(i-1)	# 不用担心：它是全局的
+...
+>>> def outer(x):
+...     inner(x)
+...
+>>> outer(3)
+3 2 1 0
+
+
+默认的可变对象
+
+>>> def saver(x=[]):	# 保存起一个列表对象
+...     x.append(1)	# 每次改变同样的对象
+...     print x
+...
+>>> saver([2])		# 默认的没有使用
+[2, 1]
+>>> saver()		# 默认的使用
+[1]
+>>> saver()		# 每次调用后生长
+[1, 1]
+>>> saver()
+[1, 1, 1]
+
+问题是，这里只有一个列表对象--def执行时生成的一个。在每一次函数被调用时，你不会得到新的
+列表对象，每个append后这个列表都要增长。
+
+>>> def saver(x=None):
+...     if x is None:
+...             x=[]
+...     x.append(1)
+...     print x
+...
+>>> saver(x=[3])
+[3, 1]
+>>> saver([3])
+[3, 1]
+>>> saver()
+[1]
+>>> saver()
+[1]
+>>> saver()
+[1]
+
 
 
 
