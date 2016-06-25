@@ -1,1 +1,49 @@
+#######################################
+#################模块##################
+#######################################
 
+whwu@master:~/script/python> cat modele1.py
+def printer(x):
+        print x
+
+>>> import modele1		# 得到模块
+>>> modele1.printer('Hello world!')	# 限定性取得名字（模块.名字）
+Hello world!
+>>>
+>>> from modele1 import printer		# 得到一个输出
+>>> printer('Hello world!')		# 不需要限定名
+Hello world!
+
+
+whwu@master:~/script/python> cat module2.py
+print('starting to load...')
+
+import sys
+name=42
+
+def func():pass
+
+class klass:pass
+
+print('done loading.')
+
+首先模块被导入（或者作为程序运行），Python从头到尾执行它的语句。
+有的语句的作用只是在模块名字空间空间中生成名字，不过其他的语句
+在import运行的时候做一些实际的工作。例如，这个文件中的两个print
+语句在导入的时候会运行：
+>>> import module2
+starting to load...
+done loading.
+>>> module2.sys
+<module 'sys' (built-in)>
+>>> module2.name
+42
+>>> module2.func
+<function func at 0x2b39615d0c08>
+>>> module2.klass
+<class module2.klass at 0x2b39615d7770>
+>>> module2.__dict__.keys()
+['name', '__builtins__', '__file__', '__package__', 'sys', 'klass', 'func', '__name__', '__doc__']
+
+#在模块名字空间里的一些名字都是Python为我们加的：例如__file__给出载入的模块文件名，__name__把知道的名字给导入者
+（不带有.py扩展名和路径）
