@@ -88,4 +88,68 @@ y=[1,2]
 >>> small.y			# 不过我们共享一个改变了的可变对象
 [21, 2]
 
+##reload函数##
+whwu@master:~/script/python> cat changer.py
+#message="first version"
+message="After editing"
+
+def printer():
+        print message
+
+
+>>> import changer
+>>> changer.printer()
+First version
+>>> import changer	# 不终止python，修改changer.py
+>>> changer.printer()	# 没有作用：用已经载入的模块
+First version
+>>> reload(changer)	# 强制新的代码载入/运行
+<module 'changer' from 'changer.py'>
+>>> changer.printer()	# 现在运行新的代码
+After editing
+
+
+混合模式：__name__和__main__
+这里有一个特别的与模块相关的技巧，既可以允许你导入一个模块，
+又可作为一个独立程序运行它。每个模块都有一个内置属性叫__name__,
+Python中设定如下：
+
+如果文件作为程序运行，在启动的时候，__name__设定为字符串__main__
+如果文件是被导入的，__name__被设定为用户已知的模块名
+
+whwu@master:~/script/python> cat runme.py
+def tester():
+        print "It's Christmas in Heaver..."
+if __name__=='__main__':	# 只在独立运行时才这样
+        tester()		# 而不是被导入时
+
+>>> import runme		# 文件作为模块
+>>> runme.tester()
+It's Christmas in Heaver...
+
+
+whwu@master:~/script/python> python runme.py
+It's Christmas in Heaver...
+
+
+模块的常见问题
+
+from拷贝名字但并不连接
+
+whwu@master:~/script/python> cat nested1.py
+x=99
+def printer():
+        print x
+
+>>> from nested1 import x,printer  # 考出名字
+>>> x=88			   # 只改变局部的"x"
+>>> printer()			   # 嵌套的x仍旧是是99
+99
+
+
+>>> import nested1	# 作为整体得到一个模块
+>>> nested1.x=88	# 修改了嵌套的x
+>>> nested1.printer()
+88
+
 
