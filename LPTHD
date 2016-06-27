@@ -1,0 +1,27 @@
+练习8
+whwu@master:~/script/python/LPTHW> cat ex8.py
+formatter="%r %r %r %r"
+
+print formatter % (1,2,3,4)
+print formatter % ("one","two","three","four")
+print formatter % (True,False,False,True)
+print formatter % (
+        "I had this thing.",
+        "That you could type up right.",
+        "But it didn't sing.",
+        "So I said goodnight."
+)
+whwu@master:~/script/python/LPTHW> python ex8.py
+1 2 3 4
+'one' 'two' 'three' 'four'
+True False False True
+'I had this thing.' 'That you could type up right.' "But it didn't sing." 'So I said goodnight.'
+
+为什么 “one” 要用引号，而 True 和 False 不需要？
+因为 True 和 False 是 Python 的关键字，用来表示真假的意义。如果你加了引号，它们就变成
+了字符串，也就无法实现它们本来的功能了。习题 27 中会有详细说明。
+我在字符中包含了中文（或者其它非 ASCII 字符），可是 %r 打印出的是乱码？
+使用 %s 就行了。
+为什么 %r 有时打印出来的是单引号，而我实际用的是双引号？
+Python 会用最有效的方式打印出字符串，而不是完全按照你写的方式来打印。这样做对于 %r 来
+说是可以接受的，因为它是用作 debug 和排错，没必要非打印出多好看的格式。
