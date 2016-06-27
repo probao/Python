@@ -25,3 +25,43 @@ True False False True
 为什么 %r 有时打印出来的是单引号，而我实际用的是双引号？
 Python 会用最有效的方式打印出字符串，而不是完全按照你写的方式来打印。这样做对于 %r 来
 说是可以接受的，因为它是用作 debug 和排错，没必要非打印出多好看的格式。
+
+
+练习9
+whwu@master:~/script/python/LPTHW> cat ex9.py
+#Here's some new strange stuff, remember type it exactly.
+
+days = "Mon Tue Wed Thu Fri Sat Sun"
+#months = "Jan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug"
+months = "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug"
+
+print "Here are the days:", days
+print "Here are the months:", months
+
+print """
+There's something going on here.
+With the three double-quotes.
+We'll be able to type as much as we like.
+Even 4 lines if we want, or 5, or 6.
+"""
+whwu@master:~/script/python/LPTHW> python ex9.py
+Here are the days: Mon Tue Wed Thu Fri Sat Sun
+Here are the months:
+Jan
+Feb
+Mar
+Apr
+May
+Jun
+Jul
+Aug
+
+
+There's something going on here.
+With the three double-quotes.
+We'll be able to type as much as we like.
+Even 4 lines if we want, or 5, or 6.
+
+怎样将月份显示在新的一行？
+字符串以 \n 开始就可以了，像这样：
+"\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug"
