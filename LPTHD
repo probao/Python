@@ -202,3 +202,168 @@ print "The script is called:", script
 print "Your first variable is:", first
 print "Your second variable is:", second
 print "Your third variable is:", third
+
+
+练习14
+whwu@master:~/script/python/LPTHW> python ex14.py Zed
+Hi Zed, I'm the ex14.py script.
+I'd like to ask you a few questions.
+Do you like me Zed?
+>yes
+Where do you live Zed?
+>usa
+What kind of computer do you have?
+>laptop
+
+Alright, so you said 'yes' about liking me.
+You live in 'usa'. Not sure where that is.
+And you have a 'laptop' computer.Nice.
+
+whwu@master:~/script/python/LPTHW> cat ex14.py
+from sys import argv
+
+script,user_name = argv
+prompt = '>'
+
+print "Hi %s, I'm the %s script." % (user_name, script)
+print "I'd like to ask you a few questions."
+print "Do you like me %s?" %user_name
+likes = raw_input(prompt)
+
+print "Where do you live %s?" % user_name
+lives = raw_input(prompt)
+
+print "What kind of computer do you have?"
+computer = raw_input(prompt)
+
+print"""
+Alright, so you said %r about liking me.
+You live in %r. Not sure where that is.
+And you have a %r computer.Nice.
+""" % (likes, lives, computer)
+
+
+练习15
+whwu@master:~/script/python/LPTHW> cat ex15.py
+from sys import argv  #  从sys库中引入argv
+
+script,filename = argv	# 命名参数
+
+txt = open(filename) # 将文件打开，并赋值于txt
+
+print "Here's your file %r:" % filename
+print txt.read()	# read txt中的所有内容
+
+print "Type the filename again:"
+file_again = raw_input(">")
+
+txt_again = open(file_again)
+
+print txt_again.read()
+
+whwu@master:~/script/python/LPTHW> python ex15.py ex15_sample.txt
+Here's your file 'ex15_sample.txt':
+This is stuff I typed into a file.
+It is really cool stuff.
+Lots and lots of fun to have in here.
+
+Type the filename again:
+>ex15_sample.txt
+This is stuff I typed into a file.
+It is really cool stuff.
+Lots and lots of fun to have in here.
+
+
+练习16
+? close – 关闭文件。跟你编辑器的 文件->保存.. 一个意思。
+? read – 读取文件内容。你可以把结果赋给一个变量。
+? readline – 读取文本文件中的一行。
+? truncate – 清空文件，请小心使用该命令。
+? write(stuff) – 将stuff 写入文件。
+
+open/文件操作
+f=open('/tmp/hello','w')
+
+#open(路径+文件名,读写模式)
+
+#读写模式:r只读,r+读写,w新建(会覆盖原有文件),a追加,b二进制文件.常用模式
+
+如:'rb','wb','r+b'等等
+
+读写模式的类型有：
+
+rU 或 Ua 以读方式打开, 同时提供通用换行符支持 (PEP 278)
+w     以写方式打开，
+a     以追加模式打开 (从 EOF 开始, 必要时创建新文件)
+r+     以读写模式打开
+w+     以读写模式打开 (参见 w )
+a+     以读写模式打开 (参见 a )
+rb     以二进制读模式打开
+wb     以二进制写模式打开 (参见 w )
+ab     以二进制追加模式打开 (参见 a )
+rb+    以二进制读写模式打开 (参见 r+ )
+wb+    以二进制读写模式打开 (参见 w+ )
+ab+    以二进制读写模式打开 (参见 a+ )
+
+
+whwu@master:~/script/python/LPTHW> cat ex16.py
+from sys import argv
+
+script,filename = argv
+
+print "We're going to erase %r." % filename
+print "If you don't want that, hit CTRL-C(^C)."
+print "If you do want that, hit return."
+
+raw_input("?")
+
+print "Opening the file..."
+target = open(filename, 'w') # 打开文件，以写模式打开，会覆盖原来内容
+
+print "Truncating the file. Goodbye!"
+target.truncate()
+
+print "Now I'm going to ask you for three lines."
+
+line1 = raw_input("line 1:")
+line2 = raw_input("line 2:")
+line3 = raw_input("line 3:")
+
+print "I'm going to write these to the file."
+
+target.write(line1)
+target.write("\n")
+target.write(line2)
+target.write("\n")
+target.write(line3)
+target.write("\n")
+
+print "And finally, we close it."
+target.close()
+
+whwu@master:~/script/python/LPTHW> cat test.txt
+To all the people out there.
+I say I don't like my hair.
+I need to shave it off
+
+whwu@master:~/script/python/LPTHW> python ex16.py test.txt
+We're going to erase 'test.txt'.
+If you don't want that, hit CTRL-C(^C).
+If you do want that, hit return.
+?
+Opening the file...
+Truncating the file. Goodbye!
+Now I'm going to ask you for three lines.
+line 1:haha
+line 2:baa
+line 3:jj
+I'm going to write these to the file.
+And finally, we close it.
+whwu@master:~/script/python/LPTHW> cat test.
+cat: test.: No such file or directory
+whwu@master:~/script/python/LPTHW> cat test.txt
+haha
+baa
+jj
+
+
