@@ -433,3 +433,156 @@ arg1: 'Zed', arg2: 'Shaw'
 arg1: 'Zed', arg2: 'Shaw'
 arg1: 'First!'
 I got nothing.
+
+练习19
+
+whwu@master:~/script/python/LPTHW> cat ex19.py
+def cheese_and_crackers(cheese_count, boxes_of_crackers):
+        print "You have %d cheese!" % cheese_count
+        print "You have %d boxes of crackers!" % boxes_of_crackers
+        print "Man that's enough for a party!"
+        print "Get a blanket.\n"
+
+print "We can just give the function numbers directly:"
+cheese_and_crackers(20, 30)
+
+print "OR, we can use variables from our script:"
+amount_of_cheese = 10
+amount_of_crackers = 50
+
+cheese_and_crackers(amount_of_cheese, amount_of_crackers)
+
+print "We can even do math inside too:"
+cheese_and_crackers(10 + 20, 5 + 6)
+
+print "And we can combine the two, variables and math:"
+cheese_and_crackers(amount_of_cheese + 100, amount_of_crackers + 1000)
+
+
+whwu@master:~/script/python/LPTHW> python ex19.py
+We can just give the function numbers directly:
+You have 20 cheese!
+You have 30 boxes of crackers!
+Man that's enough for a party!
+Get a blanket.
+
+OR, we can use variables from our script:
+You have 10 cheese!
+You have 50 boxes of crackers!
+Man that's enough for a party!
+Get a blanket.
+
+We can even do math inside too:
+You have 30 cheese!
+You have 11 boxes of crackers!
+Man that's enough for a party!
+Get a blanket.
+
+And we can combine the two, variables and math:
+You have 110 cheese!
+You have 1050 boxes of crackers!
+Man that's enough for a party!
+Get a blanket.
+
+
+练习20
+
+
+whwu@master:~/script/python/LPTHW> cat ex20.py
+from sys import argv
+
+script,input_file = argv
+
+def print_all(f):
+        print f.read()
+
+def rewind(f):
+        f.seek(0)
+
+def print_a_line(line_count,f):
+        print line_count,f.readline()
+
+current_file = open(input_file)
+
+print "First let's print the whole file:\n"
+
+print_all(current_file)
+
+print "Now let's rewind, kind of like a tape."
+
+rewind(current_file)
+
+print "Let's print three lines:"
+
+current_line = 1
+print_a_line(current_line, current_file)
+
+current_line = current_line + 1
+print_a_line(current_line, current_file)
+
+current_line = current_line + 1
+print_a_line(current_line, current_file)
+
+
+whwu@master:~/script/python/LPTHW> python ex20.py test.txt
+First let's print the whole file:
+
+123456789
+222222222
+333333333
+444444444
+555555555
+
+Now let's rewind, kind of like a tape.
+Let's print three lines:
+1 123456789
+
+2 222222222
+
+3 333333333
+
+print_all 和其它函数里的 f 是什么？
+和 Ex 18 里的一样， f 只是一个变量名而已，不过在这里它指的是一个文件。Python 里的文件
+就和老式磁带机，或者 DVD 播放机差不多。它有一个用来读取数据的“磁头”，你可以通过这
+个“磁头”来操作文件。每次你运行 f.seek(0) 你就回到了文件的开始，而运行
+f.readline() 则会读取文件的一行，然后将“磁头”移动到 \n 后面。后面你会看到更详细
+的解释。
+问什么文件里会有间隔空行？
+readline() 函数返回的内容中包含文件本来就有的 \n，而 print 在打印时又会添加一个
+\n，这样一来就会多出一个空行了。解决方法是在 print 语句结尾加一个逗号 ,，这样 print 就
+不会把它自己的 \n 打印出来了。
+为什么 seek(0) 没有把 current_line 设为 0？
+首先 seek() 函数的处理对象是 字节 而非行，所以 seek(0) 只是转到文件的 0 byte，也就
+是第一个 byte 的位置。其次， current_line 只是一个独立变量，和文件本身没有任何关系，
+我们只能手动为其增值。
+
+file.seek()方法标准格式是：seek(offset,whence=0)
+offset：开始的偏移量，也就是代表需要移动偏移的字节数
+whence：给offset参数一个定义，表示要从哪个位置开始偏移；0代表从文件开头开始算起，1代表从当前位置开始算起，2代表从文件末尾算起。
+
+
+whwu@master:~/script/python/LPTHW> cat test2.txt
+123456789
+
+whwu@master:~/script/python/LPTHW> python
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> x = file('test2.txt', 'r')
+>>> x.seek(3)
+
+>>> x.tell()
+3
+>>> x.seek(4)
+>>> x.tell()
+4
+>>> x.seek(1, 4)
+>>> x.seek(-1, 2)
+>>> x.tell()
+9
+>>> x.seek(-4, 2)
+>>> x.tell()
+6
+>>> x.seek(0,0)
+>>> x.tell()
+0
