@@ -973,3 +973,285 @@ Element was:4
 Element was:5
 
 
+练习33
+whwu@master:~/script/python/LPTHW> cat ex33.py
+i = 0
+numbers = []
+
+while i < 6:
+        print "At the top i is %d" % i
+        numbers.append(i)	
+
+        i = i + 1
+        print "Numbers now:", numbers
+        print "At the bottom i is %d" % i
+
+print "The numbers:"
+
+for num in numbers:	# 按顺序读出列表里的数字
+        print num
+whwu@master:~/script/python/LPTHW> python ex33.py
+At the top i is 0
+Numbers now: [0]
+At the bottom i is 1
+At the top i is 1
+Numbers now: [0, 1]
+At the bottom i is 2
+At the top i is 2
+Numbers now: [0, 1, 2]
+At the bottom i is 3
+At the top i is 3
+Numbers now: [0, 1, 2, 3]
+At the bottom i is 4
+At the top i is 4
+Numbers now: [0, 1, 2, 3, 4]
+At the bottom i is 5
+At the top i is 5
+Numbers now: [0, 1, 2, 3, 4, 5]
+At the bottom i is 6
+The numbers:
+0
+1
+2
+3
+4
+5
+
+
+whwu@master:~/script/python/LPTHW> cat ex33plus1.exe
+def add(x):
+        i = 0
+        numbers = []
+
+        while i < x:
+                print "At the top i is %d" % i
+                numbers.append(i)
+
+                i = i + 1
+                print "Numbers now:", numbers
+                print "At the bottom i is %d" % i
+
+        print "The numbers:"
+
+        for num in numbers:
+                print num
+
+x = int(raw_input("x:"))   # 必须注意数字的格式
+#x = raw_input("x:")
+add(x)
+whwu@master:~/script/python/LPTHW> python ex33plus1.exe
+x:4
+At the top i is 0
+Numbers now: [0]
+At the bottom i is 1
+At the top i is 1
+Numbers now: [0, 1]
+At the bottom i is 2
+At the top i is 2
+Numbers now: [0, 1, 2]
+At the bottom i is 3
+At the top i is 3
+Numbers now: [0, 1, 2, 3]
+At the bottom i is 4
+The numbers:
+0
+1
+2
+3
+
+
+
+练习35
+whwu@master:~/script/python/LPTHW> cat ex35.py
+from sys import exit
+
+def gold_room():
+        print "This room is full of gold. How much do you take?"
+
+        next = raw_input("> ")
+        if "0" in next or "1" in next:  # 如果数字中含有0或1
+                how_much = int(next)
+        else:
+                dead("Man, learn to type a number.")
+
+        if how_much < 50:
+                print "Nice, you're not greedy, you win!"
+                exit(0)
+        else:
+                dead("You greedy bastard!")
+
+def bear_room():
+        print "There is a bear here."
+        print "The bear has a bunch of honey."
+        print "The fat bear is in front of another door."
+        print "How are you going to move the bear?"
+        bear_moved = False
+
+        while True:		# 这样可以创建一个无限循环
+                next = raw_input("> ")
+
+                if next == "take honey":
+                        dead("The bear looks at you then slaps your face off.")
+                elif next == "taunt bear" and not bear_moved:
+                        print "The bear has moved from the door. You can go through it now."
+                        bear_moved = True
+                elif next == "taunt bear" and bear_moved:
+                        dead("The bear gets pissed off and chews your leg off.")
+                elif next == "open door" and bear_moved:
+                        gold_room()
+                else:
+                        print "I got no idea what that means."
+
+def cthulhu_room():
+        print "Here you see the great evil Cthulhu."
+        print "He, it, whatever stares at you and you go insane."
+        print "Do you flee for your life or eat your head?"
+
+        next = raw_input("> ")
+        if "flee" in next:
+                start()
+        elif "head" in next:
+                dead("Well that was tasty!")
+        else:
+                cthulhu_room()
+
+def dead(why):
+        print why,"Good job!"
+        exit(0)
+
+def start():
+        print "You are in a dark room."
+        print "There is a door to your right and  left."
+        print "Which one do you take?"
+
+        next = raw_input("> ")
+
+        if next == "left":
+                bear_room()
+        elif next == "right":
+                cthulhu_room()
+        else:
+                dead("You stumble around the room until you starve.")
+
+start()
+
+whwu@master:~/script/python/LPTHW> python ex35.py
+You are in a dark room.
+There is a door to your right and  left.
+Which one do you take?
+> left
+There is a bear here.
+The bear has a bunch of honey.
+The fat bear is in front of another door.
+How are you going to move the bear?
+> taunt bear
+The bear has moved from the door. You can go through it now.
+> open door
+This room is full of gold. How much do you take?
+> 100
+You greedy bastard! Good job!
+
+
+
+练习38
+
+whwu@master:~/script/python/LPTHW> cat ex38.py
+# create a mapping of state to abbreviation
+
+states = {					# 定义一个叫states的字典
+        'Oregon': 'OR',
+        'Florida': 'FL',
+        'California': 'CA',
+        'New York': 'NY',
+        'Michigan': 'MI'
+}
+
+# create a basic set of states and some cities in them
+cities = {					# 定义一个叫cities的字典
+        'CA': 'San Francisco',
+        'MI': 'Detroit',
+        'FL': 'Jacksonville'
+}
+
+# add some more cities
+cities['NY'] = 'New York'			# 在cities的字典中增加'NY':'New York'
+cities['OR'] = 'Portland'			# 在cities的字典中增加'OR':'Portland'
+
+# print out some cities
+print '-' * 10
+print "NY state has: ", cities['NY']		# 在cities这个字典中，通过键（key）来找到所需的值
+print "OR state has: ", cities['OR']
+
+# print some states
+print '-' * 10
+print "Michigan's abbreviation is: ", states['Michigan']
+print "Florida's abbreviation is: ", states['Florida']
+
+# do it by using the state then cities dict
+print '-'*10
+print "Michigan has:", cities[states['Michigan']]	# 在字典states中，得到键'Michigan'的值，再在cities这个字典中找
+print "Florida has:", cities[states['Florida']]
+
+# print every state abbreviation
+print '-' * 10
+for state, abbrev in states.items():
+        print "%s is abbreviated %s" % (state, abbrev)		# item函数 item()方法把字典中每对key和value组成一个元组，并把这些元组放在列表中返回。
+
+# print every city in state
+print '-' * 10
+for abbrev, city in cities.items():
+        print "%s has the city %s" % (abbrev, city)
+
+# now do both at the same time
+print '-' * 10
+for state, abbrev in states.items():
+        print "%s state is abbreviated %s and has city %s" % (
+                state, abbrev, cities[abbrev])
+
+print '-' * 10
+
+# safely get a abbreviation by state that might not be there
+state = states.get('Texas', None)			# get函数Python 字典(Dictionary) get() 函数返回指定键的值，如果值不在字典中返回默认值。
+							# get()方法语法：dict.get(key, default=None) key -- 字典中要查找的键。default -- 如果指定键的值不存在时，返回该默认值值None。
+if not state:
+        print "Sorry, no Texas."
+
+# get a city with a default value
+city = cities.get('TX', 'Does Not Exist')
+print "The city for the state 'TX' is: %s" % city
+
+
+whwu@master:~/script/python/LPTHW> python ex38.py
+----------
+NY state has:  New York
+OR state has:  Portland
+----------
+Michigan's abbreviation is:  MI
+Florida's abbreviation is:  FL
+----------
+Michigan has: Detroit
+Florida has: Jacksonville
+----------
+California is abbreviated CA
+Michigan is abbreviated MI
+New York is abbreviated NY
+Florida is abbreviated FL
+Oregon is abbreviated OR
+----------
+FL has the city Jacksonville
+CA has the city San Francisco
+MI has the city Detroit
+OR has the city Portland
+NY has the city New York
+----------
+California state is abbreviated CA and has city San Francisco
+Michigan state is abbreviated MI and has city Detroit
+New York state is abbreviated NY and has city New York
+Florida state is abbreviated FL and has city Jacksonville
+Oregon state is abbreviated OR and has city Portland
+----------
+Sorry, no Texas.
+The city for the state 'TX' is: Does Not Exist
+
+
+
