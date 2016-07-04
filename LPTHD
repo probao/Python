@@ -1254,4 +1254,87 @@ Sorry, no Texas.
 The city for the state 'TX' is: Does Not Exist
 
 
+练习40
+whwu@master:~/script/python/LPTHW> cat ex40.py
+class Song(object):
+        def __init__(self, lyrics):
+                self.lyrics = lyrics
+
+        def sing_me_a_song(self):
+                for line in self.lyrics:
+                        print line
+
+happy_bday = Song(["Happy birthday to you",   #  Song.__int__(happy_bday, ....)
+                "I don't want to get sued",
+                "So I'll stop right there"])
+
+bulls_on_parade = Song(["They rally around the family",
+                        "With pockets full of shells"])
+
+happy_bday.sing_me_a_song( )
+
+
+bulls_on_parade.sing_me_a_song( )
+
+
+whwu@master:~/script/python/LPTHW> python ex40.py
+Happy birthday to you
+I don't want to get sued
+So I'll stop right there
+They rally around the family
+With pockets full of shells
+
+为什么创建 __init__ 或者别的类函数时需要多加一个 self 变量？
+如果你不加 self ， cheese = 'Frank' 这样的代码意义就不明确了，它指的既可能
+是实例的 cheese 属性，或者一个叫做 cheese 的局部变量。有了 self.cheese =
+'Frank' 你就清楚地知道了这指的是实例的属性 self.cheese 。
+
+
+whwu@master:~/script/python/LPTHW> cat ex40plus1.py
+class TheThing(object):
+        def __init__(self):
+                self.number = 0
+
+        def some_function(self):
+                print "I got called."
+
+        def add_me_up(self, more):
+                self.number +=more
+                return self.number
+
+# two different things
+a = TheThing()   # 生成两个实例
+b = TheThing()
+
+a.some_function() # 运行程序some_function(a)
+b.some_function()
+
+print a.add_me_up(20)
+print b.add_me_up(30)
+
+print a.number
+print b.number
+
+# study this.This is how you pass a variable
+# from one class to another. You will need this.
+
+class TheMultiplier(object):
+        def __init__(self, base):
+                self.base = base
+
+        def do_it(self, m):
+                return m * self.base
+
+x = TheMultiplier(a.number)
+print x.do_it(b.number)
+whwu@master:~/script/python/LPTHW> python ex40plus1.py
+I got called.
+I got called.
+20
+30
+20
+30
+600
+
+
 
