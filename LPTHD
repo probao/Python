@@ -794,6 +794,56 @@ All
 who
 
 
+练习28 布尔表达式
+whwu@master:~> python
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> True and True
+True
+>>> False and True
+False
+>>> 1 == 1 and 2 == 1
+False
+>>> "test" == "test"
+True
+>>> 1 == 1 or 2 != 1
+True
+>>> True and 1 == 1
+True
+>>> False and 0 != 0
+False
+>>> True or 1 == 1
+True
+>>> "test" == "testing"
+False
+>>> 1 != 0 and 2 == 1
+False
+>>> "test" != "testing"
+True
+>>> "test" == 1
+False
+>>> not (True and False)
+True
+>>> not (1 == 1 and 0 != 1)
+False
+>>> not ( 10 == 1 or 1000 == 1000 )
+False
+>>> not ( 1 != 10 or 3 == 4)
+False
+>>> not ( "testing" == "testing" and "Zed" == "Cool Guy" )
+True
+>>> 1 == 1 and (not("testing" == 1  or 1== 0))
+True
+>>> "chunky" == "bacon" and (not (3 == 4 or 3 == 3))
+False
+>>> 3 == 3 and (not ("testing" == "testing" or "Python" == "Fun"))
+False
+
+
+
+
+
 练习29
 whwu@master:~/script/python/LPTHW> python ex29.py
 Too many cats! The world is doomed!
@@ -971,6 +1021,33 @@ Element was:2
 Element was:3
 Element was:4
 Element was:5
+
+whwu@master:~/script/python/LPTHW> cat ex32plus1.py
+a = int(raw_input("> "))
+
+element = []
+
+for i in range(0,a):
+        print "adding %d to the list." % i
+        element.append(i)
+
+
+print element
+
+whwu@master:~/script/python/LPTHW> python ex32plus1.py
+> 5
+adding 0 to the list.
+adding 1 to the list.
+adding 2 to the list.
+adding 3 to the list.
+adding 4 to the list.
+[0, 1, 2, 3, 4]
+
+Q: 为什么 for i in range(1, 3): 只循环了两次？
+ range() 函数循环的次数不包括最后一个。所以 range(1,3) 只循环到2,这是这种循环最常用的方法。
+
+
+
 
 
 练习33
@@ -1253,6 +1330,64 @@ Oregon state is abbreviated OR and has city Portland
 Sorry, no Texas.
 The city for the state 'TX' is: Does Not Exist
 
+whwu@master:~/script/python/LPTHW> cat ex38plus1.py
+ten_things = "Apples Oranges Crows Telephone Light Sugar"
+
+print "Wait there are not 10 things in that list. Let's fix that."
+
+stuff = ten_things.split(' ')	# split函数，以空格为分隔符
+more_stuff = ["Day", "Night", "Song", "Frisbee", "COrn", "Banana", "Girl", "Boy"]
+
+while len(stuff) != 10:		# len函数，判断stuff列表中元素的个数
+        next_one = more_stuff.pop() # pop函数，从列表中移除并返回最后一项或obj
+        print "Adding:", next_one
+        stuff.append(next_one)
+        print "There are %d items now." % len(stuff)
+
+print "There we go:", stuff
+
+print "Let's do some things with stuff."
+
+print stuff[1]
+print stuff[-1]
+print stuff.pop()
+print ' '.join(stuff)   #join()：   连接字符串数组。将字符串、元组、列表中的元素以指定的字符(分隔符)连接生成一个新的字
+print '#'.join(stuff[3:5])
+
+whwu@master:~/script/python/LPTHW> python ex38plus1.py
+Wait there are not 10 things in that list. Let's fix that.
+Adding: Boy
+There are 7 items now.
+Adding: Girl
+There are 8 items now.
+Adding: Banana
+There are 9 items now.
+Adding: COrn
+There are 10 items now.
+There we go: ['Apples', 'Oranges', 'Crows', 'Telephone', 'Light', 'Sugar', 'Boy', 'Girl', 'Banana', 'COrn']
+Let's do some things with stuff.
+Oranges
+COrn
+COrn
+Apples Oranges Crows Telephone Light Sugar Boy Girl Banana
+Telephone#Light
+
+
+whwu@master:~/script/python/LPTHW> python		#len函数
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> ten_things = "Apples Oranges Crows Telephon" # 字符串长度
+>>> len(ten_things)
+29
+>>> ten_things_ed = ten_things.split(' ')
+>>> len(ten_things_ed)			# 列表中元素个数
+4
+>>> ten_things_ed
+['Apples', 'Oranges', 'Crows', 'Telephon']
+
+
+
 
 练习40
 whwu@master:~/script/python/LPTHW> cat ex40.py
@@ -1338,3 +1473,53 @@ I got called.
 
 
 
+
+
+
+
+
+
+
+
+
+python脚本阅读
+whwu@master:~/script/python/LPTHW> cat script1.py
+import random
+secret = random.randint(1,99)
+guess = 0
+tries = 0
+print "AHOY! I'm the Script created by BAO, and I have a secret!"
+print "It is a number from 1 to 99. I'll give you 10 tries."
+
+while guess != secret and tries < 10:
+        guess = input("What's your guess?")	# 必须是input，因为input返回的是数值型数据，例如int，float等， 而raw_input返回的是字符串类型
+        if guess < secret:
+                print "Too low, scurvey dog!"
+        elif guess > secret:
+                print "Too high, landlubber!"
+
+        tries = tries + 1
+
+if guess == secret:
+        print "Hey man! You got it! Found my secret, you did!"
+else:
+        print "No more guesses! Better luck next time, matey!"
+        print "The secret number was", secret
+
+whwu@master:~/script/python/LPTHW> python script1.py
+AHOY! I'm the Script created by BAO, and I have a secret!
+It is a number from 1 to 99. I'll give you 10 tries.
+What's your guess?3
+Too low, scurvey dog!
+What's your guess?50
+Too high, landlubber!
+What's your guess?25
+Too high, landlubber!
+What's your guess?12
+Too low, scurvey dog!
+What's your guess?19
+Too low, scurvey dog!
+What's your guess?23
+Too high, landlubber!
+What's your guess?20
+Hey man! You got it! Found my secret, you did!
