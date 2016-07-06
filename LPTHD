@@ -1229,8 +1229,82 @@ This room is full of gold. How much do you take?
 You greedy bastard! Good job!
 
 
-
 练习38
+whwu@master:~/script/python/LPTHW> cat ex38plus1.py
+ten_things = "Apples Oranges Crows Telephone Light Sugar"
+
+print "Wait there are not 10 things in that list. Let's fix that."
+
+stuff = ten_things.split(' ')	# split函数，以空格为分隔符
+more_stuff = ["Day", "Night", "Song", "Frisbee", "COrn", "Banana", "Girl", "Boy"]
+
+while len(stuff) != 10:		# len函数，判断stuff列表中元素的个数
+        next_one = more_stuff.pop() # pop函数，从列表中移除并返回最后一项或obj
+        print "Adding:", next_one
+        stuff.append(next_one)
+        print "There are %d items now." % len(stuff)
+
+print "There we go:", stuff
+
+print "Let's do some things with stuff."
+
+print stuff[1]
+print stuff[-1]
+print stuff.pop()
+print ' '.join(stuff)   #join()：   连接字符串数组。将字符串、元组、列表中的元素以指定的字符(分隔符)连接生成一个新的字
+print '#'.join(stuff[3:5])
+
+whwu@master:~/script/python/LPTHW> python ex38plus1.py
+Wait there are not 10 things in that list. Let's fix that.
+Adding: Boy
+There are 7 items now.
+Adding: Girl
+There are 8 items now.
+Adding: Banana
+There are 9 items now.
+Adding: COrn
+There are 10 items now.
+There we go: ['Apples', 'Oranges', 'Crows', 'Telephone', 'Light', 'Sugar', 'Boy', 'Girl', 'Banana', 'COrn']
+Let's do some things with stuff.
+Oranges
+COrn
+COrn
+Apples Oranges Crows Telephone Light Sugar Boy Girl Banana
+Telephone#Light
+
+
+
+whwu@master:~/script/python/LPTHW> python		#len函数
+Python 2.6.6 (r266:84292, Jul 23 2015, 15:22:56)
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-11)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> ten_things = "Apples Oranges Crows Telephon" # 字符串长度
+>>> len(ten_things)
+29
+>>> ten_things_ed = ten_things.split(' ')
+>>> len(ten_things_ed)			# 列表中元素个数
+4
+>>> ten_things_ed
+['Apples', 'Oranges', 'Crows', 'Telephon']
+
+
+
+
+练习39
+>>> stuff = {'name':'Zed', 'age': 39, 'height': 6 * 12 + 2}
+>>> print stuff['name']
+Zed
+>>> print stuff['age']
+39
+>>> print stuff['height']
+74
+>>> stuff['city'] = "San Francisco"
+>>> stuff
+{'city': 'San Francisco', 'age': 39, 'name': 'Zed', 'height': 74}
+>>> stuff["haha"] = "xixi"
+>>> stuff
+{'city': 'San Francisco', 'age': 39, 'haha': 'xixi', 'name': 'Zed', 'height': 74}
+
 
 whwu@master:~/script/python/LPTHW> cat ex38.py
 # create a mapping of state to abbreviation
