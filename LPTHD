@@ -1546,6 +1546,103 @@ I got called.
 600
 
 
+whwu@master:~/script/python/LPTHW> python MyStuff.py
+I am classy apples!
+And now a thousand years between
+whwu@master:~/script/python/LPTHW> cat MyStuff.py
+class MyStuff(object):
+        def __init__(self):
+                self.tangerine = "And now a thousand years between"
+
+        def apple(self):
+                print "I am classy apples!"
+
+thing = MyStuff()
+thing.apple()
+print thing.tangerine
+
+
+练习41
+程序不用总是从头开始读
+
+strip函数
+Python strip() 方法用于移除字符串头尾指定的字符（默认为空格）。
+语法：
+	str.strip([chars]) --- 移除指定字符
+>>> str = "00000hahaha00000"
+>>> print str.strip('0')
+hahaha
+
+capitalize函数
+Python  capitalize()将字符串的第一个字母变成大写
+语法：
+	str.captialize()
+
+>>> str = "this is string example...wow!!"
+>>> print str.capitalize()
+This is string example...wow!!
+
+
+
+
+
+
+
+import random
+from urllib import urlopen  #urllib 库提供了一个从指定的 URL 地址获取网页数据，然后对其进行分析处理，获取想要的数据。
+import sys
+
+WORD_URL = "http://learncodethehardway.org/words.txt"
+WORDS = []
+
+PHRASES = {
+	"class %%%(%%%):":
+	   "Make a class named %%% that is-a %%%.",
+	"class %%%(object):\n\tdef __innit__(self, ***)":
+	   "class %%% has-a __init__ that takes self and *** parameters.",
+	"class %%%(object):\n\tdef ***(self, @@@)":
+	   "class %%% has-a function named *** that takes self and @@@ parameters.",
+	"*** = %%%()":
+	   "Set *** to an instance of class %%%.",
+	"***.***(@@@)":
+	    "From *** get the *** function, and call it with parameters self, @@@.",
+	"***.***  = '***'":
+	    "From *** get the *** attribute and set it to '***'."
+}
+
+
+# do they want to drill phrases first
+if len(sys.argv) == 2 and sys.argv[1] = "english":
+	PHRASE_FIRST = True
+else:
+	PHRASE_FIRST = False
+
+# load up the words from the website
+for word in urlopen(WORD_URL).readlines():
+	WORDS.append(word.strip())    # strip函数
+
+
+def convert(snippet, phrase):
+	class_names = [w.captalize() for w in   #captalize函数
+			random.sample(WORDS, snippet.count("%%%"))]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
