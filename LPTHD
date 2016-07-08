@@ -1573,16 +1573,63 @@ Python strip() 方法用于移除字符串头尾指定的字符（默认为空�
 >>> print str.strip('0')
 hahaha
 
+
 capitalize函数
 Python  capitalize()将字符串的第一个字母变成大写
 语法：
 	str.captialize()
+
 
 >>> str = "this is string example...wow!!"
 >>> print str.capitalize()
 This is string example...wow!!
 
 
+shuffle函数
+>>> import random
+>>>
+>>> list = [20, 16, 10. 5];
+>>> list = [20, 16, 10, 5];
+>>> random.shuffle(list)
+>>> print list
+[5, 16, 10, 20]
+
+
+sample函数
+random.sample的函数原型为：random.sample(sequence, k)，从指定序列中随机获取指定长度的片断。sample函数不会修改原有序列。
+>>> random.sample('abcdefghij', 3)
+['e', 'c', 'd']
+
+
+count函数
+count()方法就可以统计某个元素在列表中出现了多少次
+>>> x = [1, 2, 'a', [1,2], [1,2]]
+>>> x.count([1, 2])
+2
+
+
+randint()函数
+random.randint()的函数原型为：random.randint(a, b)，用于生成一个指定范围内的整数。其中参数a是下限，参数b是上限，生成的随机数n: a <= n <= b
+>>> random.randint(16,20)
+18
+>>> random.randint(16,20)
+16
+
+
+replace函数
+Python replace() 方法把字符串中的 old（旧字符串） 替换成 new(新字符串)，如果指定第三个参数max，则替换不超过 max 次。
+>>> str ="is is is is"
+>>> print str.replace("is", "was", 3)
+was was was is
+
+
+join函数
+join()方法语法：
+str.join(sequence)
+
+>>> seq = ['a', 'b', 'c']
+>>> print str.join(seq)
+a-b-c
 
 
 
@@ -1619,12 +1666,60 @@ else:
 
 # load up the words from the website
 for word in urlopen(WORD_URL).readlines():
-	WORDS.append(word.strip())    # strip函数
+	WORDS.append(word.strip())    # strip函数 生成一个名字为WORDS的列表
 
 
 def convert(snippet, phrase):
 	class_names = [w.captalize() for w in   #captalize函数
 			random.sample(WORDS, snippet.count("%%%"))]
+	other_names = random.sample(WORDS, snippet.count("***"))
+	results = []
+	para_names = []
+
+	for i in range(0, snippet.count("@@@")):  # count函数--返回snippet中@@@的个数
+		param_count = random.randint(1, 3)	# randint函数 生成一个1到3之间的整数
+		param_names.append(', '.join(random.sample(WORDS, param_count))) # 从WORDS中选取para_count个单词
+
+	for sentence in snippet, phrase:
+		result = sentence[:]
+
+	# fake class names
+	for word in class_names:
+		result = result.replace("%%%", word, 1)
+	
+	# fake other names
+	for word in other_names:
+		result = result.replace("%%%", word, 1)
+
+	# fake parameter lists
+	for word in para_names:
+		result = result.replace("@@@", word, 1)
+
+	results.append(result)
+
+return results
+
+
+
+# keep going until they hit CTRL-D
+try：
+	while True:
+		snippets = PHRASES.keys()  # 将PHRASES中的键值命名为snippets
+		random.shuffle(snippets)   # shuffle函数 返回随机排序后的序列
+
+		for snippet in snippets：	# 在列表snippets中的元素，命名为snippet
+			phrase = PHRASES[snippet]	# 在字典PHRASES中键为snippet 的值命名为phrase
+			question,answer = convert(snippet, phrase) # convert的return值是一个列表，列表中有两个元素，分别命名为question以及answer
+			if PHRASE_FIRST:
+				question, answer = answer, question
+			
+			print question
+			
+			raw_input("> ")
+			print "ANSWER: %s\n\n" % answer
+except EOFError:
+	print "\nBye"
+
 
 
 
