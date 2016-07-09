@@ -1720,18 +1720,21 @@ try：
 except EOFError:
 	print "\nBye"
 
+whwu@master:~/script/python/LPTHW> python ex41.py english
+Set drug to an instance of class Beast.
+>
+ANSWER: drug = Beast()
 
 
+class Cemetery has-a __init__ that takes self and butto parameters.
+>
+ANSWER: class Cemetery(object):
+        def __init__(self, butto)
 
 
-
-
-
-
-
-
-
-
+From cherry get the bulb function, and  call it with parameters self, dad, band.
+>
+Bye
 
 
 
