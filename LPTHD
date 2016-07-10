@@ -1971,7 +1971,113 @@ class Engine(object):
 		current_scene.enter()
 
 
-
+whwu@master:~/script/python/LPTHW> python ex43.py				# 启动python a_map = Map('central_corridor') -- a_map是Map的一个实例化 											Map类中self是a_map
+The Gothons of Planet Percal #25 have invaded your ship and destroyed           # 通过Map类中__init__函数 在Map类中 self = a_map, start_scene = central corridor
+your entire crew. You are the last surviving member and your last		# a_game = Engine(a_map) a_game -- 是Engine的一个实例化， 通过Engine类中的__init__函数
+mission is to get the neutron destruct bomb from the Weapons Armory,		# 在Engine中 self=a_game, scene_map=a_map
+put it in the bridge, and blow the ship up after getting into an		# a_game.play() -- play(a_game) 运行a_game实例化中的play函数
+escape pod.									# current_scene=self.scene_map.opening_scene()-- 将a_game.a_map.opening_scene()函数的值赋给current_scene	
+										# 脚本中current_scene = CentralCorridor() last_scene = Finished() 分别实例化
+										# 当current_scene 不等于 last_scene时
+You're running down the central corridir to the Weapons Armory when		# 运行current_scene.enter()也就是运行CentralCorridor类中的enter（），将返回值赋值于next_scene
+a Gothon jumps out, red scaly skin, dark grimy teeth, and evil clown costume	# 就出现左边的内容
+flowing around his hate filled body. He's blocking the door to the
+Armory and about to pull a weapon to blast you.
+> tell a joke									# 返回值为laser_weapon_armory next_scene_name = laser_weapon_armory
+Lucky for you they made you learn Gothon insults in the academy.		# current_scene = LaserWeaponArmory() while loop直到current_scene = last_scene
+You tell the one Gothon joke you know:
+Lbhe zbgure vf fb sng, jura fur fvgf nebhaq gur ubhfr, fur fvgf nebhaq gur ubhfr                                                                                        .
+The Gothon stops, tries not to laugh, then busts out laughing and can't move.
+While heis laughing you run up and shoot him square in the head
+putting him down, then jump  through the Weapon Armory door.
+You do a dive roll into the Weapon Armory, crouch and scan the room
+for more Gothons that might be hiding. It's dead quiet, too quiet.
+You stand up and run to the far side of the room and find the
+and you need the code to get the bomb out. If you get the code
+wrong 10 times then the lock closes forever and you can't
+get the bomb. The code is 3 digits.
+[keypad]> 112
+The container clicks open and the seal breaks, letting gas out.
+You grab the neutron bomb and run as fast as you can to the
+bridge where you must place it in the right spot.
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 2
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 1
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 3
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 4
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 5
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> 6
+DOES NOT COMPUTE!
+You burst onto the Bridge with the netron destruct bomb
+under your arm and surprise 5 Gothons who are trying to
+tkae control of the ship. Each of them has an even uglier
+clown costume than the last. They haven't pulled their
+weapons out yet, as they see the active bomb under your
+arm and  don't want to set it off.
+> slowly place the bomb
+You point your blaster at the bomb under your arm
+and the Gothons put their hands up and start to sweat.
+You inch backward to the door, open it, and then carefully
+place the bomb on the floor, pointing your blaster at it.
+You then jump back through the door, punch the close button
+and blast the lock so the Gothons can't get out.
+Now that the bomb is placed you run to the escape pod to
+get off this tin can.
+You rush through the ship desperately trying to make it to
+the escage pod before the whole ship explodes. It seems like
+hardly any Gothons are on the ship, so your run is clear of
+interference. You get to the chamber with the escape pods, and
+now need to pick one to take. Some of them could be damaged
+but you don't have time to look. There's 5 pods, which one
+do you take?
+[pod #]> 3
+You jump into pod 3 and hit the eject buttion.
+The pod easily slides out into space heading to
+the planet below. As it flies to the planet, you look
+back and see your ship implode then explode like a
+brighter star, taking out the Gothon ship at the same
+time. You won!
+You won! Good job.		# current_scene.enter()
 
 
 
