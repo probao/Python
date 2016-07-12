@@ -2080,6 +2080,154 @@ time. You won!
 You won! Good job.		# current_scene.enter()
 
 
+练习44
+
+隐性继承
+whwu@master:~/script/python/LPTHW> cat ex44a.py
+class Parent(object):
+
+        def implicit(self):
+                print "PARENT implicit()"
+
+class Child(Parent):
+        pass
+
+dad = Parent()
+son = Child()
+
+dad.implicit()
+son.implicit()
+whwu@master:~/script/python/LPTHW> python ex44a.py
+PARENT implicit()
+PARENT implicit()
+在 class Child 下使用 pass 的目的是告诉Python，在这里你想要一个空白的块。
+这里创建了一个叫做 Child 的类，但是没有在这个类中定义任何性的方法。它将从类 Parent 继承获得所有的方法。
+
+注意一下，尽管我再代码的13行调用了 son.implicit() ，而类 Child 并没有一个定义叫做 implicit 的方法，代码仍然正常工作了，
+因为它调用了 Parent 中定义的同名方法。这个高速你的是：如果你在基类(i.e.,  Parent )中定义了一个方法，
+那么所有的子类(i.e.,  Child ) 都可以自动的获得这个功能。对于你需要在很多类中有重复的方法来说，非常方便。
+
+重写方法
+
+关于有些方法是隐式调用的问题原因在于有时候你想让子类有不同的表现。这时你想重写子类中的方法且有效的覆盖父类中的方法。
+要做到这一点，你只需要在子类中定义一个同名的方法就行，例如
+
+whwu@master:~/script/python/LPTHW> cat ex44b.py
+class Parent(object):
+
+        def override(self):
+                print "PARENT override()"
+
+class Child(Parent):
+
+        def override(self):
+                print "CHILD override()"
+
+dad = Parent()
+son = Child()
+
+dad.override()
+son.override()
+whwu@master:~/script/python/LPTHW> python ex44b.py
+PARENT override()
+CHILD override()
+
+你可以看到，当第14行执行时，它执行了父类的 override 方法，因为变量 dad 是一个父类实例，
+但是当第15行执行时，打印的是子类的 override 方法，这是因为 son 是一个子类的实例，这个子类重写了那个方法，定义了自己的版本。
+
+
+之前或之后改变父类
+
+whwu@master:~/script/python/LPTHW> cat ex44c.py
+class Parent(object):
+
+        def altered(self):
+                print "PARENT altered()"
+
+class Child(Parent):
+
+        def altered(self):
+                print "CHILD, BEFORE PARENT altered()"
+                super(Child, self).altered()
+                print "CHILD, AFTER PARENT altered()"
+
+dad = Parent()
+son = Child()
+
+dad.altered()
+son.altered()
+whwu@master:~/script/python/LPTHW> python ex44c.py
+PARENT altered()
+CHILD, BEFORE PARENT altered()
+PARENT altered()
+CHILD, AFTER PARENT altered()
+
+1.因为我已经重写了子类的 Child.altered 方法，第9行的运行结果应该和你的期待是一样
+2.在这个例子中，我打算使用 super 来得到父类的 Parent.altered 版本。
+3.在第10行，我调用了 super(Child, self).altered() 方法, 这个方法能够意识到继承的发生，并给你获得类 Parent 。你可以这样读这行代码“调用 super ，参数为 Child 和 self ,然后不管它返回什么，调用方法 altered  ”
+4.在这种情况下，父类的 Parent.altered 版本执行，并打印出父类的信息。
+5.最后，代码从 Parent.altered  返回，  Child.altered  方法继续打印出剩下的信息。
+
+
+组合使用
+whwu@master:~/script/python/LPTHW> cat ex44d.py
+class Parent(object):
+
+        def override(self):
+                print "PARENT override()"
+
+        def implicit(self):
+                print "PARENT implicit()"
+
+        def altered(self):
+                print "PARENT altered()"
+
+class Child(Parent):
+
+        def override(self):
+                print "CHILD override()"
+
+        def altered(self):
+                print "CHILD, BEFORE PARENT altered()"
+                super(Child, self).altered()
+                print "CHILD, AFTER PARENT altered()"
+
+dad = Parent()
+son = Child()
+
+dad.implicit()
+son.implicit()		#在son类中没有implicit，隐形继承父类
+
+dad.override()
+son.override()
+
+dad.altered()
+son.altered()		# 调用super函数
+
+
+whwu@master:~/script/python/LPTHW> python ex44d.py
+PARENT implicit()
+PARENT implicit()
+PARENT override()
+CHILD override()
+PARENT altered()
+CHILD, BEFORE PARENT altered()
+PARENT altered()
+CHILD, AFTER PARENT altered()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
