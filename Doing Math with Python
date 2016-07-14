@@ -1,1 +1,210 @@
+#########################################################
+##############charpter 1 working with numbers############
+#########################################################
+
+下取整数 //
+>>>12 // 5
+>>>2
+
+取余数 %
+>>> 9 % 2
+1
+>>>
+
+阶乘 **
+>>> 2 ** 2
+4
+>>> 2 ** 10
+1024
+>>> 64 ** (1/2)   # python 2.7中1/2是0
+1
+>>> 64 ** (1.0/2) # （1.0）/2 是0.5
+8.0
+
+
+括号（）
+>>> 5 + 5 * 5
+30
+>>> (5 + 5) * 5
+50
+
+int函数 #去掉小数部分，保留整数
+>>> int(3.8)
+3
+>>> int(1.4)
+1
+>>> int(-1.3)
+-1
+
+
+通过fraction模块
+>>> from fractions import Fraction
+>>> f = Fraction(3, 4)
+>>> f
+Fraction(3, 4)
+>>> f + 1   # 如果式子中只含有Fraction以及整数时，结果依旧是一个fraction
+Fraction(7, 4)
+>>> f + 1 + 1.5 # 如果式子中含有Fraction以及浮点数时，结果就是浮点数。
+3.25
+
+
+复数
+>>> a = 2 + 3j
+>>> type(a)
+<type 'complex'>
+>>> b = complex(3, 3)
+>>> b
+(3+3j)
+>>> a + b
+(5+6j)
+>>> a - b
+(-1+0j)
+(-3+15j)
+>>> a / b
+(0.8333333333333334+0.16666666666666666j)
+>>> z = 2 + 3j
+>>> z.real
+2.0
+>>> z.imag
+3.0
+>>> (z.real ** 2 + z.imag ** 2) ** 0.5
+3.605551275463989
+>>> abs(z)
+3.6055512754639896
+
+
+Getting User Input
+
+>>> a = input()
+12
+>>> a
+12
+>>> a = '1'
+>>> int(a)+1
+2
+>>> float(a) + 1
+2.0
+>>> int ('2.0')		# int()函数不能使一个含小数的字符串变成整数
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: invalid literal for int() with base 10: '2.0'
+
+>>> a = int(input())
+1
+>>> a + 1
+2
+>>> a = int(input())  # python2.7 浮点数也可以
+1.0
+>>> a + 1
+2
+
+分数和负数的输入
+>>> a = Fraction(input('Enter a fraction: '))
+Enter a fraction: 3/4   # python 2.7 3/4 都是整数
+>>> a
+Fraction(0, 1)
+>>> a = Fraction(input('Enter a fraction: '))
+Enter a fraction: 3.0/4
+>>> a
+Fraction(3, 4)
+
+
+>>> a = Fraction(input('Enter a fraction: '))
+Enter a fraction: 3.0/4
+>>> a
+Fraction(3, 4)
+>>> a = Fraction(input('Enter a fraction: '))
+Enter a fraction: 3/0
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+ZeroDivisionError: integer division or modulo by zero
+
+>>> try:
+...     a = Fraction(input('Enter a fraction: '))
+... except ZeroDivisionError:
+...     print('Invalid fraction')
+...
+Enter a fraction: 3/0
+Invalid fraction
+
+
+>>> z = complex(input('Enter a complex number: '))
+Enter a complex number: 2+3j
+>>> z
+(2+3j)
+
+
+用程序来做数学
+PS C:\Users\Weihong> cat .\ch1ex2.py
+def is_factor(a, b):
+        if b % a == 0:
+                print 'True'
+        else:
+                print 'False'
+
+a = int(input(' number a: '))
+b = int(input(' number b: '))
+
+is_factor(a, b)
+PS C:\Users\Weihong> python .\ch1ex2.py
+ number a: 4
+ number b: 8
+True
+
+>>> for i in range(1, 4):
+...     print(i)
+...
+1
+2
+3
+>>> for i in range(5):
+...     print(i)
+...
+0
+1
+2
+3
+4
+>>> for i in range(1, 11, 2):
+...     print(i)
+...
+1
+3
+5
+7
+9
+
+求整数的因子
+
+PS C:\Users\Weihong> cat .\ch1ex3.py
+# find the factors of an integer
+
+def factors(b):
+
+        for i in range(1, b+1):
+                if b % i == 0:
+                        print  (i)
+
+if __name__ == '__main__':
+
+        b = input('Your Number Please: ')
+        b = float(b)
+
+        if b > 0 and b.is_integer():
+                factors(int(b))
+        else:
+                print('Please enter a positive integer')
+
+PS C:\Users\Weihong> python .\ch1ex3.py
+Your Number Please: 12
+1
+2
+3
+4
+6
+12
+PS C:\Users\Weihong> python .\ch1ex3.py
+Your Number Please: -9
+Please enter a positive integer
 
