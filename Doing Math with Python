@@ -208,3 +208,76 @@ PS C:\Users\Weihong> python .\ch1ex3.py
 Your Number Please: -9
 Please enter a positive integer
 
+
+format函数
+它通过{}和:来代替%。
+“映射”示例
+
+通过位置
+>>> '{0},{1}'.format('kzc',18)
+'kzc,18'
+>>> '{},{}'.format('kzc',18)
+'kzc,18'
+>>> '{1},{0},{1}'.format('kzc',18)
+'18,kzc,18'
+字符串的format函数可以接受不限个参数，位置可以不按顺序，可以不用或者用多次，不过2.6不能为空{}，2.7才可以。
+
+通过关键字参数
+>>> '{name},{age},{name}'.format(age=18,name='kzc')
+'kzc,18,kzc'
+
+通过下标
+>>> p = ['kzc',18,'apple']
+>>> '{0[0]},{0[2]},{0[1]}'.format(p)
+'kzc,apple,18'
+
+填充与对齐
+填充常跟对齐一起使用
+^、<、>分别是居中、左对齐、右对齐，后面带宽度
+:号后面带填充的字符，只能是一个字符，不指定的话默认是用空格填充
+>>> '{:>5}'.format('189')
+'  189'
+>>> '{:0>5}'.format('189')
+'00189'
+
+精度与类型f
+精度常跟类型f一起使用
+>>> '{:.2f}'.format(1.567)
+'1.57'
+>>> '{:.2f}'.format(1.597)
+'1.60'
+
+用，号还能用来做金额的千位分隔符。
+>>> '{:,}'.format(1234567890)
+'1,234,567,890'
+
+
+乘法表生成
+PS C:\Users\Weihong> cat .\ch1ex4.py
+# Multiplication table printer
+
+def multi_table(a):
+
+        for i in range(1, 11):
+                print('{0} * {1} = {2}'.format(a, i, a*i))
+
+if __name__ == '__main__':		# 你运行当前脚本，就会执行if __name__=="__main__"下的函数，如果你是当模块被其他程序import的，那么就不会执行。
+        a = input('Enter a number: ')   # 主要是测试用，测试你写的这个模块有没有实现你想要的功能 
+        multi_table(float(a))        
+	
+PS C:\Users\Weihong> python ch1ex4.py
+Enter a number: 4                    
+4.0 * 1 = 4.0                        
+4.0 * 2 = 8.0                        
+4.0 * 3 = 12.0                       
+4.0 * 4 = 16.0                       
+4.0 * 5 = 20.0                       
+4.0 * 6 = 24.0                       
+4.0 * 7 = 28.0                       
+4.0 * 8 = 32.0                       
+4.0 * 9 = 36.0                       
+4.0 * 10 = 40.0   
+
+
+
+
