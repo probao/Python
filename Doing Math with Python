@@ -531,6 +531,57 @@ Enter the last number: 12
 >>> show()
 >>>
 
+生成纽约市的年平均温度
+>>> nyc_temp = [53.9, 56.3, 56.4, 53.4, 54.5, 55.8, 56.8 ,55.0, 55.3, 56.7, 56.4, 57.3]
+>>> plot(nyc_temp, marker='o')
+[<matplotlib.lines.Line2D object at 0x05DDF770>]
+>>> show()
+生成的图是从0开始的
+
+>>> nyc_temp = [53.9, 56.3, 56.4, 53.4, 54.5, 55.8, 56.8 ,55.0, 55.3, 56.7, 56.4, 57.3]
+>>> years = range(2000, 2012)
+>>> plot(years, nyc_temp, marker='o')
+[<matplotlib.lines.Line2D object at 0x06431390>]
+>>> show()
+x坐标是2000到2011
+
+
+>>> nyc_temp_2000 = [31.3, 37.3, 47.2, 51.0, 63.5, 71.3, 72.7, 66.0, 57.0, 45.3, 31.1]
+>>> nyc_temp_2006 = [40.9, 35.7, 43.1, 55.7, 63.1, 71.0, 77.9, 66.6, 56.2, 51.9, 43.6]
+>>> nyc_temp_2012 = [37.3, 40.9, 50.9, 54.8, 65.1, 71.0, 78.8, 68.8, 58.0, 43.9, 41.5]
+>>> months = range(1, 12)
+>>> plot(months, nyc_temp_2000, months, nyc_temp_2006, months, nyc_temp_2012)
+[<matplotlib.lines.Line2D object at 0x0E633710>, <matplotlib.lines.Line2D object at 0x0E633810>,
+D object at 0x0E633B90>]
+>>> show()
+图中没有标明颜色
+
+
+增加legend
+>>> y1 = [1, 2, 3, 4]
+>>> y2 = [2, 6, 4, 7]
+>>> x1 = range(1, 5)
+>>> plot(x1, y1, x1, y2)
+[<matplotlib.lines.Line2D object at 0x0E6B54D0>, <matplotlib.lines.Line2D object at 0x0E6B5510>]
+>>>
+>>> from pylab import legend
+>>> legend(['haha','xixi'])        # 每条线命名
+<matplotlib.legend.Legend object at 0x0E6B5890>
+>>> show()
+
+改变legend的位置
+>>> y1 = [1, 2, 3, 4]
+>>> y2 = [2, 6, 4, 7]
+>>> x1 = range(1, 5)
+>>> plot(x1, y1, x1, y2)
+[<matplotlib.lines.Line2D object at 0x05C895B0>, <matpl
+>>>
+>>> from pylab import legend
+>>> legend(['xixi','haha'], loc='upper left') #改变legend的位置
+<matplotlib.legend.Legend object at 0x05C89610>
+>>> show()
+
+
 
 
 
