@@ -316,3 +316,226 @@ Which conversion would you like to de?: 1
 Enter distance in kilometers: 23
 Distance in miles:14.2945929149
 
+
+计算二次函数的根
+PS C:\Users\Weihong> cat .\ch1ex6.py
+#Quadratic equation root calculator
+
+def roots(a, b, c):
+
+        D = (b*b - 4*a*c)**0.5
+        x_1 = (-b + D ) / (2*a)
+        x_2 = (-b - D ) / (2*a)
+
+        print('x1: {0}'.format(x_1))
+        print('x2: {0}'.format(x_2))
+
+if  __name__ == '__main__':
+        a = input('Enter a: ')
+        b = input('Enter b: ')
+        c = input('Enter c: ')
+        roots(float(a), float(b), float(c))
+PS C:\Users\Weihong> python .\ch1ex6.py
+Enter a: 1
+Enter b: 2
+Enter c: 1
+x1: -1.0
+x2: -1.0
+
+
+def roots(a, b, c):
+
+        D = (b*b - 4*a*c)**0.5
+        x_1 = (-b + D ) / (2*a)
+        x_2 = (-b - D ) / (2*a)
+
+        print('x1: {0}'.format(x_1))
+        print('x2: {0}'.format(x_2))
+
+if  __name__ == '__main__':
+        a = input('Enter a: ')
+        b = input('Enter b: ')
+        c = input('Enter c: ')
+        roots(complex(a), complex(b), complex(c))
+
+PS C:\Users\Weihong> python .\ch1ex6.py
+Enter a: 1
+Enter b: 1
+Enter c: 1
+x1: (-0.5+0.866025403784j)
+x2: (-0.5-0.866025403784j)
+PS C:\Users\Weihong> python .\ch1ex6.py
+Enter a: 1
+Enter b: 2
+Enter c: 1
+x1: (-1+0j)
+x2: (-1+0j)
+PS C:\Users\Weihong> cat .\ch1ex6.py
+#Quadratic equation root calculator
+
+
+
+
+奇偶数判断并打印出之后的10个相应数字
+PS C:\Users\Weihong> cat .\ch1ex7.py
+def odd_or_even(a):
+        if a% 2 == 1:
+                print 'This an odd number.'
+                for i in range(1, 11):
+                        print a
+                        a  = a + 2
+        else:
+                print 'This an even number.'
+                for i in range(1, 11):
+                        print a
+                        a  = a + 2
+
+if __name__ == '__main__':
+
+        a = input('Your Number Please: ')
+        a = float(a)
+
+        if a > 0 and a.is_integer():
+                odd_or_even(int(a))
+
+        else:
+                print('Please enter a positive integer')
+
+PS C:\Users\Weihong> python .\ch1ex7.py
+Your Number Please: 5
+This an odd number.
+5
+7
+9
+11
+13
+15
+17
+19
+21
+23
+PS C:\Users\Weihong> python .\ch1ex7.py
+Your Number Please: 6
+This an even number.
+6
+8
+10
+12
+14
+16
+18
+20
+22
+24
+
+
+强化版乘法表生成
+
+PS C:\Users\Weihong> cat .\ch1ex8.py
+# Multiplication table printer
+
+def multi_table(a, b, c):
+
+        for i in range(b, c):
+                print('{0} * {1} = {2}'.format(a, i, a*i))
+
+if __name__ == '__main__':
+        a = input('Enter a number: ')
+        b = input('Enter the first number: ')
+        c = input('Enter the last number: ')
+        c = c + 1
+        multi_table(a, b, c)
+PS C:\Users\Weihong>
+
+
+PS C:\Users\Weihong> python .\ch1ex8.py
+Enter a number: 3
+Enter the first number: 4
+Enter the last number: 12
+3 * 4 = 12
+3 * 5 = 15
+3 * 6 = 18
+3 * 7 = 21
+3 * 8 = 24
+3 * 9 = 27
+3 * 10 = 30
+3 * 11 = 33
+3 * 12 = 36
+
+
+
+#########################################################
+##########charpter 2 Visualizing Data With Graphs########
+#########################################################
+
+列表和元组
+列表
+>>> simplelist = [1, 2, 3]
+>>> simplelist = [0]
+>>> simplelist = [1, 2, 3]
+>>> simplelist[0]
+1
+>>> simplelist[1]
+2
+>>> simplelist[2]
+3
+
+
+>>> stringlist = ['a string', 'b string', 'c string']
+>>> stringlist[0]
+'a string'
+>>> stringlist[1]
+'b string'
+>>> stringlist[2]
+'c string'
+
+
+>>> emptylist.append(1)
+>>> emptylist
+[1]
+>>> emptylist.append(2)
+>>> emptylist
+[1, 2]
+
+
+元组
+>>> simpletuple = (1, 2, 3)
+>>> simpletuple[0]
+1
+>>> simpletuple[1]
+2
+>>> simpletuple[2]
+3
+元组不能用append函数
+
+
+列表与元组的迭代
+>>> l = [1, 2, 3]
+>>> for item in l:
+...     print(item)
+...
+1
+2
+3
+
+
+
+
+通过Matplotlib作图
+
+>>> x_numbers = [1, 2, 3]
+>>> y_numbers = [2, 4, 6]
+>>> from pylab import plot,show
+>>> plot(x_numbers, y_numbers)
+[<matplotlib.lines.Line2D object at 0x05A36C50>]
+>>> show()
+>>>
+
+
+
+
+
+
+
+
+
