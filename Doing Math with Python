@@ -582,6 +582,128 @@ D object at 0x0E633B90>]
 >>> show()
 
 
+个性化图
+增加表头和坐标名
+>>> from pylab import plot, show, title, xlabel, ylabel, legend
+>>> y1=[1, 2, 3, 4, 5]
+>>> y2=[3, 2, 1, 7, 2]
+>>> x=range(1,6)
+>>> plot(x, y1, x, y2)
+[<matplotlib.lines.Line2D object at 0x051E79F0>, <matplotlib.lines.Line2D object at
+>>> title('the first plot')		# 表头
+<matplotlib.text.Text object at 0x051C98D0>
+>>> xlabel('x-axis')			# x坐标的名字
+<matplotlib.text.Text object at 0x04FB11B0>
+>>> ylabel('y-axis')			# y坐标的名字
+<matplotlib.text.Text object at 0x051B01B0>
+>>> legend(['num1','num2'])		# 线的名字
+<matplotlib.legend.Legend object at 0x051B0930>
+>>> show()
+
+坐标轴的设计
+>>> nyc_temp = [53.9, 56.3, 56.4, 53.4, 54.5, 55.8, 56.8, 55.0, 55.3, 54.0, 56.7, 56.4, 57.3]
+>>> months = range(0,13)
+>>> plot(months, nyc_temp, marker='o')
+[<matplotlib.lines.Line2D object at 0x05422690>]
+>>> from pylab import axis
+>>> axis()
+(0.0, 12.0, 53.0, 57.5)  # 默认区间
+>>> axis(ymin=0)
+(0.0, 12.0, 0, 57.5)	# 可以通过ymin，ymax。。改变区间
+>>> show()
+
+
+用pyplot作图
+PS C:\Users\Weihong> cat .\ch2ex1.py
+# Simple plot using pyplot
+
+import matplotlib.pyplot
+
+def create_graph():
+        x_numbers = [1, 2, 3]
+        y_numbers = [2, 4, 6]
+
+        matplotlib.pyplot.plot(x_numbers, y_numbers)
+        matplotlib.pyplot.show()
+
+if __name__ == '__main__':
+        create_graph()
+
+
+To save us some typing, we can import the pyplot module by entering
+import matplotlib.pyplot as plt. Then, we can refer to pyplot with the label
+plt in our programs, instead of having to always type matplotlib.pyplot:
+为了节约打字时间，可以将matplotlib.pyplot命名为plt
+PS C:\Users\Weihong> cat .\ch2ex2.py
+# Simple plot using pyplot
+
+import matplotlib.pyplot as plt
+
+def create_graph():
+        x_numbers = [1, 2, 3]
+        y_numbers = [2, 4, 6]
+
+        plt.plot(x_numbers, y_numbers)
+        plt.show()
+
+if __name__ == '__main__':
+        create_graph()
+
+
+保存图片
+>>> from pylab import plot,savefig
+>>> x = [1, 2, 3]
+>>> y = [2, 4, 6]
+>>> plot(x, y)
+[<matplotlib.lines.Line2D object at 0x05D039F0>]
+>>> savefig('mypraph.png')
+
+
+通过公式作图
+
+万有引力定律
+PS C:\Users\Weihong> cat .\ch2ex3.py
+# The relationship between gravitational force and
+# distance between two bodies
+
+import matplotlib.pyplot as plt
+
+# Draw the graph
+def draw_graph(x, y):
+        plt.plot(x, y, marker='o')
+        plt.xlabel('Distance in meters')
+        plt.ylabel('Gravitational force in newtons')
+        plt.title('Gravitational force and distance')
+        plt.show()
+
+def generate_F_r():
+        # Generate values for r
+        r = range(100, 1001, 50)
+        # Empty list to store the calculated values of F
+        F = []
+
+        # Constant, G
+        G = 6.674*(10**-11)
+        # Two masses
+        m1 = 0.5
+        m2 = 1.5
+
+        # Calculate force and add it to the list, F
+        for dist in r:
+                force = G*(m1*m2)/(dist**2)
+                F.append(force)
+
+        # call the draw_graph function
+        draw_graph(r, F)
+
+if  __name__=='__main__':
+        generate_F_r()
+
+
+
+
+
+
 
 
 
