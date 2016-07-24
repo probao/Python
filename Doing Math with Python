@@ -700,6 +700,224 @@ if  __name__=='__main__':
         generate_F_r()
 
 
+抛物线定律
+#Draw the trajectory of a body in projectile motion
+
+from matplotlib import pyplot as plt
+import math
+
+def draw_graph(x, y):
+	plt.plot(x, y)
+	plt.xlabel('x-coordinate')
+	plt.ylabel('y-coordinate')
+	plt.title('Projectile motion of a ball')
+
+def frange(start, final, increment):
+
+	numbers = []
+	while start < final:
+		numbers.append(start)
+		start = start + increment
+	
+	return numbers
+
+def draw_trajectory(u, theta):
+
+	theta = math.radians(theta)
+	g = 9.8
+
+	# Time of flight
+	t_flight = 2*u*math.sin(theta)/g
+	# Find time intervals
+	intervals = frange(0, t_flight, 0.001)
+
+	# List of x and y coordinates
+	x = []
+	y = []
+	for t in intervals:
+		x.append(u*math.cos(theta)*t)
+		y.append(u*math.sin(theta)*t - 0.5*g*t*t)
+	
+	draw_graph(x, y)
+
+if __name__ == '__main__':
+	try:
+		u = float(input('Enter the initial velocity(m/s): '))
+		theta = float(input('Enter the angle of projection(degrees): '))
+	except ValueError:
+		print('You entered an invalid input')
+	else:				# try...except...else
+		draw_trajectory(u, theta)
+		plt.show()
+
+##同时画出三条线
+if __name__ == '__main__':
+	u_list = [20, 40, 60]
+	theta = 45
+	for u in u_list:
+		draw_trajectory(u, theta)
+
+	plt.legend(['20', '40', '60'])
+	plt.show()		
+
+
+
+
+练习
+习题1
+1.1
+#nyc_weather_forcast_basic
+
+import matplotlib.pyplot as plt
+
+def forcast():
+	
+	time_of_day = ['3:00PM', '6:00PM', '9:00PM', '12:00AM', '3:00AM', '6:00AM', '9:00AM', '12:00PM']
+	temp = [34, 34, 32, 28, 27, 24, 26, 29]
+	intervals = range(1, len(time_of_day) + 1)
+	
+
+	plt.plot(intervals, temp)
+	plt.ylim(20,40)		#设置x轴的区间	
+	plt.xticks(intervals, time_of_day)
+	plt.show()
+
+if __name__ == '__main__':
+	forcast( )
+
+
+1.2
+PS C:\Users\Weihong> cat .\ch2ex5.py
+#nyc_weather_forcast_basic
+
+import matplotlib.pyplot as plt
+
+def forcast():
+
+        time_of_day = ['3:00PM', '6:00PM', '9:00PM', '12:00AM', '3:00AM', '6:00AM', '9:00AM', '12:00PM']
+        temp1 = [34, 34, 32, 28, 27, 24, 26, 29]
+        temp2 = [21, 26, 37, 27, 32, 19, 20, 28]
+        intervals = range(1, len(time_of_day) + 1)
+
+
+        plt.plot(intervals, temp1, intervals, temp2)
+        plt.ylim(0,40)
+        plt.xticks(intervals, time_of_day)
+        plt.legend(['New York', 'London'])
+        plt.xlabel('time')
+        plt.ylabel('temperature')
+        plt.show( )
+
+if __name__ == '__main__':
+        forcast( )
+
+
+
+习题2
+2.1
+PS C:\Users\Weihong> cat .\ch2ex6a.py
+#quadratic function calculator
+
+x_values = [-1, 1, 2, 3, 4, 5]
+for x in x_values:
+        y = x**2 + 2*x + 1
+        print('x={0} y={1}'.format(x, y))
+
+PS C:\Users\Weihong> python .\ch2ex6a.py
+x=-1 y=0
+x=1 y=4
+x=2 y=9
+x=3 y=16
+x=4 y=25
+x=5 y=36
+
+2.2
+PS C:\Users\Weihong> cat .\ch2ex6b.py
+#the graph of quadratic function calculator
+
+import matplotlib.pyplot as plt
+
+def fig_quad(x, y):
+        plt.plot(x, y)
+        plt.show( )
+
+if __name__ == '__main__':
+        x_values = range( -100, 100, 10)
+        y_values = []
+        for x in x_values:
+                y_values.append(x**2 + 2*x + 1)
+
+        fig_quad(x_values, y_values)
+
+
+习题3
+3.1
+PS C:\Users\Weihong> cat ch2ex7a.py
+#Draw the trajectory of a body in projectile motion
+
+from matplotlib import pyplot as plt
+import math
+
+def draw_graph(x, y):
+        plt.plot(x, y)
+        plt.xlabel('x-coordinate')
+        plt.ylabel('y-coordinate')
+        plt.title('Projectile motion of a ball')
+
+def frange(start, final, increment):
+
+        numbers = []
+        while start < final:
+                numbers.append(start)
+                start = start + increment
+
+        return numbers
+
+def draw_trajectory(u, theta):
+
+        theta = math.radians(theta)
+        g = 9.8
+
+        # Time,distance of flight
+        t_flight = 2*u*math.sin(theta)/g
+        s_max = u*math.cos(theta)*t_flight
+        h_max = u*math.sin(theta)*t_flight /2 - 0.5 * g *( t_flight / 2) **2
+
+        print 'The time of flight: %0.2f' % t_flight
+        print 'The maximum horizontal distance: %0.2f' % s_max
+        print 'The maximun vertical distance: %0.2f' % h_max
+
+        # Find time intervals
+        intervals = frange(0, t_flight, 0.001)
+
+        # List of x and y coordinates
+        x = []
+        y = []
+        for t in intervals:
+                x.append(u*math.cos(theta)*t)
+                y.append(u*math.sin(theta)*t - 0.5*g*t*t)
+
+        draw_graph(x, y)
+
+if __name__ == '__main__':
+        try:
+                u = float(input('Enter the initial velocity(m/s): '))
+                theta = float(input('Enter the angle of projection(degrees): '))
+        except ValueError:
+                print('You entered an invalid input')
+        else:                           # try...except...else
+                draw_trajectory(u, theta)
+                plt.show()
+
+
+PS C:\Users\Weihong> python ch2ex7a.py
+Enter the initial velocity(m/s): 25
+Enter the angle of projection(degrees): 60
+The time of flight: 4.42
+The maximum horizontal distance: 55.23
+The maximun vertical distance: 23.92
+
+
 
 
 
