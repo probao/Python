@@ -1,5 +1,5 @@
 #########################################################
-##############charpter 1 working with numbers############
+###############chapter 1 working with numbers############
 #########################################################
 
 下取整数 //
@@ -1087,6 +1087,202 @@ Enter category: Entertainment
 Expenditure:30
 Enter category: Phone/Internet
 Expenditure:30
+
+
+斐波那契数列
+PS C:\Users\Weihong> cat .\ch2ex9.py
+"""
+fibonacci_goldenration.py
+"""
+
+import matplotlib.pyplot as plt
+
+def fibo(n):
+        if n  == 1:
+                return [1]
+        if n == 2:
+                return[1, 1]
+
+        a = 1
+        b = 1
+        # first two members of the series
+        series = [a, b]
+        for i in range(n):
+                c = a + b
+                series.append(c)
+                a = b
+                b = c
+
+        return series
+
+def plot_ratio(series):
+        ratios = [ ]
+        for i in range(len(series)-1):
+                ratios.append(float(series[i+1])/series[i])
+        plt.plot(ratios)
+        plt.title('Ratio between Fibonacci numbers & Golden ratio')
+        plt.ylabel('Ratio')
+        plt.xlabel('No.')
+        plt.show( )
+
+if __name__ == '__main__':
+        num = 100
+        series = fibo(num)
+        plot_ratio(series)
+
+
+
+#########################################################
+#######chapter 3 Describing data with statistics#########
+#########################################################
+平均数
+>>> shortlist = [1, 2, 3]
+>>> sum(shortlist)
+6
+>>> len(shortlist)
+3
+
+PS C:\Users\Weihong> cat .\ch3ex1.py
+"""
+Calculating the mean
+"""
+
+def calculate_mean(numbers):
+        s = sum(numbers)
+        N = len(numbers)
+        # Calculate the mean
+        mean = float(s)/N
+
+        return mean
+
+if __name__ == '__main__':
+        donations = [100, 60, 70, 900, 100, 200, 500, 500, 503, 600, 1000, 1200]
+        mean = calculate_mean(donations)
+        N = len(donations)
+        print('Mean donation over the last {0} days is {1}'.format(N, mean))
+PS C:\Users\Weihong> python ch3ex1.py
+Mean donation over the last 12 days is 477.75
+
+
+中位数
+>>> samplelist = [4, 1, 3]
+>>> samplelist.sort()
+>>> samplelist
+[1, 3, 4]
+
+
+PS C:\Users\Weihong> cat .\ch3ex2.py
+"""
+Calculating the median
+"""
+
+def calculate_median(numbers):
+        N = len(numbers)
+        numbers.sort( )
+
+        #Find the median
+        if N % 2 == 0:
+                # if N is even
+                m1 = N/2 - 1
+                m2 = (N/2)
+                # Convert to integer, match position
+                median = (numbers[m1] + numbers[m2])/2
+        else:
+                m = (N+1)/2 - 1
+                median = numbers[m]
+
+        return median
+
+if __name__ == '__main__':
+        donations = [100, 60, 70, 900, 100, 200, 500, 500, 503, 600, 1000, 1200]
+        median = calculate_median(donations)
+        N = len(donations)
+        print('Median donation over the last {0} days is {1}'.format(N, median))
+
+PS C:\Users\Weihong> python ch3ex2.py
+Median donation over the last 12 days is 500
+
+
+
+计算数字的频率
+>>> simplelist = [4, 2, 1, 4]
+>>> from collections import Counter
+>>> c = Counter(simplelist)
+>>> c.most_common()
+[(4, 2), (1, 1), (2, 1)]
+>>> c.most_common(1)  #出现次数最多的数字，以及它的次数
+[(4, 2)]
+>>> c.most_common(2)
+[(4, 2), (1, 1)]
+>>> mode = c.most_common(1)
+>>> mode
+[(4, 2)]
+>>> mode[0]
+(4, 2)
+>>> mode[0][0]
+4
+
+
+PS C:\Users\Weihong> cat ch3ex3.py
+"""
+Calculating the mode
+"""
+
+from collections import Counter # 从collections中引入Counter
+
+def calculate_mode(numbers):
+        c = Counter(numbers)	# c是Counter（numbers）的一个实例化
+        mode = c.most_common(1)	# most_common中第一个元组以列表形式赋值于mode
+        return mode[0][0]	# 返回值为列表元素第一个元组元素中的第一个值
+
+if __name__ == '__main__':
+        scores = [7, 8, 9, 2, 10, 9, 9, 9, 9, 4, 5, 6, 1, 5, 6, 7, 8, 6, 1, 10]
+        mode = calculate_mode(scores)
+
+        print('The mode of the list of numbers is: {0}'.format(mode))
+PS C:\Users\Weihong> python ch3ex3.py
+The mode of the list of numbers is: 9
+
+
+
+PS C:\Users\Weihong> cat ch3ex4.py
+"""
+Calculating the mode when the list of numbers may
+have multiple modes
+"""
+
+from collections import Counter
+
+def calculate_mode(numbers):
+
+        c = Counter(numbers)
+        numbers_freq = c.most_common()
+        max_count = numbers_freq[0][1]	# 第一个元组中第二个元素是频率最高数的次数
+
+        modes = []	
+        for num in numbers_freq:	# num是numbers_freq中的元素因此num是一个二维元组
+                if num[1] == max_count:
+                        modes.append(num[0])
+        return modes
+
+if __name__ == '__main__':
+        scores = [5, 5, 5, 4, 4, 4, 9, 1, 3]
+        modes = calculate_mode(scores)
+        print('The mode(s) of the list of numbers are:')
+        for mode in modes:
+                print(mode)
+PS C:\Users\Weihong> python ch3ex4.py
+The mode(s) of the list of numbers are:
+4
+5
+
+
+生成频率表格
+
+
+
+
+
 
 
 
