@@ -1508,6 +1508,77 @@ if __name__ =='__main__':
         fig(x, y)
 
 
+多图
+PS C:\Users\Weihong> cat .\ch3ex11.py
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+
+plt.figure(1)
+
+plt.figure(2)	# 创建图标2
+
+ax1 = plt.subplot(211)	# 在图标2中 创建2列1行的空间，将第一（1）的位置命名为ax1
+
+ax2 = plt.subplot(212)
+
+
+x = np.linspace(0, 3, 100)
+
+for i in xrange(5):
+        plt.figure(1)
+        plt.plot(x, np.exp(i*x/3))
+        plt.sca(ax1)
+        plt.plot(x, np.sin(i*x))
+        plt.sca(ax2)
+        plt.plot(x, np.cos(i*x))
+
+
+plt.show()
+
+
+PS C:\Users\Weihong> cat .\ch3ex12.py
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3]
+y1 = [ 1, 2, 3]
+y2 = [2, 4, 6]
+
+plt.subplot(211) 
+plt.plot(x, y1)
+plt.subplot(212)
+plt.plot(x, y2)
+
+plt.show()
+
+
+PS C:\Users\Weihong> cat ch3ex13.py
+"""
+multi-scatter figures
+"""
+
+import matplotlib.pyplot as plt
+
+x = [10.0, 8.0, 13.0, 9.0, 11.0, 14.0, 6.0, 4.0 ,12.0, 7.0, 5.0]
+y1 = [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]
+y2 = [9.14, 8.14,8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74]
+
+plt.subplot(211)
+plt.scatter(x, y1)
+plt.title('The First Scatter')
+plt.ylabel('y1')
+plt.subplot(212)
+plt.scatter(x, y2)
+plt.title('The Second Scatter')
+plt.xlabel('x1')
+plt.ylabel('y2')
+plt.show()
+
+
+
+
+
 
 
 
