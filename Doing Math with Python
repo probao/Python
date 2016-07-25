@@ -1278,6 +1278,150 @@ The mode(s) of the list of numbers are:
 
 
 生成频率表格
+PS C:\Users\Weihong> cat .\ch3ex5.py
+"""
+Frequency table for a list of numbers
+"""
+
+from collections import Counter
+
+def frequency_table(numbers):
+        table = Counter(numbers)
+        print 'Number\tFrequency'
+        for number in table.most_common():
+                print('{0}\t{1}'.format(number[0], number[1]))
+
+if __name__ == '__main__':
+        scores = [7, 8, 9, 2, 10, 9, 9, 9, 9, 4, 5, 6, 1, 5, 6, 7, 8, 6, 1, 10]
+        frequency_table(scores)
+PS C:\Users\Weihong> python ch3ex5.py
+Number  Frequency
+9       5
+6       3
+1       2
+5       2
+7       2
+8       2
+10      2
+2       1
+4       1
+
+
+按数字排序
+PS C:\Users\Weihong> cat .\ch3ex6.py
+"""
+Frequency table for a list of numbers
+Enhanced to display the table sorted by the numbers
+"""
+from collections import Counter
+
+def frequency_table(numbers):
+        table = Counter(numbers)
+        numbers_freq = table.most_common( )
+        numbers_freq.sort( )
+
+        print('Number\tFrequency')
+        for number in numbers_freq:
+                print('{0}\t{1}'.format(number[0], number[1]))
+
+if __name__ == '__main__':
+        scores = [7, 8, 9, 2, 10, 9, 9, 9, 9, 4, 5, 6, 1, 5, 6, 7, 8, 6, 1, 10]
+        frequency_table(scores)
+
+PS C:\Users\Weihong> python ch3ex6.py
+Number  Frequency
+1       2
+2       1
+4       1
+5       2
+6       3
+7       2
+8       2
+9       5
+10      2
+
+
+数据的分部
+
+数据的范围
+PS C:\Users\Weihong> cat .\ch3ex7.py
+"""
+Find the range
+"""
+
+def find_range(numbers):
+
+        lowest = min(numbers)
+        highest = max(numbers)
+        # Find the range
+        r = highest - lowest
+
+        return lowest, highest, r
+
+if __name__ == '__main__':
+        donations = [100, 60, 70, 900, 100, 200, 500, 500, 503, 600, 1000, 1200]
+        lowest, highest, r =  find_range(donations)
+        print('Lowest: {0} Highest: {1} Range: {2}'.format(lowest, highest, r))
+
+PS C:\Users\Weihong> python ch3ex7.py
+Lowest: 60 Highest: 1200 Range: 1140
+
+
+计算方差和标准差
+PS C:\Users\Weihong> cat .\ch3ex8.py
+"""
+Find the variance and standard deviation of a list of numbers
+"""
+
+def calculate_mean(numbers):
+        s = sum(numbers)
+        N = len(numbers)
+        # Calculate the mean
+        mean = float(s)/N	#float()使s变成浮点数
+
+        return mean
+
+def find_differences(numbers):
+        # Find the mean
+        mean = calculate_mean(numbers)
+        # Find the differences from the mean
+        diff = []
+        for num in numbers:
+                diff.append(num - mean)
+        return diff
+
+def calculate_variance(numbers):
+        #Find the list of differences
+        diff = find_differences(numbers)
+        #Find the squared differences
+        squared_diff = []
+        for d in diff:
+                squared_diff.append(d**2)
+        # Find the variance
+        sum_squared_diff = sum(squared_diff)
+        variance = sum_squared_diff/len(numbers)
+        return variance
+
+if __name__ == '__main__':
+        donations = [100, 60, 70, 900, 100, 200, 500, 500, 503, 600, 1000, 1200]
+        variance = calculate_variance(donations)
+        print('The variance of the list of numbers is {0}'.format(variance))
+
+        std = variance**0.5
+        print('The standard deviation of the list of numbers is {0}'.format(std))
+
+PS C:\Users\Weihong> python .\ch3ex8.py
+The variance of the list of numbers is 141047.354167
+The standard deviation of the list of numbers is 375.562716689
+
+
+
+
+
+
+
+
+
 
 
 
