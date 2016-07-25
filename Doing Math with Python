@@ -1415,6 +1415,100 @@ The variance of the list of numbers is 141047.354167
 The standard deviation of the list of numbers is 375.562716689
 
 
+计算两组数据的关系
+>>> simple_list1 = [1, 2, 3, 4]
+>>> simple_list2 = [4, 5, 6, 7]
+>>> for x, y in zip(simple_list1, simple_list2):
+...     print(x, y)
+...
+(1, 4)
+(2, 5)
+(3, 6)
+(4, 7)
+
+
+>>> prod = []
+>>> for x, y in zip(simple_list1, simple_list2):
+...     prod.append(x*y)
+...
+>>> print prod
+[4, 10, 18, 28]
+
+
+计算相关系数
+PS C:\Users\Weihong> cat ch3ex9.py
+def find_corr_x_y(x, y):
+        n = len(x)
+
+        # Find the sum of the products
+        prod = []
+        for xi, yi in zip(x, y):
+                prod.append(xi*yi)
+
+        sum_prod_x_y = sum(prod)
+        sum_x = sum(x)
+        sum_y = sum(y)
+        squared_sum_x = sum_x**2
+        squared_sum_y = sum_y**2
+
+        x_square = []
+        for xi in x:
+                x_square.append(xi**2)
+        x_square_sum = sum(x_square)
+
+        y_square = []
+        for yi in y:
+                y_square.append(yi**2)
+        y_square_sum = sum(y_square)
+
+        #Use formula to calculate correlation
+        numerator = n*sum_prod_x_y - sum_x*sum_y
+        denominator_term1 = n*x_square_sum - squared_sum_x
+        denominator_term2 = n*y_square_sum - squared_sum_y
+        denominator = (denominator_term1*denominator_term2)**0.5
+        correlation = float(numerator)/denominator
+
+        return correlation
+
+if __name__ == '__main__':
+        x = [1, 2, 3, 4, 5, 6]
+        y = [3, 5, 0, 3, 10, 12]
+        a = find_corr_x_y(x, y)
+        print ('The correlation is {0}'.format(a))
+PS C:\Users\Weihong> python ch3ex9.py
+The correlation is 0.733103511309
+
+
+高中成绩与大学入学考试之间的关系
+做散点图
+>>> x = [1, 2, 3, 4]
+>>> y = [2, 4, 6, 8]
+>>> import matplotlib.pyplot as plt
+>>> plt.scatter(x,y)
+<matplotlib.collections.PathCollection object at 0x052246B0>
+>>> plt.show()
+
+
+PS C:\Users\Weihong> cat .\ch3ex10.py
+"""
+the scatter figure
+"""
+import matplotlib.pyplot as plt
+
+def fig(x, y):
+        plt.scatter(x, y)
+        plt.title('The Scatter Figure')
+        plt.ylabel('College admission test scores') #注意格式，必须tab键
+        plt.xlabel('High school grades')
+        plt.show( )
+
+if __name__ =='__main__':
+        x = [90, 92, 95, 96, 87, 87, 90, 95, 98, 96]
+        y = [85, 87, 86, 97, 96, 88, 89, 98, 98, 87]
+        fig(x, y)
+
+
+
 
 
 
