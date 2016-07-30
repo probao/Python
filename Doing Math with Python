@@ -1576,6 +1576,113 @@ plt.ylabel('y2')
 plt.show()
 
 
+从一个文本文件中读取数据
+PS C:\Users\Weihong> python ch3ex14.py
+Sum of the numbers: 5733.0
+PS C:\Users\Weihong> cat ch3ex14.py
+#Find the sum of numbers stored in a file
+def sum_data(filename):
+        s = 0
+        with open(filename) as f:	# with函数等价为Python中的with语句中要求对象实现__enter__和__exit__函数
+                for line in f:
+                        s = s + float(line)	# 将数字的形式改为浮点数
+        print('Sum of the numbers: {0}'.format(s))
+
+if __name__ == '__main__':
+        sum_data('data.txt')
+
+PS C:\Users\Weihong> python ch3ex14.py
+Sum of the numbers: 5733.0
+
+
+PS C:\Users\Weihong> cat ch3ex15.py
+"""
+Calculating the mean of numbers stored in a file
+"""
+def read_data(filename):
+
+        numbers = []
+        with open(filename) as f:
+                for line in f:
+                        numbers.append(float(line))
+
+        return numbers
+
+def calculate_mean(numbers):
+        s = sum(numbers)
+        N = len(numbers)
+        mean = s/N
+
+        return mean
+
+if __name__ == '__main__':
+        data = read_data('data.txt')
+        mean = calculate_mean(data)
+        print('Mean: {0}'.format(mean))
+
+PS C:\Users\Weihong> python ch3ex15.py
+Mean: 477.75
+
+
+从一个CSV文件中读取数据
+PS C:\Users\Weihong> cat number.csv
+Number,squared
+10,100
+9,81
+22,484
+
+PS C:\Users\Weihong> cat ch3ex16.py
+import csv
+
+def read_csv(filename):
+
+        numbers = []
+        squared = []
+        with open(filename) as f:
+                reader = csv.reader(f)	#reader函数读取CSV文件，将文件对象f转为一个参数并返回一个指针指向CSV文件的第一行
+                next(reader)		#指向下一行
+                next(reader)		#指向下一行
+                for row in reader:
+                        print('The first number: {0}'.format(row[0]))
+                        print('The second number:{0}'.format(row[1]))
+
+if __name__ == '__main__':
+        read_csv('number.csv')
+
+
+PS C:\Users\Weihong> python ch3ex16.py
+The first number: 9
+The second number:81
+The first number: 22
+The second number:484
+
+
+PS C:\Users\Weihong> cat ch3ex17.py
+import csv
+import matplotlib.pyplot as plt
+
+def scatter_plot(x, y):
+        plt.scatter(x, y)
+        plt.xlabel('Number')
+        plt.ylabel('Square')
+        plt.show()
+
+def read_csv(filename):
+
+        numbers = []
+        squared = []
+        with open(filename) as f:
+                reader = csv.reader(f)
+                next(reader)
+                for row in reader:
+                        numbers.append(int(row[0]))
+                        squared.append(int(row[1]))
+                return numbers, squared
+
+if __name__ == '__main__':
+        numbers, squared = read_csv('number.csv')
+        scatter_plot(numbers, squared)
+
 
 
 
