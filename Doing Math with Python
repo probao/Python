@@ -1684,6 +1684,230 @@ if __name__ == '__main__':
         scatter_plot(numbers, squared)
 
 
+习题
+习题1
+
+PS C:\Users\Weihong> cat ch3ex19.py
+def find_corr_x_y(x, y):
+#       L1 = len(x)
+#       L2 = len(y)
+        if len(x) != len(y):
+                print('The two sets of numbers are of unequal size')
+                return None
+
+        n = len(x)
+
+        # Find the sum of the products
+        prod = []
+        for xi, yi in zip(x, y):
+                prod.append(xi*yi)
+
+        sum_prod_x_y = sum(prod)
+        sum_x = sum(x)
+        sum_y = sum(y)
+        squared_sum_x = sum_x**2
+        squared_sum_y = sum_y**2
+
+        x_square = []
+        for xi in x:
+                x_square.append(xi**2)
+        x_square_sum = sum(x_square)
+
+        y_square = []
+        for yi in y:
+                y_square.append(yi**2)
+        y_square_sum = sum(y_square)
+
+        #Use formula to calculate correlation
+        numerator = n*sum_prod_x_y - sum_x*sum_y
+        denominator_term1 = n*x_square_sum - squared_sum_x
+        denominator_term2 = n*y_square_sum - squared_sum_y
+        denominator = (denominator_term1*denominator_term2)**0.5
+        correlation = float(numerator)/denominator
+
+        return correlation
+
+def generate_data(m, n):
+        x = range(0, m)
+        y = [4*xi for xi in range(0, n)]
+        return x, y
+
+if __name__ == '__main__':
+        x, y = generate_data(7, 10)
+        corr = find_corr_x_y(x, y)
+        if not corr:
+                print('Correlation could not be calculated')
+        else:
+                print('The correlation coefficient between x and y is {0}'.format(corr))
+
+PS C:\Users\Weihong> python ch3ex19.py
+The two sets of numbers are of unequal size
+Correlation could not be calculated
+
+
+
+习题2
+
+PS C:\Users\Weihong> cat ch3ex20.py
+"""
+Calculate their mean, median, mode, variance, and standard deviation
+"""
+
+from collections import Counter
+
+def calculate_mean(numbers):
+        s = sum(numbers)
+        N = len(numbers)
+        mean = float(s) / N
+        return mean
+
+def calculate_median(numbers):
+        N = len(numbers)
+        if N % 2 == 0:
+                m1 = N / 2 - 1
+                m2 = N / 2
+                median = (numbers[m1] + numbers[m2]) / 2
+        else:
+                m = (N + 1) / 2 -1
+                median = numbers[m]
+
+        return median
+
+def calculate_mode(numbers):
+        c = Counter(numbers)
+        mode = c.most_common(1)
+        return mode[0][0]
+
+def calculate_variance(numbers):
+        mean = calculate_mean(numbers)
+        diff = []
+        for num in numbers:
+                diff.append(num - mean)
+
+        squared_diff = []
+        for d in diff:
+                squared_diff.append(d**2)
+
+        # Find the variance
+        sum_squared_diff = sum(squared_diff)
+        variance = sum_squared_diff/len(numbers)
+        return variance
+
+def read_data(filename):
+        numbers = []
+        with open(filename) as f:
+                for line in f:
+                        numbers.append(float(line))
+        return numbers
+
+if __name__ == '__main__':
+        data = read_data('data.txt')
+        mean = calculate_mean(data)
+        median = calculate_median(data)
+        mode = calculate_mode(data)
+        variance = calculate_variance(data)
+        std = variance**0.5
+        print('The mean of the list is {0}'.format(mean))
+        print('The median of the list is {0}'.format(median))
+        print('The mode of the list is {0}'.format(mode))
+        print('The variance of the list is {0}'.format(variance))
+        print('The std of the list is {0}'.format(std))
+
+PS C:\Users\Weihong> python ch3ex20.py
+The mean of the list is 477.75
+The median of the list is 350.0
+The mode of the list is 500.0
+The variance of the list is 141047.354167
+The std of the list is 375.562716689
+
+
+可以用python的库
+'''
+statistics_calculator.py
+
+Read numbers from a file, calculate and print statistical measures:
+mean, median, mode, variance, standard deviation
+'''
+
+from stats import mean, median, mode, variance_sd
+
+def read_data(filename):
+    numbers = []
+    with open(filename) as f:
+        for line in f:
+            numbers.append(float(line))
+
+    return numbers
+
+if __name__=='__main__':
+    data = read_data('mydata.txt')
+    m = mean(data)
+    median = median(data)
+    mode = mode(data)
+    variance, sd = variance_sd(data)
+    print('Mean: {0:.5f}'.format(m))
+    print('Median: {0:.5f}'.format(median))
+    print('Mode: {0:.5f}'.format(mode))
+    print('Variance: {0:.5f}'.format(variance))
+    print('Standard deviation: {0:.5f}'.format(sd))
+
+
+习题3 Experiment with Other CSV Data
+
+
+
+
+
+
+
+
+
+
+
+
+
+PS C:\Users\Weihong> cat ch3ex17.py
+import csv
+import matplotlib.pyplot as plt
+
+def scatter_plot(x, y):
+        plt.scatter(x, y)
+        plt.xlabel('Number')
+        plt.ylabel('Square')
+        plt.show()
+
+def read_csv(filename):
+
+        numbers = []
+        squared = []
+        with open(filename) as f:
+                reader = csv.reader(f)
+                next(reader)
+                for row in reader:
+                        numbers.append(int(row[0]))
+                        squared.append(int(row[1]))
+                return numbers, squared
+
+if __name__ == '__main__':
+        numbers, squared = read_csv('number.csv')
+        scatter_plot(numbers, squared)
+
+
+
+    population = population[::-1]
+    years = years[::-1]
+    year = row[0].split('-')[0]
+
+
+
+
+
+
+
+
+
+
+
 
 
 
