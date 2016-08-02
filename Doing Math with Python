@@ -2069,6 +2069,98 @@ zip函数
 [(1, 4), (2, 5), (3, 6)]
 
 
+#########################################################
+####chapter 3 Algebra and Symb olic Math with SymPy######
+#########################################################
+
+>>> import sympy
+>>> from sympy import Symbol
+>>> x = Symbol('x')
+>>> x + x + 1
+2*x + 1
+
+>>> a = Symbol('y')	# a 可以看成是一个Symbol的对象，所创建的Symbol必须是字符串
+>>> y + y + y +3
+>>> a + a + a +3
+3*y + 3
+
+
+Working with Expressions
+
+Factorizing and Expanding Expression
+>>> from sympy import Symbol
+>>> x = Symbol('x')
+>>> y = Symbol('y')
+>>> z = Symbol('z')
+>>> from sympy import factor
+>>> expr = x**2 - y**2
+>>> factor(expr)
+(x - y)*(x + y)
+
+
+>>> from sympy import factor, expand
+>>> from sympy import factor, expand, pprint
+>>> expr = x**2 - y**2
+>>> factor(expr)
+(x - y)*(x + y)
+>>> factors = factor(expr)
+>>> expand(factors)
+x**2 - y**2
+>>> expr = expand(factors)
+>>> expr
+x**2 - y**2
+>>> pprint(expr)
+ 2    2
+x  - y
+
+>>> expr = 1 + 2*x + 2*x**2
+>>> pprint(expr)
+   2
+2*x  + 2*x + 1	# 从高次项到低次项
+
+>>> from sympy import init_printing
+>>> init_printing(order = 'rev - lex')
+>>> pprint(expr)
+>>> init_printing(order = 'rev-lex')
+>>> pprint(expr)
+             2
+1 + 2*x + 2*x	# 从低次项到高次项
+
+
+例子1
+"""
+Print the series:
+x + x**2/2 + x**3/3 +.....x**n/n
+"""
+
+from sympy import Symbol, pprint, init_printing
+def print_series(n):
+
+        #Initialize printing system with reverse order
+        init_printing(order='rev-lex')
+
+        x = Symbol('x')	
+        series = x
+        for i in range(2, n+1):
+                series = series + (x**i)/i
+        pprint(series)
+
+if __name__ == '__main__':
+        n = input('Enter the number of terms you want in the series: ')
+        print_series(int(n))
+PS C:\Users\Weihong> python ch4ex1.py
+Enter the number of terms you want in the series: 4
+     2    3    4
+    x    x    x
+x + -- + -- + --
+    2    3    4
+
+
+
+
+
+
+
 
 
 
