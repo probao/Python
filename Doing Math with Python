@@ -2155,6 +2155,132 @@ Enter the number of terms you want in the series: 4
 x + -- + -- + --
     2    3    4
 
+数值带入
+
+>>> from sympy import Symbol, pprint, init_printing
+>>> x = Symbol('x')
+>>> y = Symbol('y')
+>>> x*x + x*y +x*y + y*y
+x**2 + 2*x*y + y**2
+>>> expr = x*x + x*y +x*y + y*y
+>>> res = expr.subs({x:1, y:2})	# subs函数，{x:1, y:2}一个字典 
+>>> res
+9
+>>> expr.subs({x:1-y})
+y**2 + 2*y*(-y + 1) + (-y + 1)**2	# 也可以用代数式来替代
+
+>>> expr_subs=expr.subs({x:1-y})
+>>> from sympy import simplify
+>>> simplify(expr_subs)	# 进一步简化，进行计算
+1
+
+计算一系列的数值
+
+PS C:\Users\Weihong> cat ch4ex2.py
+"""
+print the series:
+"""
+
+from sympy import Symbol, pprint, init_printing
+def print_series(n, x_value):
+
+        # Initialize printing system with reverse order
+        init_printing(order='rev-lex')
+
+        x = Symbol('x')
+        series = x
+        for i in range(2, n+1):
+                series = series + (x**i)/i
+
+        pprint(series)
+
+        # Evaluate the series at x_value
+        series_value = series.subs({x:x_value})
+        print('Value of the series at {0}:{1}'.format(x_value, series_value))
+
+if __name__ == '__main__':
+        n = input('Enter the number of terms you want in the series:')
+        x_value = input('Enter the value of x at which you want to evaluate the series: ')
+
+        print_series(int(n), float(x_value))
+
+PS C:\Users\Weihong> python ch4ex2.py
+Enter the number of terms you want in the series:5
+Enter the value of x at which you want to evaluate the series: 1.2
+     2    3    4    5
+    x    x    x    x
+x + -- + -- + -- + --
+    2    3    4    5
+Value of the series at 1.2:3.51206400000000
+
+
+将字符串转化为数学表达式
+
+>>> from sympy import sympify
+>>> expr = raw_input('Enter a mathematical expression: ')	# python2.7 必须是raw_input
+Enter a mathematical expression: x**2 + 3*x	# 输入格式必须正确
+>>> expr=sympify(expr)	# sympify函数可以将字符串转变为数学表达式
+>>> expr
+x**2 + 3*x
+>>> 2*expr
+2*x**2 + 6*x
+
+
+表达式的乘积
+
+PS C:\Users\Weihong> cat ch4ex3.py
+"""
+Product of two expressions
+"""
+
+from sympy import expand, sympify
+from sympy.core.sympify import SympifyError
+
+def product(expr1, expr2):
+        prod = expand(expr1*expr2)
+        print(prod)
+
+if __name__ == '__main__':
+        expr1 = raw_input('Enter the first expression: ')
+        expr2 = raw_input('Enter the second expression: ')
+
+        try:
+                expr1 = sympify(expr1)
+                expr2 = sympify(expr2)
+        except SympifyError:
+                print('Invalid input')
+        else:
+                product(expr1, expr2)
+
+PS C:\Users\Weihong> python ch4ex3.py
+Enter the first expression: x**2 + x*2 + x
+Enter the second expression: x**3 + x*3 + x
+x**5 + 3*x**4 + 4*x**3 + 12*x**2
+
+
+解方程
+>>> from sympy import Symbol, solve
+>>> x = Symbol('x')
+>>> expr = x - 5 -7 # 默认数字为0
+>>> solve(expr)
+[12]
+
+>>> from sympy import Symbol, solve
+>>> x = Symbol('x')
+>>> expr = x - 5 -7
+>>> solve(expr)
+[12]
+
+>>> expr = x**2 + 5*x + 4
+>>> solve(expr, dict=True)	# dict = True意味将输出文件的形式定位字典
+[{x: -4}, {x: -1}]
+
+>>> expr = x**2 + x + 4
+>>> solve(expr, dict=True)
+[{x: -1/2 - sqrt(15)*I/2}, {x: -1/2 + sqrt(15)*I/2}]	# 虚数的形式
+
+
+
 
 
 
