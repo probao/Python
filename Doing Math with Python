@@ -2280,6 +2280,257 @@ x**5 + 3*x**4 + 4*x**3 + 12*x**2
 [{x: -1/2 - sqrt(15)*I/2}, {x: -1/2 + sqrt(15)*I/2}]	# 虚数的形式
 
 
+解含参数的方程
+>>> from sympy import Symbol, pprint, init_printing, solve
+>>> x = Symbol('x')	
+>>> a = Symbol('a')
+>>> b = Symbol('b')
+>>> c = Symbol('c')
+>>> expr = a*x*x + b*x + c
+>>> solve(expr, x, dict=True)	# 解方程 以x为未知数，结果以字典形式表示
+[{x: (-b + sqrt(-4*a*c + b**2))/(2*a)}, {x: -(b + sqrt(-4*a*c + b**2))/(2*a)}]
+
+
+>>> s = Symbol('s')
+>>> u = Symbol('u')
+>>> t = Symbol('t')
+>>> a = Symbol('a')
+>>> expr = u*t + (1/2)*a*t*t - s   # 书写错误，在python2.7中（1/2）不可以
+>>> t_expr = solve(expr, t, dict = True)
+>>> pprint(t_expr)
+     s
+[{t: -}]
+     u
+>>> expr = u*t + 0.5*a*t*t - s
+>>> t_expr = solve(expr, t, dict = True)
+>>> pprint(t_expr)
+             ______________        /       ______________\
+            /            2         |      /            2 |
+     -u + \/  2.0*a*s + u         -\u + \/  2.0*a*s + u  /
+[{t: ----------------------}, {t: -------------------------}]
+               a                              a
+
+
+解决线性代数
+>>> x = Symbol('x')
+>>> y = Symbol('y')
+>>> expr1 = 2*x +3*y - 6
+>>> expr2 = 3*x + 2*y - 12
+>>> solve((expr1, expr2), dict = True)  # 解两个方程
+[{x: 24/5, y: -6/5}]
+
+
+>>> x = Symbol('x')
+>>> y = Symbol('y')
+>>> expr1 = 2*x +3*y - 6
+>>> expr2 = 3*x + 2*y - 12
+>>> solve((expr1, expr2), dict = True)
+[{x: 24/5, y: -6/5}]
+>>> soln = solve((expr1, expr2), dict = True) 
+>>> soln	# soln是一个列表，第一个元素是一个字典
+[{x: 24/5, y: -6/5}]
+>>> soln = soln[0] # soln变成一个字典
+>>> expr1.subs({x:soln[x], y:soln[y]})
+0
+>>> expr2.subs({x:soln[x], y:soln[y]})
+0
+
+
+用Sympy作图
+matplotlib作图必须是数值，而Sympy则可以是方程
+>>> from sympy.plotting import plot
+>>> from sympy  import Symbol
+>>> x = Symbol('x')
+>>> plot(2*x+3)
+
+>>> from sympy.plotting import plot
+>>> from sympy  import Symbol
+>>> x = Symbol('x')
+>>> plot(2*x+3)
+<sympy.plotting.plot.Plot object at 0x040CCE50>
+>>> plot(2*x+3, (x, -5, 5), title = 'A Line', xlabel='x', ylabel='2x+3')	# (x, -5, 5)x的取值范围
+
+
+输入方程并作图
+>>> from sympy import sympify
+>>> expr = sympify(expr)
+>>> y = Symbol('y')	# 告诉SymPy哪一个是变量
+>>> solve(expr, y)
+[-2*x/3 + 2]
+
+
+
+PS C:\Users\Weihong> cat ch4ex4.py
+"""
+Plot the graph of an input expression
+"""
+
+from sympy import Symbol, sympify, solve
+from sympy.plotting import plot
+
+def plot_expression(expr):
+
+        y = Symbol('y')
+        solutions = solve(expr, y)
+        expr_y = solutions[0]
+        plot(expr_y)
+
+if __name__ == '__main__':
+
+        expr = raw_input('Enter your expression in terms of x and y:')
+        try:
+                expr = sympify(expr)
+        except SympifyError:
+                print('Invalid input')
+        else:
+                plot_expression(expr)
+
+PS C:\Users\Weihong> python ch4ex4.py
+Enter your expression in terms of x and y:x*x - y
+
+
+做多图
+>>> from sympy.plotting import plot
+>>> from sympy import Symbol
+>>> x = Symbol('x')
+>>> plot(2*x+3, 3*x+1)
+<sympy.plotting.plot.Plot object at 0x0312D390>
+
+
+>>> x = Symbol('x')
+>>> p = plot(2*x+3, 3*x+1, legend=True, show=False)
+>>> p[0].line_color = 'b'	# 使Sympy中的线有颜色
+>>> p[1].line_color = 'r'
+>>> p.show()
+
+
+习题
+
+习题1 Factor Finder
+
+PS C:\Users\Weihong> python ch4ex5.py
+Enter your expression in terms of x and y:x*x-y*y
+(x - y)*(x + y)
+PS C:\Users\Weihong> cat ch4ex5.py
+"""
+Factor Finder
+"""
+
+from sympy import sympify, factor, SympifyError
+
+def factorize(expr):
+        return factor(expr)
+
+
+if __name__ == '__main__':
+
+        expr = raw_input('Enter your expression in terms of x and y:')
+        try:
+                expr = sympify(expr)
+        except SympifyError:
+                print('Invalid input')
+        else:
+                print(factorize(expr))
+
+
+习题2 
+
+我的版本
+
+PS C:\Users\Weihong> cat ch4ex6.py
+"""
+Graphical Equation Solver
+"""
+from sympy import sympify, SympifyError, Symbol, solve
+from sympy.plotting import plot
+
+def cal_solution(expr1, expr2):
+        x = Symbol('x')
+        y = Symbol('y')
+        soln = solve((expr1, expr2), dict = True)
+        soln = soln[0]
+        return soln
+
+def plot_fig(expr1, expr2):
+        y = Symbol('y')	# 将x定义为未知数
+        expr1 = solve(expr1, y)[0]	# 用x的表达式来描述y，solve(expr1, y)的输出是一个列表，将第一个值赋给expr1
+        expr2 = solve(expr2, y)[0]
+        plot(expr1, expr2)
+
+if __name__ ==  '__main__':
+        expr1 = raw_input('Enter your expression in terms of x and y: ')
+        expr2 = raw_input('Enter your expression in terms of x and y: ')
+        try:
+                expr1 = sympify(expr1)
+                expr2 = sympify(expr2)
+        except SympifyError:
+                print('Invalid input')
+        else:
+                #print(' x = {0} and y = {1}'.format(cal_solution(expr1, expr2)['x'],cal_solution(expr1, expr2)['y'] ))
+                print(cal_solution(expr1, expr2))
+                plot_fig(expr1, expr2)
+
+PS C:\Users\Weihong> python ch4ex6.py
+Enter your expression in terms of x and y: x-y-1
+Enter your expression in terms of x and y: x+y-4
+{x: 5/2, y: 3/2}
+
+
+
+标准答案
+'''
+
+graphical_eq_solve.py
+
+Graphical equation solver
+'''
+
+from sympy import Symbol, sympify, solve, SympifyError
+from sympy.plotting import plot
+
+def solve_plot_equations(eq1, eq2, x, y):
+    # Solve
+    solution = solve((eq1, eq2), dict=True)
+    if solution:
+        print('x: {0} y: {1}'.format(solution[0][x], solution[0][y]))
+    else:
+        print('No solution found')
+    # Plot
+    eq1_y = solve(eq1,'y')[0]
+    eq2_y = solve(eq2, 'y')[0]
+    plot(eq1_y, eq2_y, legend=True)
+    
+ 
+
+if __name__=='__main__':
+
+    eq1 = input('Enter your first equation : ')
+    eq2 = input('Enter your second equation: ')
+
+    try:
+        eq1 = sympify(eq1)
+        eq2 = sympify(eq2)
+    except SympifyError:
+        print('Invalid input')
+    else:
+        x = Symbol('x')
+        y = Symbol('y')
+        # check if the expressions consist of only two variables
+        eq1_symbols = eq1.atoms(Symbol)
+        eq2_symbols = eq2.atoms(Symbol)
+        
+        if len(eq1_symbols)> 2 or len(eq2_symbols) > 2:
+            print('The equations must have only two variables - x and y')
+        elif x not in eq1_symbols or y not in eq1_symbols:
+            print('First equation must have only x and y variables')
+        elif x not in eq2_symbols or y not in eq2_symbols:
+            print('Second equation must have only x and y variables')       
+        else:
+            solve_plot_equations(eq1, eq2, x, y)
+
+
+
+
 
 
 
