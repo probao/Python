@@ -2700,6 +2700,96 @@ if __name__ == '__main__':
             print('Invalid inequality')
 
 
+#########################################################
+#######chapter 4 Playing with Sets and Probability#######
+#########################################################
+
+集合的建立
+>>> from sympy import FiniteSet
+>>> s = FiniteSet(2, 4, 6)
+>>> s
+{2, 4, 6}
+
+>>> from sympy import FiniteSet
+>>> from fractions import Fraction
+>>> s = FiniteSet(1, 1.5, Fraction(1, 5))	# 集合中的元素可以有多种
+>>> s
+{1/5, 1, 1.5}
+>>> len(s)					# 通过len函数可以知道集合中元素的个数
+3
+
+
+>>> 4 in s		# 检查该数字是否在集合中
+False
+>>> 1 in s
+True
+
+
+>>> s = FiniteSet()	# 创建一个空的集合
+>>> s
+EmptySet()
+
+
+>>> members = [1, 2, 3]
+>>> s = FiniteSet(*members)	# 将列表中的元素传递至集合
+>>> s
+{1, 2, 3}
+
+
+集合的重复和顺序
+>>> members = [1, 2, 3, 2]
+>>> FiniteSet(*members)
+{1, 2, 3}
+>>> s=FiniteSet(*members)
+>>> for i in s:
+...     print(i)	# 顺序可能不一样
+...
+1
+2
+3
+
+>>> s = FiniteSet(3, 4, 5)	# 集合的顺序是任意的
+>>> t = FiniteSet(5, 4, 3)
+>>> s == t
+True
+
+子集、包含集、全子集
+>>> s = FiniteSet(1)
+>>> t = FiniteSet(1, 2)
+>>> s.is_subset(t)	# s是t的子集
+True
+>>> t.is_subset(s)	# t不是s的子集
+False
+
+>>> s.is_superset(t)	# s不包含t
+False
+>>> t.is_superset(s)	# t包含s
+True
+
+
+>>> s = FiniteSet(1, 2, 3)
+>>> ps = s.powerset()
+>>> ps
+{EmptySet(), {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}	# 列出全部子集
+
+
+>>> from sympy import FiniteSet
+>>> s = FiniteSet(1, 2, 3)	
+>>> t = FiniteSet(1, 2, 3)
+>>> s.is_proper_subset(t)	# s是t的真子集吗？不是
+False
+>>> t.is_proper_superset(s)	# t真包含于s吗？ 不是
+False
+
+
+>>> t = FiniteSet(1, 2, 3, 4)
+>>> s.is_proper_subset(t)
+True
+>>> t.is_proper_superset(s)
+True
+
+
+
 
 
 
