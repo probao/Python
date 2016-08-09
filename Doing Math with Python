@@ -3180,6 +3180,136 @@ Trials: 100000 Trial average 3.51182
 Trials: 500000 Trial average 3.497628
 
 
+习题3
+>>> import random
+>>> random.random()
+
+我的答案
+PS C:\Users\Weihong> cat .\ch5ex10.py
+import random
+
+def game(start_amount):
+
+        amount = start_amount
+        toss = 0
+        while amount > 0:
+                delta = random.random()
+                if delta > 0.5:
+                        amount = amount + 1.0
+                        print('Heads! Current amount: {0}'.format(amount))
+                else:
+                        amount = amount - 1.5
+                        print('Tails! Current amount: {0}'.format(amount))
+                toss += 1
+        print('Game over: (Current amount: {0}, Coin tosses: {1})'.format(amount, toss))
+
+if __name__  ==  '__main__' :
+
+        start_amount = input('Enter your starting amount: ')
+        game(start_amount)
+
+PS C:\Users\Weihong> python ch5ex10.py
+Enter your starting amount: 10.0
+Tails! Current amount: 8.5
+Tails! Current amount: 7.0
+Heads! Current amount: 8.0
+Tails! Current amount: 6.5
+Tails! Current amount: 5.0
+Tails! Current amount: 3.5
+Heads! Current amount: 4.5
+Tails! Current amount: 3.0
+Tails! Current amount: 1.5
+Tails! Current amount: 0.0
+Game over: (Current amount: 0.0, Coin tosses: 10)
+
+
+标准答案
+'''
+game_tosses.py
+
+A player wins 1$ for every head and loses 1.5$ for every tail. 
+The game is over when the player's balance reaches 0$
+'''
+import random
+
+def play(start_amount):
+
+    win_amount = 1
+    loss_amount = 1.5
+
+    cur_amount = start_amount
+    tosses = 0
+
+    while cur_amount > 0:
+        tosses += 1
+        toss = random.randint(0, 1)
+        if toss == 0:
+            cur_amount += win_amount
+            print('Heads! Current amount: {0}'.format(cur_amount))
+        else:
+            cur_amount -= loss_amount
+            print('Tails! Current amount: {0}'.format(cur_amount))
+    print('Game over :( Current amount: {0}. Coin tosses: {1}'.format(cur_amount, tosses))
+
+if __name__ == '__main__':
+    start_amount = float(input('Enter your starting amount: '))
+    play(start_amount)
+
+
+
+习题4：Shuffling a Deck of Cards
+
+PS C:\Users\Weihong> cat ch5ex11.py
+"""
+shuffle_enhanced.py
+"""
+
+import random
+
+class Card:					# 创建一个叫Card的类
+        def __init__(self, suite, rank):	# 两个属性
+                self.suite = suite
+                self.rank = rank
+
+def initialize_deck():
+        suites = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
+        ranks = ['Ace', '2', '3']
+        cards = []
+        for suite in suites:
+                for rank in ranks:
+                        card = Card(suite, rank)	# card是Card（）的一个实例化 全局变量
+                        cards.append(card)
+        return cards
+
+def shuffle_and_print(cards):
+        random.shuffle(cards)
+        for card in cards:
+                print('{0} 0f {1}'.format(card.rank, card.suite))
+
+if __name__ == '__main__':
+        cards = initialize_deck()
+        shuffle_and_print(cards)
+
+PS C:\Users\Weihong> python ch5ex11.py
+3 0f Diamonds
+2 0f Clubs
+Ace 0f Clubs
+2 0f Diamonds
+Ace 0f Spades
+3 0f Clubs
+Ace 0f Hearts
+2 0f Spades
+3 0f Spades
+Ace 0f Diamonds
+2 0f Hearts
+3 0f Hearts
+
+
+习题5 Estimating the Area of a Circle
+
+
+
+
 
 
 
