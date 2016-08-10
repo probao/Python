@@ -3306,6 +3306,135 @@ Ace 0f Diamonds
 
 
 习题5 Estimating the Area of a Circle
+PS C:\Users\Weihong> cat ch5ex12.py
+'''
+estimate_circle_area.py
+
+Estimate the area of a circle
+'''
+import math
+import random
+
+def estimate(radius, total_points):
+        center = (radius, radius)
+
+        in_circle = 0
+        for i in range(total_points):
+                x = random.uniform(0, 2*radius) # 生成一个实数在0到2*radius的区间里
+                y = random.uniform(0, 2*radius)
+                p = (x, y)
+                # distance of the point created from circle's center
+                d = math.sqrt((p[0] - center[0])**2 + (p[1] - center[1])**2)
+                if d <= radius:
+                        in_circle += 1
+
+        area_of_square = (2*radius)**2
+        return (float(in_circle)/total_points)*area_of_square
+
+if __name__ == '__main__':
+        radius = float(input('Radius: '))
+        area_of_circle = math.pi*radius**2
+        for points in [10**3, 10**5, 10**6]:
+                print('Area: {0}, Estimated ({1}): {2}'. format(area_of_circle, points, estimate(radius, points)))
+
+PS C:\Users\Weihong> python ch5ex12.py
+Radius: 2
+Area: 12.5663706144, Estimated (1000): 12.88
+Area: 12.5663706144, Estimated (100000): 12.53568
+Area: 12.5663706144, Estimated (1000000): 12.575472
+
+Estimating the Value of Pi
+PS C:\Users\Weihong> cat ch5ex13.py
+"""
+estimate_pi.py
+
+Estimate the value of Pi
+"""
+
+import math
+import random
+
+def estimate(total_points):
+        radius = 1
+        center = (radius, radius)
+
+        in_circle = 0
+        for i in range(total_points):
+                x = random.uniform(0, 2*radius)
+                y = random.uniform(0, 2*radius)
+                p = (x, y)
+                # distance from circle's center
+                d = math.sqrt((p[0] - center[0])**2 + (p[1] - center[1])**2)
+                if d <= radius:
+                        in_circle += 1
+        return (float(in_circle)/total_points)*4
+
+if __name__ == '__main__':
+        for points in [10**3, 10**5, 10**6]:
+                print('Known value: {0}, Estimated( {1}: {2})'. format(math.pi, points, estimate(points)))
+PS C:\Users\Weihong> python ch5ex13.py
+Known value: 3.14159265359, Estimated( 1000: 3.088)
+Known value: 3.14159265359, Estimated( 100000: 3.14272)
+Known value: 3.14159265359, Estimated( 1000000: 3.140652)
+
+
+
+
+
+#########################################################
+#####chapter 4 Drawing Geometric Shapes and Fractals#####
+#########################################################
+>>> import matplotlib.pyplot as plt
+>>> x = [1, 2, 3]
+>>> y = [1, 2, 3]
+>>> plt.plot(x, y)
+[<matplotlib.lines.Line2D object at 0x05124650>]
+>>> plt.show()
+
+>>> import matplotlib.pyplot as plt
+>>> x = [1, 2, 3]
+>>> y = [1, 2, 3]
+>>> fig = plt.figure()
+>>> ax = plt.axes()
+>>> plt.plot(x, y)
+[<matplotlib.lines.Line2D object at 0x052EA790>]
+>>> plt.show()
+
+
+Besides manually creating Figure and Axes objects, you can use two
+different functions in the pyplot module to get a reference to the current
+Figure and Axes objects. When you call the gcf() function, it returns a reference
+to the current Figure, and when you call the gca() function, it returns
+a reference to the current Axes. An interesting feature of these functions
+is that each will create the respective object if it doesn’t already exist. How
+these functions work will become clearer as we make use of them later in
+this chapter.
+
+
+Drawing a Circle
+PS C:\Users\Weihong> cat ch6ex1.py
+"""
+Example of using matplotlib's Circle patch
+"""
+
+import matplotlib.pyplot as plt
+
+def create_circle():
+        circle = plt.Circle((0, 0), radius = 0.5)	# circle 是Circle程序的一个对象
+        return circle					# 返回circle这个对象
+
+def show_shape(patch):
+        ax = plt.gca()					# ax是plt.gca()的一个对象，存储着当前坐标轴的信息
+        ax.add_patch(patch)				# 一般我们不会直接对Axes.lines或者Axes.patches属性进行操作，
+							# 而是调用add_line或者add_patch等方法，这些方法帮助我们完成许多属性设置工作：
+							# 这里ax.add_patch(patch)将ax属性添加到patch中
+
+	plt.axis('scaled')				# scaled自动调节坐标范围
+        plt.show()
+
+if __name__ == '__main__':
+        c = create_circle()
+        show_shape(c)
 
 
 
