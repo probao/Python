@@ -3438,6 +3438,91 @@ if __name__ == '__main__':
 
 
 
+Creating Animated Figures
+PS C:\Users\Weihong> cat ch6ex2.py
+"""
+A growing circle
+"""
+
+from matplotlib import pyplot as plt
+from matplotlib import animation
+
+def create_circle():
+        circle = plt.Circle((0,0), 0.05)
+        return circle
+
+def update_radius(i, circle):
+        circle.radius = i*0.5
+        return circle,
+
+def create_animation():
+        fig = plt.gcf()
+        ax = plt.axes(xlim=(-10, 10), ylim=(-10, 10))
+        ax.set_aspect('equal')
+        circle = create_circle()
+        ax.add_patch(circle)
+        anim = animation.FuncAnimation(fig, update_radius, fargs = (circle,), frames = 30, interval = 50)
+        plt.title('Simple Circle Animation')
+        plt.show()
+
+if __name__ == '__main__':
+        create_animation()
+
+
+#########explaination##########
+We start by importing the animation module from the matplotlib package.
+The create_animation() function carries out the core functionality here.
+It gets a reference to the current Figure object using the gcf() function at u
+and then creates the axes with limits of –10 and 10 for both the x- and y-axes.
+After that, it creates a Circle object that represents a circle with a radius
+of 0.05 and a center at (0, 0) and adds this circle to the current axes at v.
+Then, we create a FuncAnimation object w, which passes the following data
+about the animation we want to create:
+
+fig--This is the current Figure object.
+
+update_radius--This function will be responsible for drawing every
+frame. It takes two arguments (1)a frame number that is automatically
+passed to it when called and (2) the patch object that we want to update
+every frame. This function also must return the object.
+
+update_radius函数有两个参数(1)frame的个数，该函数会自动传到该函数 
+(2)这个patch的对象，这里是（circle，），后面有逗号说明这是一个元组
+
+
+fargs This tuple consists of all the arguments to be passed to the
+update_radius() function other than the frame number. If there are no
+such arguments to pass, this keyword argument need not be specified.
+
+
+frames This is the number of frames in the animation. Our function
+update_radius() is called this many times. Here, we’ve arbitrarily chosen
+30 frames.
+
+
+interval This is the time interval in milliseconds between two frames.
+If your animation seems too slow, decrease this value; if it seems too
+fast, increase this value.
+
+We then set a title using the title() function and, finally, show the figure
+using the show() function.
+
+As mentioned earlier, the update_radius() function is responsible for
+updating the property of the circle that will change each frame. Here, we
+set the radius to i*0.5, where i is the frame number. As a result, you see
+a circle that grows every frame for 30 frames—thus, the radius of the largest
+circle is 15. Because the axes’ limits are set at –10 and 10, this gives the
+effect of the circle exceeding the figure’s dimensions. When you run the
+program, you’ll see your first animated figure, as shown in Figure 6-3.
+You’ll notice that the animation continues until you close the matplotlib
+window. This is the default behavior, which you can change by setting
+the keyword argument to repeat=False when you create the FuncAnimation
+object.
+
+
+
+
+
 
 
 
