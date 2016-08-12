@@ -3520,6 +3520,163 @@ the keyword argument to repeat=False when you create the FuncAnimation
 object.
 
 
+Animating a Projectile’s Trajectory
+PS C:\Users\Weihong> cat ch6ex3.py
+"""
+Animate the trajectory of an object in projectile motion
+"""
+
+from matplotlib import pyplot as plt
+from matplotlib import animation
+import math
+
+g = 9.8
+
+def get_intervals(u, theta):
+
+        t_flight = 2*u*math.sin(theta)/g	# 飞行的时间
+        intervals = []				# 间隔的列表
+        start = 0				
+        interval = 0.005
+        while start < t_flight:
+                intervals.append(start)
+                start = start + interval	
+        return intervals			# 返回intervals的列表为[0, 0.005, 0.010, 0.015 ...]
+
+def update_position(i, circle, intervals, u, theta):
+
+        t = intervals[i]
+        x = u*math.cos(theta)*t
+        y = u*math.sin(theta)*t - 0.5*g*t*t
+        circle.center = x, y
+        return circle,
+
+def create_animation(u, theta):
+
+        intervals = get_intervals(u, theta)
+
+        xmin = 0
+        xmax = u*math.cos(theta)*intervals[-1]
+        ymin = 0
+        t_max = u*math.sin(theta)/g
+        ymax = u*math.sin(theta)*t_max - 0.5*g*t_max**2
+        fig = plt.gcf()				# fig是plt.gcf的一个实例化
+
+        ax = plt.axes(xlim = (xmin, xmax), ylim = (ymin, ymax))
+
+        circle = plt.Circle((xmin, ymin), 1.0)
+        ax.set_aspect('equal')
+        ax.add_patch(circle)
+
+        anim = animation.FuncAnimation(fig, update_position,		# 对象， 图片更改函数， update_position函数所需的变量
+                        fargs = (circle, intervals, u, theta),		# 图片个数，时间间隔1ms，不重复
+                        frames = len(intervals), interval=1,
+                        repeat = False)
+
+        plt.title('Projectile Motion')
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.show()
+
+if __name__ == '__main__':
+        try:
+                u = float(input('Enter the initial velocity(m/s): '))			# 初始速度，格式为float
+                theta = float(input('Enter the angle of projection(degrees): '))	# 初始角度，格式为float
+        except ValueError:
+                print('You entered an invalid input')
+        else:
+                theta = math.radians(theta)	# 将角度变成弧度制
+                create_animation(u, theta)	# 运行create_animation函数
+
+
+
+Drawing Fractals
+
+Transformations of Points in a Plane
+
+>>> import random	
+>>> l = [1, 2, 3]
+>>> random.choice(l)	# 该函数用于元组，数列，字符串 当用于字符串时，返回一个随机的字符
+1
+>>> random.choice(l)
+2
+>>> random.choice(l)
+3
+>>> random.choice(l)
+2
+>>> random.choice(l)
+3
+
+
+PS C:\Users\Weihong> cat ch6ex4.py
+"""
+Example of selecting a transformation from two equally probable
+transformations
+"""
+
+import matplotlib.pyplot as plt
+import random
+
+def transformation_1(p):
+        x = p[0]
+        y = p[1]
+        return x + 1, y - 1
+
+def transformation_2(p):
+        x = p[0]
+        y = p[1]
+        return x + 1, y + 1
+
+def transform(p):
+        # List of transformation functions
+        transformations = [transformation_1, transformation_2]
+        # Pick a random transformation function and call it
+        t = random.choice(transformations)	# 从transformations中随机选一个元素
+        x, y = t(p)
+        return x, y
+
+def build_trajectory(p, n):
+        x = [p[0]]	# 元组p的第一个元素
+        y = [p[1]]	# 元组p的第二个元素
+        for i in range(n):
+                p = transform(p)
+                x.append(p[0])
+                y.append(p[1])
+        return x, y
+
+if __name__ ==  '__main__':
+        #Initial point
+        p = (1, 1)	# 初始点的坐标
+        n = int(input('Enter the number of iterations: '))	#迭代次数
+        x, y = build_trajectory(p, n)
+        # Plot
+        #plt.axes(xlim = (0, 100), ylim = (0,100))
+        plt.plot(x, y)
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.show()
+
+
+
+Drawing the Barnsley Fern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
