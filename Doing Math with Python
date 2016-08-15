@@ -3944,6 +3944,201 @@ if __name__ == '__main__':
         plt.show()
 
 
+#########################################################
+###########chapter 7 Solving Calculus Problems###########
+#########################################################
+
+An Overview of Common Mathematical Functions
+>>> import math
+>>> math.sin(math.pi/2)
+1.0
+>>> import sympy
+>>> sympy.sin(math.pi/2)	# math 和 sympy 都可以数值计算
+1.00000000000000
+
+>>> from sympy import Symbol
+>>> theta = Symbol('theta')
+>>> math.sin(theta) + math.cos(theta)	# math库不能用字符计算
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "D:\python\sympy\core\expr.py", line 226, in __float__
+    raise TypeError("can't convert expression to float")
+TypeError: can't convert expression to float
+>>> sympy.sin(theta) + sympy.sin(theta)		# sympy库可以用字符计算
+2*sin(theta)
+
+
+抛物线到最高点的时间
+>>> from sympy import sin, solve, Symbol
+>>> u = Symbol('u')
+>>> t = Symbol('t')
+>>> g = Symbol('g')
+>>> theta = Symbol('theta')
+>>> solve(u*sin(theta) - g*t, t)	# sympy可以字符计算
+[u*sin(theta)/g]
+
+
+Assumptions in SymPy
+>>> from sympy import Symbol
+>>> x = Symbol('x')
+>>> if (x+5) > 0:
+...     print('Do Something')
+... else:
+...     print('Do Something else')
+...
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "D:\python\sympy\core\relational.py", line 195, in __nonzero__
+    raise TypeError("cannot determine truth value of Relational")
+TypeError: cannot determine truth value of Relational
+
+这里的问题在于SymPy并不知道x的符号
+
+
+>>> x = Symbol('x', positive=True)
+>>> if (x+5) > 0:
+...     print('Do Something')
+... else:
+...     print('Do Something else')
+...
+Do Something
+
+如果标明了negative=true，依旧会得到之前的错误
+
+
+Finding the Limit of Functions
+>>> from sympy import Limit, Symbol, S
+>>> x = Symbol('x')
+>>> Limit(1/x, x, S.Infinity)   # 表达式， 变量x， 定义域的范围
+Limit(1/x, x, oo, dir='-')	# oo表示正无穷，-号表示从负数一侧
+
+
+>>> l = Limit(1/x, x, S.Infinity)
+>>> l.doit()	# 函数范围的值，可以用doit()
+0
+
+
+>>> Limit(1/x, x, 0, dir='-').doit()	#表达式，变量，定义域的位置或范围，从负数侧开始
+-oo
+>>> Limit(1/x, x, 0, dir='+').doit()	#表达式，变量，定义域的位置或范围，从正数侧开始
+oo
+
+>>> from sympy import Symbol, sin
+>>> Limit(sin(x)/x, x, 0).doit()	# 
+1
+
+
+Continuous Compound Interest复利计算
+
+A = (1 + 1/n )^n
+
+>>> from sympy import Limit, Symbol, S
+>>> n = Symbol('n')
+>>> Limit((1+1/n)**n, n, S.Infinity).doit()
+E
+
+A = P(1+r/n)^(n*t)
+P is the principal sum
+r is the nominal interest rate
+n is the compounding frequency
+t is the overall length of time the interest is applied (usually expressed in years).
+
+>>> from sympy import Symbol, Limit, S
+>>> p = Symbol('p', positive=True)
+>>> r = Symbol('r', positive=True)
+>>> t = Symbol('t', positive=True)
+>>> Limit(p*(1+r/n)**(n*t), n, S.Infinity).doit()
+p*exp(r*t)
+
+
+
+Instantaneous Rate of Change
+>>> from sympy import Symbol, Limit
+>>> t = Symbol('t')
+>>> St = 5*t**2 + 2*t + 8	# 函数的方程
+>>> t1 = Symbol('t1')		# 定义t1
+>>> delta_t = Symbol('delta_t')		# 定义delta_t
+>>> St1 = St.subs({t:t1})		# 将St中的t，用t1代替
+>>> St1_delta = St.subs({t:t1+delta_t})	# 将St中的t，用t1+delta_t代替
+>>> Limit((St1_delta-St1)/delta_t, delta_t, 0).doit()	# 求极限，这里是求导数，求瞬时速度
+10*t1 + 2
+
+
+
+Finding the Derivative of Functions
+>>> from sympy import Symbol, Derivative	# 引入Derivative求导数的模块
+>>> t = Symbol('t')
+>>> St = 5*t**2 + 2*t + 8
+>>> d = Derivative(St, t)			# d是class-Derivative的对象
+>>> d.doit()					# 导数的解
+10*t + 2
+>>> t1 = Symbol('t1')
+>>> d.doit().subs({t:t1})			# 可以用subs函数得到具体的解
+10*t1 + 2
+>>> d.doit().subs({t:2})
+22
+
+>>> from sympy import Derivative, Symbol
+>>> x =Symbol('x')
+>>> f = (x**3 + x**2 +x)*(x**2+x)
+>>> Derivative(f, x).doit()
+(2*x + 1)*(x**3 + x**2 + x) + (x**2 + x)*(3*x**2 + 2*x + 1)
+
+
+>>> from sympy import Derivative, Symbol, sin
+>>> x =Symbol('x')
+>>> f = sin(x)
+>>> Derivative(f, x).doit()		# 三角函数求导
+cos(x)
+
+
+A Derivative Calculator
+PS C:\Users\Weihong> cat ch7ex1.py
+"""
+Derivative calculator
+"""
+
+from sympy import Symbol, Derivative, sympify, pprint
+from sympy.core.sympify import SympifyError
+
+def derivative(f, var):
+        var = Symbol(var)
+        d = Derivative(f, var).doit()
+        pprint(d)
+
+if __name__ == '__main__':
+        f = raw_input('Enter a function: ')
+        var = raw_input('Enter the variable to differentiate with respect to: ')
+        try:
+                f = sympify(f)
+        except SympifyError:
+                print('Invalid input')
+        else:
+                derivative(f, var)
+
+PS C:\Users\Weihong> python ch7ex1.py
+Enter a function: 2*x
+Enter the variable to differentiate with respect to: x
+2
+
+PS C:\Users\Weihong> python ch7ex1.py
+Enter a function: 2*x**2 + 3*x + 1
+Enter the variable to differentiate with respect to: x
+4*x + 3
+PS C:\Users\Weihong> python ch7ex1.py		# 两个未知数 Calculating Partial Derivatives
+Enter a function: 2*x**2 + y**2
+Enter the variable to differentiate with respect to: x
+4*x
+
+
+
+
+
+
+
+
+
+
 
 
 
