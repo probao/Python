@@ -4131,6 +4131,61 @@ Enter the variable to differentiate with respect to: x
 4*x
 
 
+Higher-Order Derivatives and Finding the Maxima
+and Minima
+>>> from sympy import Symbol, solve, Derivative
+>>> x = Symbol('x')			# 对x的定义
+>>> f = x**5 - 30*x**3 + 50*x		# 函数表达式
+>>> d1 = Derivative(f, x).doit()	# d1是Derivative 类的一个实例化，并且是在函数doit()处理完之后
+>>> d1
+5*x**4 - 90*x**2 + 50			# 函数的一阶导数
+>>> critical_points = solve(d1)		# 通过solve函数，求解d1
+>>> critical_points
+[-sqrt(-sqrt(71) + 9), sqrt(-sqrt(71) + 9), -sqrt(sqrt(71) + 9), sqrt(sqrt(71) + 9)]	# 求得一阶导数为0的点，说明这些点是极值点
+>>> critical_points = solve(d1, x)
+>>> critical_points
+[-sqrt(-sqrt(71) + 9), sqrt(-sqrt(71) + 9), -sqrt(sqrt(71) + 9), sqrt(sqrt(71) + 9)]
+
+>>> A = critical_points[2]
+>>> B = critical_points[0]
+>>> C = critical_points[1]
+>>> D = critical_points[3]
+
+
+>>> d2 = Derivative(f, x, 2).doit()	# 二阶导数
+>>> d2.subs({x:B}).evalf()	# local minimum
+127.661060789073
+>>> d2.subs({x:B})
+20*sqrt(71)*sqrt(-sqrt(71) + 9)
+>>> d2.subs({x:C}).evalf()	# local maximum
+-127.661060789073
+>>> d2.subs({x:A}).evalf()	# local maximum
+-703.493179468151
+>>> d2.subs({x:D}).evalf()	# local minimum
+703.493179468151
+
+
+>>> x_min = -5
+>>> x_max = 5
+>>>
+>>> f.subs({x:A}).evalf()	# A是最大值
+705.959460380365
+>>> f.subs({x:C}).evalf()
+25.0846626340294
+>>> f.subs({x:x_min}).evalf()
+375.000000000000
+>>> f.subs({x:x_max}).evalf()
+-375.000000000000
+
+>>> f.subs({x:B}).evalf()	# D是最小值
+-25.0846626340294
+>>> f.subs({x:D}).evalf()
+-705.959460380365
+
+
+
+Finding the Global Maximum Using Gradient Ascent
+
 
 
 
