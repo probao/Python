@@ -119,6 +119,119 @@ PS C:\Users\Weihong> python problem_4.py
 906609        
         
         
+problem5
+2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+
+PS C:\Users\Weihong> python problem_5.py
+232792560
+PS C:\Users\Weihong> cat problem_5.py
+from fractions import gcd
+
+def lcm(a, b):
+        tmp1 = reduce(gcd, [a, b])
+        lcm = a*b // tmp1
+        return lcm
+
+if __name__ == '__main__':
+        a = range(1, 21)
+        sum = reduce(lcm, a)
+        print sum
+
+
+python中的reduce内建函数是一个二元操作函数，他用来将一个数据集合（链表，元组等）中的所有数据进行下列操作：用传给reduce中的函数 func()（必须是一个二元操作函数）先对集合中的第1，2个数据进行操作，得到的结果再与第三个数据用func()函数运算，最后得到一个结果。
+如：
+
+Python代码
+def myadd(x,y):    
+    return x+y    
+sum=reduce(myadd,(1,2,3,4,5,6,7))    
+print sum   
+def myadd(x,y): return x+y sum=reduce(myadd,(1,2,3,4,5,6,7)) print sum  
+
+
+
+problem6
+Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is 3025 ? 385 = 2640.
+Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+
+PS C:\Users\Weihong> python problem_6.py
+The difference is 25164150
+PS C:\Users\Weihong> cat problem_6.py
+def the_square_of_sum(a):
+        sum1 = 0
+        for number1 in a:
+                sum1 = sum1 + number1
+        return sum1**2
+
+def the_sum_of_square(a):
+        sum2 = 0
+        for number2 in a:
+                factor = number2**2
+                sum2 = sum2 + factor
+        return sum2
+
+if __name__ == '__main__':
+        a = range(1, 101)
+        print('The difference is {0}'.format(the_square_of_sum(a)-the_sum_of_square(a)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+problem9
+A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
+
+a2 + b2 = c2
+
+For example, 32 + 42 = 9 + 16 = 25 = 52.
+
+There exists exactly one Pythagorean triplet for which a + b + c = 1000.
+Find the product abc.
+
+
+PS C:\Users\Weihong> cat .\problem_9.py
+import math
+
+def calculate(a, b):
+        a = float(a)
+        b = float(b)
+        tmp = a + b + math.sqrt(a**2 + b**2)
+        return tmp
+
+if __name__ == '__main__':
+        result = []
+        part1 = range(1, 1000)
+        part2 = range(1, 1000)
+        for a in part1:
+                for b in part2:
+                        if calculate(a, b) == 1000:
+                                c = math.sqrt(a**2 + b**2)
+                                result.append(a)
+                                result.append(b)
+                                result.append(c)
+
+        print('Three number are {0}, {1} and {2}'.format(result[0], result[1], result[2]))
+PS C:\Users\Weihong> python problem_9.py
+Three number are 200, 375 and 425.0
+
+
+
+
+
         
         
 
