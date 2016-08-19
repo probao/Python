@@ -49,9 +49,8 @@ if __name__ == '__main__':
 
   
   
-  problem3
-  The prime factors of 13195 are 5, 7, 13 and 29.
-
+problem3
+The prime factors of 13195 are 5, 7, 13 and 29.
 What is the largest prime factor of the number 600851475143 ?
 PS C:\Users\Weihong> cat problem_3.py
 import math
@@ -82,8 +81,8 @@ if __name__ == '__main__':
         print prime
 
 
-  problem4
-  A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+ problem4
+ A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
 
 Find the largest palindrome made from the product of two 3-digit numbers.
 PS C:\Users\Weihong> cat problem_4.py
@@ -105,7 +104,7 @@ def six_digit(group):
 def check_palin(six_digit):
         palin_number = []
         for i in six_digit:
-                tmp = '%d'%i
+                tmp = '%d'%i	# 数字转字符串
                 if tmp[0] == tmp[5] and tmp[1] == tmp[4] and tmp[2] == tmp[3]:
                         palin_number.append(i)
         return palin_number
@@ -117,8 +116,10 @@ if __name__ == '__main__':
         
 PS C:\Users\Weihong> python problem_4.py
 906609        
-        
-        
+
+
+
+
 problem5
 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
 What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
@@ -139,7 +140,8 @@ if __name__ == '__main__':
         print sum
 
 
-python中的reduce内建函数是一个二元操作函数，他用来将一个数据集合（链表，元组等）中的所有数据进行下列操作：用传给reduce中的函数 func()（必须是一个二元操作函数）先对集合中的第1，2个数据进行操作，得到的结果再与第三个数据用func()函数运算，最后得到一个结果。
+python中的reduce内建函数是一个二元操作函数，他用来将一个数据集合（链表，元组等）中的所有数据进行下列操作：
+用传给reduce中的函数 func()（必须是一个二元操作函数）先对集合中的第1，2个数据进行操作，得到的结果再与第三个数据用func()函数运算，最后得到一个结果。
 如：
 
 Python代码
@@ -272,16 +274,6 @@ PS C:\Users\Weihong> python problem_8.py
 
 
 
-
-
-
-
-
-
-
-
-
-
 problem9
 A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
 
@@ -317,6 +309,99 @@ if __name__ == '__main__':
         print('Three number are {0}, {1} and {2}'.format(result[0], result[1], result[2]))
 PS C:\Users\Weihong> python problem_9.py
 Three number are 200, 375 and 425.0
+
+
+
+
+
+
+
+Problem 13
+Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+
+
+PS C:\Users\Weihong> python .\problem_13.py
+The first 10 digit: 5537376230
+PS C:\Users\Weihong> cat .\problem_13.py.
+def read_data(filename):
+
+        numbers = []
+        with open(filename) as f:
+                for line in f:
+                        numbers.append(float(line))
+        return numbers
+
+if __name__ == '__main__':
+        data = read_data('large_num.txt')
+        sum_num = sum(data)
+        sum_string = '%d' % sum_num
+        print('The first 10 digit: {0}'.format(sum_string[0:10]))
+PS C:\Users\Weihong> python .\problem_13.py.
+The first 10 digit: 5537376230
+
+
+
+
+
+
+
+
+
+
+problem16
+2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+What is the sum of the digits of the number 2^1000?
+
+
+
+PS C:\Users\Weihong> cat .\problem_16.py
+def factorial(n):
+        i = 0
+        result = 1
+        while i < n:
+                result = result * 2
+                i += 1
+        print result
+        return result
+
+def sum(result):
+        result_string = '%d' % result # 将数字变为字符串
+        total_num = 0
+        for i in result_string:
+                total_num = total_num + int(i)	# 字符串中每个字母变成数字再加和
+        return total_num
+
+if __name__ == '__main__':
+        n = input('the number: ')
+        result = factorial(n)
+        print('The answer is {0}.'.format(sum(result)))
+
+PS C:\Users\Weihong> python problem_16.py
+the number: 1000
+107150860718626732094842504906000181056140481170553360744375038837035105112493612249319837881569585812759467291755314682
+518714528569231404359845775746985748039345677748242309854210746050623711418779541821530464749835819412673987675591655439
+46077062914571196477686542167660429831652624386837205668069376
+The answer is 1366.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Problem 18
@@ -414,6 +499,81 @@ PS C:\Users\Weihong> python .\problem_13.py
 
 
 
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
