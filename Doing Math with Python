@@ -4411,7 +4411,89 @@ if __name__ == '__main__':
                         print('Maximum value: {0}'.format(f,subs({var:var_max})))
 
 
+###Finding the Integrals of Functions###
 
+>>> from sympy import Integral, Symbol
+>>> x = Symbol('x')
+>>> k = Symbol('k')
+>>> Integral(k*x, x)
+Integral(k*x, x)
+>>> Integral(k*x, x).doit()
+k*x**2/2
+>>> Integral(k*x, (x, 0, 2)).doit()	# 0到2的积分
+2*k
+
+
+>>> from sympy import Integral, Symbol
+>>> x = Symbol('x')
+>>> Integral(x, (x, 2, 4)).doit()
+6
+
+
+
+###Probability Density Functions###
+>>> from sympy import Symbol, exp, sqrt, pi, Integral
+>>> x = Symbol('x')
+>>> p = exp(-(x - 10)**2/2)/sqrt(2*pi)
+>>> Integral(p, (x, 11, 12)).doit().evalf()
+0.135905121983278
+
+从负无穷到正无穷的积分值为1
+>>> from sympy import Symbol, exp, sqrt, pi, Integral, S
+>>> x = Symbol('x')
+>>> p = exp(-(x - 10)**2/2)/sqrt(2*pi)
+>>> Integral(p, (x, S.NegativeInfinity, S.Infinity)).doit().evalf()
+1.00000000000000
+
+
+练习
+#1: Verify the Continuity of a Function at a Point
+PS C:\Users\Weihong> cat ch7ex5.py
+from sympy import Limit, Symbol, sympify
+from sympy.core.sympify import SympifyError
+
+def left(var):
+        left = Limit(f, var, point, dir='-').doit()
+        return left
+
+def right(var):
+        right = Limit(f, var, point, dir='+').doit()
+        return right
+
+
+
+if __name__ == '__main__':
+
+        f = raw_input('Enter a function in one variable: ')
+        var = raw_input('Enter the variable:')
+        point = float(input('Enter the point to check the continuity at: '))
+
+        try:
+                f = sympify(f)
+        except SympifyError:
+                print('Invalid function entered')
+        else:
+                var = Symbol(var)
+                if left(var) == right(var):
+                        print(' {0} is continuous at {1}'.format(f, point))
+                else:
+                        print(' {0} is not continuous at {1}'.format(f, point))
+
+PS C:\Users\Weihong> python ch7ex5.py
+Enter a function in one variable: 1/x
+Enter the variable:x
+Enter the point to check the continuity at: 0
+ 1/x is not continuous at 0.0
+
+PS C:\Users\Weihong> python ch7ex5.py
+Enter a function in one variable: 1/x
+Enter the variable:1/x
+Enter the point to check the continuity at: 1
+ 1/x is continuous at 1.0
+
+
+
+#2: Implement the Gradient Descent
 
 
 
