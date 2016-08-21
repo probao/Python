@@ -563,6 +563,22 @@ The number is 837799
 
 
 
+###Problem 15###
+Lattice paths
+How many such routes are there through a 20×20 grid?
+
+PS C:\Users\Weihong> cat problem_15.py
+import math
+
+n = input(' The length:')
+a = math.factorial(2*n)
+b = math.factorial(n)
+result = a /(b*b)
+
+print result
+PS C:\Users\Weihong> python problem_15.py
+ The length:20
+137846528820
 
 
 
