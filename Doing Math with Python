@@ -4546,7 +4546,28 @@ x: 0.00499854833366870
 Minimum value: 0.0000249854854440222
 
 
+#3: Area Between Two Curves
 
+PS C:\Users\Weihong> cat ch7ex7.py
+from sympy import Integral, Symbol, sympify
+
+f1 = raw_input('Enter the upper function in one variable: ')
+f2 = raw_input('Enter the lower function in one variable: ')
+var = raw_input('Enter the variable to differentiate with respect to: ')
+var0 = float(input('Enter the initial value of the variable: '))
+var1 = float(input('Enter the final value of the variable:'))
+f1 = sympify(f1)
+f2 = sympify(f2)
+var = Symbol(var)
+result = Integral(f1 - f2, (var, var0, var1)).doit().evalf()
+print result
+PS C:\Users\Weihong> python ch7ex7.py
+Enter the upper function in one variable: x
+Enter the lower function in one variable: x**2
+Enter the variable to differentiate with respect to: x
+Enter the initial value of the variable: 0
+Enter the final value of the variable:1
+0.166666666666667
 
 
 
