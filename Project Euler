@@ -495,7 +495,7 @@ The number is 76576500
 
 
 
-Problem 13
+###Problem 13###
 Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
 
 
@@ -520,6 +520,46 @@ The first 10 digit: 5537376230
 
 
 
+###Problem 14###
+It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms.
+Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
+Which starting number, under one million, produces the longest chain?
+NOTE: Once the chain starts the terms are allowed to go above one million.
+
+PS C:\Users\Weihong> cat .\problem_14.py
+def collatz(n):
+        group = [n]
+        while n > 1:
+                if n % 2 == 0:
+                        n = n/2
+                        group.append(n)
+                else:
+                        n = 3*n + 1
+                        group.append(n)
+        return group
+
+
+if __name__ == '__main__':
+        i =1000000
+        max_group = []
+        the_number = 0
+
+        while i > 1:
+                if i not in max_group:
+                        #print i
+                        group = collatz(i)
+                        if len(group) > len(max_group):
+                                max_group = group
+                                the_number = i
+                        i -= 1
+                else:
+                        #print i
+                        i -= 1
+
+        print('The number is {0}'.format(the_number))
+
+PS C:\Users\Weihong> python problem_14.py
+The number is 837799
 
 
 
@@ -527,7 +567,8 @@ The first 10 digit: 5537376230
 
 
 
-problem16
+
+###problem16###
 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
 What is the sum of the digits of the number 2^1000?
 
