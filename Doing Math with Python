@@ -4494,6 +4494,58 @@ Enter the point to check the continuity at: 1
 
 
 #2: Implement the Gradient Descent
+一个图中有两个图，两个图的叠加
+PS C:\Users\Weihong> cat .\ch7ex6.py
+from sympy import Derivative, Symbol, sympify, solve, plot
+from sympy.core.sympify import SympifyError
+from matplotlib import pyplot as plt
+
+def grad_descent(x0, f1x, x,f):
+        epsilon = 1e-6
+        step_size = 1e-4
+        x_old = x0
+        x_new = x_old - step_size*f1x.subs({x:x_old}).evalf()
+        y1 = f.subs({x: x_old})
+        y2 = f.subs({x: x_new})
+        x_data = [x_old, x_new]
+        y_data = [y1, y2]
+        while abs(x_old - x_new) > epsilon:
+                x_old = x_new
+                x_new = x_old - step_size*f1x.subs({x:x_old}).evalf()
+                x_data.append(x_new)
+                y_data.append(f.subs({x:x_new}))
+
+        return x_new, x_data, y_data
+
+
+if __name__ == '__main__':
+        f = raw_input('Enter a function in one variable: ')
+        var = raw_input('Enter the variable to differentiate with respect to: ')
+        var0 = float(input('Enter the initial value of the variable: '))
+        try:
+                f = sympify(f)
+        except SympifyError:
+                print('Invalid function entered')
+        else:
+                var = Symbol(var)
+                d = Derivative(f, var).doit()
+                var_min, x_data, y_data = grad_descent(var0, d, var, f)
+                x_val = [ float(i)/100 for i in range(-100, 101)]
+                f_val = [f.subs({var:x}) for x in x_val]
+                print('{0}: {1}'.format(var.name, var_min))
+                print('Minimum value: {0}'.format(f.subs({var:var_min})))
+                plt.plot(x_val, f_val)
+                plt.plot(x_data, y_data, 'r.')
+                plt.show()
+
+PS C:\Users\Weihong> python .\ch7ex6.py
+Enter a function in one variable: x**2
+Enter the variable to differentiate with respect to: x
+Enter the initial value of the variable: 0.5
+x: 0.00499854833366870
+Minimum value: 0.0000249854854440222
+
+
 
 
 
