@@ -4569,7 +4569,27 @@ Enter the initial value of the variable: 0
 Enter the final value of the variable:1
 0.166666666666667
 
+#4: Finding the Length of a Curve
+PS C:\Users\Weihong> cat ch7ex8.py
+from sympy import Integral,  Derivative, Symbol, sympify, sqrt
 
+f = raw_input('Enter the function in one variable: ')
+var = raw_input('Enter the variable to differentiate with respect to: ')
+var0 = float(input('Enter the initial value of the variable: '))
+var1 = float(input('Enter the final value of the variable: '))
+f = sympify(f)
+var = Symbol(var)
+d = Derivative(f, var).doit()
+answer = Integral(sqrt(1 + d**2), (var, var0, var1)).doit()
+print answer
+
+
+PS C:\Users\Weihong> python ch7ex8.py
+Enter the function in one variable: 2*x**2 + 3*x + 1
+Enter the variable to differentiate with respect to: x
+Enter the initial value of the variable: -5
+Enter the final value of the variable: 10
+268.372650946022
 
 
 
