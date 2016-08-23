@@ -803,6 +803,87 @@ PS C:\Users\Weihong> python problem_21.py
 
 
 
+###Problem22###
+Using names.txt (right click and 'Save Link/Target As...'), a 46K text file containing over five-thousand first names,
+begin by sorting it into alphabetical order. Then working out the alphabetical value for each name, 
+multiply this value by its alphabetical position in the list to obtain a name score.
+For example, when the list is sorted into alphabetical order, COLIN, which is worth 3 + 15 + 12 + 9 + 14 = 53, is the 938th name in the list. 
+So, COLIN would obtain a score of 938 × 53 = 49714.
+What is the total of all the name scores in the file?
+
+
+My version
+PS C:\Users\Weihong> python problem_22.py
+871198282
+PS C:\Users\Weihong> cat problem_22.py
+def read_data(filename):
+        name = ''
+        group = []
+        with open(filename) as f:
+                for line in f:
+                        name = line	# 读取文件中的行并存储为字符串
+        for i in name.split(','):	# 以逗号为分隔符
+                group.append(i[1:-1])	# 不要双引号，取第二个字符到倒数第二个字符
+        group = sorted(group)		# 排序
+        return group
+
+def calculate_point(group):
+        P = []
+        i = 0
+        for name in group:
+                i = i + 1
+                sum = 0
+                total = 0
+                for letter in name:
+                        sum = sum + dic[letter]
+                total = i * sum
+                P.append(total)
+        return P
+
+
+if __name__ == '__main__':
+        dic = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G':7, 'H': 8, 'I': 9, 'J':10, 'K': 11, 'L': 12 , 'M': 13
+, 'N': 14, 'O': 15, 'P': 16, 'Q': 17, 'R': 18, 'S': 19, 'T': 20, 'U': 21, 'V': 22, 'W': 23, 'X': 24, 'Y': 25, 'Z': 26}
+        group = read_data('p022_names.txt')
+        point = calculate_point(group)
+        #print group
+        print sum(point)
+
+nice version
+基础知识enumerate函数
+>>> for i, j in enumerate(('a', 'b', 'c'), 1):	# 参数1 标明起始数为1
+...     print i, j
+...
+1 a
+2 b
+3 c
+>>> for i, j in enumerate(('a', 'b', 'c'), 2): # 类似的例子
+...     print i, j
+...
+2 a
+3 b
+4 c
+
+
+PS C:\Users\Weihong> cat .\problem_22short.py
+from string import ascii_uppercase	# 从string库中引入ascii_uppercase, 在ascii_uppercase中是大写字母
+
+def score(word):
+        return sum(ascii_uppercase.index(c) + 1 for c in word.strip('"')) # strip函数去掉", 然后得到ascii_uppercase中的index，由于index是从0开始的，所以要加1
+
+with open('p022_names.txt') as f:
+        names = f.read().split(',')
+        names.sort()
+print sum(i*score(x) for i, x in enumerate(names, 1))	#参数1， 编号从1开始
+
+PS C:\Users\Weihong> python .\problem_22short.py
+871198282
+
+
+
+
+
+
 
 
 
