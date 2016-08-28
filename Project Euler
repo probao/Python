@@ -15,6 +15,7 @@ def multi(n):
 if __name__ == '__main__':
         n = int(input('The number:'))
         print('The sum is {0}'.format(multi(n)))
+   
         
  
 ###problem2###       
