@@ -1182,6 +1182,127 @@ PS C:\Users\Weihong> python problem_30.py
 443839
 
 
+###Problem 31###
+
+In England the currency is made up of pound, £, and pence, p, and there are eight coins in general circulation:
+1p, 2p, 5p, 10p, 20p, 50p, £1 (100p) and £2 (200p).
+It is possible to make £2 in the following way:
+1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p
+How many different ways can £2 be made using any number of coins?
+
+递归的思想
+http://blog.dreamshire.com/project-euler-31-solution/
+PS C:\Users\Weihong> cat problem_31a.py
+target = 200
+coins = [1, 2, 5, 10, 20, 50, 100, 200]
+ways = [1] + [0]*target
+
+for coin in coins:
+        for i in range(coin, target+1):
+                ways[i] += ways[i-coin]
+
+print ways[target]
+
+
+
+PS C:\Users\Weihong> cat problem_31.py
+i = 0
+for a in range(201):
+        for b in range(101):
+                for c in range(41):
+                        for d in range(21):
+                                for e in range(11):
+                                        for f in range(5):
+                                                for g in range(3):
+                                                        sum = a*1 + b*2 + c * 5 + d*10+e*20 + f*50 + g * 100
+                                                        if sum == 200:
+                                                                i += 1
+print i + 1
+
+
+
+
+PS C:\Users\Weihong> python problem_31a.py
+73682
+
+
+
+
+
+
+
+PS C:\Users\Weihong> cat .\problem_29.py
+from sympy import FiniteSet
+
+numbers = []
+for i in range(2, 101):
+        for j in range(2, 101):
+                p = i ** j
+                numbers.append(p)
+
+s = FiniteSet(*numbers)
+print len(s)
+PS C:\Users\Weihong> python problem_29.py
+9183
+
+
+
+
+
+
+
+
+###Problem 32###
+
+We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once; for example, the 5-digit number, 15234, is 1 through 5 pandigital.
+The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier, and product is 1 through 9 pandigital.
+Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
+HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+
+
+PS C:\Users\Weihong> cat .\problem_32.py
+from sympy import FiniteSet
+
+def one_four():
+        answer1 = []
+        compare = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        for i in range(1, 10):
+                for j in range(1000, 10001):
+                        w = i*j
+                        part1_str = '%d' % i
+                        part2_str = '%d' % j
+                        result = '%d' % w
+                        test = sorted(part1_str + part2_str + result)
+                        if test == compare:
+                                answer1.append(w)
+        return answer1
+
+def two_three():
+        answer2 = []
+        compare = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+        for i in range(1, 100):
+                for j in range(100, 1001):
+                        x = i*j
+                        part1_str = '%d' % i
+                        part2_str = '%d' % j
+                        result = '%d' % x
+                        test = sorted(part1_str + part2_str + result)
+                        if test == compare:
+                                answer1.append(x)
+        return answer2
+
+if __name__ == '__main__':
+        answer1 = one_four()
+        answer2 = two_three()
+        answer = answer1 + answer2
+        s = FiniteSet(*answer)
+        print sum(list(s))
+PS C:\Users\Weihong> python problem_32.py
+45228
+
+
+
+
 
 
 
