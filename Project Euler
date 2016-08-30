@@ -1301,6 +1301,154 @@ PS C:\Users\Weihong> python problem_32.py
 45228
 
 
+###Problem 33###
+The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify it may incorrectly believe that 49/98 = 4/8, 
+which is correct, is obtained by cancelling the 9s.
+We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+There are exactly four non-trivial examples of this type of fraction, less than one in value, 
+and containing two digits in the numerator and denominator.
+
+If the product of these four fractions is given in its lowest common terms, find the value of the denominator.
+
+
+def check_fraction(a, b):
+        A = list(str(a))
+        B = list(str(b))
+        for i in A:
+                if i in B:
+                        return True
+        return False
+
+def find_number(a, b):
+        A = list(str(a))
+        B = list(str(b))
+        for i in A:
+                if i in B:
+                        A.remove(i)
+                        B.remove(i)
+                        c = float(A[0])
+                        d = float(B[0])
+        return c, d
+
+if __name__ == '__main__':
+        M = []
+        N = []
+        for a in range(10, 100):
+                for b in range(10, 100):
+                        if a < b and a % 10 != 0  and b % 10 != 0:
+                                pro1 = float(a)/b
+                                if check_fraction(a, b):
+                                        c, d = find_number(a, b)
+                                        pro2 = float(c) / d
+                                        if pro1 == pro2:
+                                                M.append(a)
+                                                N.append(b)
+        print M
+        print N
+ 
+whwu@master:~/script> python problem_33.py
+[16, 19, 26, 49]
+[64, 95, 65, 98]
+
+
+
+###Problem 34###
+
+PS C:\Users\Weihong> cat problem_34.py
+import math
+
+for x in range(10, 1854721):
+        s = 0
+        for i in str(x):
+                s = s + math.factorial(int(i))
+                if s == x:
+                        print(s)
+PS C:\Users\Weihong> python problem_34.py
+145
+40585
+
+
+
+
+
+###Problem 35###
+
+The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are themselves prime.
+There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+How many circular primes are there below one million?
+
+PS C:\Users\Weihong> python .\problem_35.py
+[13, 31, 37, 73, 71, 17, 97, 79, 113, 131, 311, 197, 971, 719, 337, 373, 733, 919, 199, 991, 1193, 1931, 9311, 3119, 377
+9, 7793, 7937, 9377, 11939, 19391, 93911, 39119, 91193, 19937, 99371, 93719, 37199, 71993, 193939, 939391, 393919, 93919
+3, 391939, 919393, 199933, 999331, 993319, 933199, 331999, 319993]
+50
+PS C:\Users\Weihong> cat .\problem_35.py
+import math
+
+def check_prime(number):
+        if number != 1:
+                for factor in range(2, int(math.sqrt(number))+1):
+                        if number % factor == 0:
+                                return False
+        else:
+                return False
+        return True
+
+
+def generate_number(a):
+        number_list = []
+        n = len(a)
+        s = 0
+        while s <  n -1:
+                b = a.pop(0)
+                a.append(b)
+                new_num_str = ''
+                for index in a:
+                        new_num_str = new_num_str + index
+                number_list.append(int(new_num_str))
+                s += 1
+        return number_list
+
+
+def check_circular(number_list):
+        for y in number_list:
+                if y in prime_list:
+                        continue
+                else:
+                        return False
+        return True
+
+
+if __name__ == '__main__':
+        prime_list = []
+        for i in range(13, 1000001):
+                if check_prime(i):
+                        prime_list.append(i)
+        #print prime_list
+
+        circular_prime = []
+        for number in prime_list:
+        #       print number
+                a = list(str(number))
+                if '0' not in a:
+                        number_list = generate_number(a)
+                        if check_circular(number_list):
+                                circular_prime.append(number)
+                                prime_list.remove(number)
+                                for j in number_list:
+                                        circular_prime.append(j)
+                                        prime_list.remove(j)
+        print circular_prime
+        print len(circular_prime)
+
+
+
+
+
+
+
+
+
 
 
 
