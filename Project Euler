@@ -1446,6 +1446,52 @@ if __name__ == '__main__':
 
 
 
+###Problem 96###
+A well constructed Su Doku puzzle has a unique solution and can be solved by logic, 
+although it may be necessary to employ "guess and test" methods in order to eliminate options (there is much contested opinion over this). 
+The complexity of the search determines the difficulty of the puzzle; 
+the example above is considered easy because it can be solved by straight forward direct deduction.
+The 6K text file, sudoku.txt (right click and 'Save Link/Target As...'), contains fifty different Su Doku puzzles ranging in difficulty,
+but all with unique solutions (the first puzzle in the file is the example above).
+By solving all fifty puzzles find the sum of the 3-digit numbers found in the top left corner of each solution grid; 
+for example, 483 is the 3-digit number found in the top left corner of the solution grid above.
+
+
+PS C:\Users\Weihong> cat problem_96.py
+from urllib import urlopen
+s = 0
+
+def same_row(i, j): return (i/9 == j/9)
+def same_col(i, j): return (i-j) % 9 == 0
+def same_block(i, j): return (i/27 == j/27 and (i % 9)/3 == (j % 9)/3)
+def r(a):
+        global s
+        i = a.find('0')
+        if i == -1:
+                s += int(a[0:3])
+
+        excluded_numbers = set()
+        for j in range(81):
+                if same_row(i, j) or same_col(i, j) or same_block(i, j):
+                        excluded_numbers.add(a[j])
+
+        for m in '123456789':
+                if m not in excluded_numbers:
+                        r(a[:i] + m + a[i+1:])
+
+file = urlopen('https://projecteuler.net/project/resources/p096_sudoku.txt', 'r').readlines()
+fx = ''.join([line[:9] for line in file if not 'Grid' in line])
+fx = [fx[i:(i+81)] for i in range(0, len(fx), 81)]
+
+[r(p) for p in fx]
+
+print "Project Euler 96 Solution =", s
+
+PS C:\Users\Weihong> python problem_96.py
+Project Euler 96 Solution = 24702
+
+
+
 
 
 
