@@ -741,6 +741,58 @@ PS C:\Users\Weihong> python .\problem_13.py
 1074
 
 
+
+###Problem 19###
+You are given the following information, but you may prefer to do some research for yourself.
+•1 Jan 1900 was a Monday.
+•Thirty days has September,
+ April, June and November.
+ All the rest have thirty-one,
+ Saving February alone,
+ Which has twenty-eight, rain or shine.
+ And on leap years, twenty-nine.
+•A leap year occurs on any year evenly divisible by 4, but not on a century unless it is divisible by 400.
+How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+
+
+PS C:\Users\Weihong> cat problem_19.py
+A = [i for i in range(1,32)]
+B = [i for i in range(1,31)]
+C = [i for i in range(1,29)]
+D = [i for i in range(1, 30)]
+case_1 = A + C + A + B + A + B + 2*A + B +A  + B + A
+case_2 = A + D + A + B + A + B + 2*A + B +A  + B + A
+year = 1901
+
+centry = []
+while year < 2001:
+        if year % 4 != 0:
+                centry = centry + case_1
+        if year % 4 == 0:
+                centry = centry + case_2
+        year += 1
+
+the_first_day = [i+1 for i, j in enumerate(centry) if j == 1]
+
+times = 0
+for i in the_first_day:
+        if i % 7 == 6:
+                times += 1
+
+print times
+
+PS C:\Users\Weihong> python problem_19.py
+171
+
+
+
+
+
+
+
+
+
 ###Problem 20###
 n! means n × (n ? 1) × ... × 3 × 2 × 1
 For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
@@ -1052,6 +1104,39 @@ if __name__ == '__main__':
 
 
         print('longest recurring cycle for 1/d, d = {0}'.format(d))
+
+
+###Problem 27###
+Euler discovered the remarkable quadratic formula:
+n 2 +n+41 
+n2+n+41
+It turns out that the formula will produce 40 primes for the consecutive integer values 0≤n≤39 
+0≤n≤39
+. However, when n=40,40 2 +40+41=40(40+1)+41 
+
+
+
+PS C:\Users\Weihong> cat problem_27.py
+from eulerlib import is_prime, primes
+
+L = 1000
+nmax = 0
+for b in primes(L):
+        for a in range(-b, b, 2):
+                n = 1
+                while is_prime(n*n + a*n + b):
+                        n += 1
+                if n > nmax:
+                        nmax, p = n, a*abs(b)
+                        p1 = a
+                        p2 = b
+
+print p, p1, p2
+
+PS C:\Users\Weihong> python problem_27.py
+-59231 -61 971
+
+
 
 
 
@@ -1440,6 +1525,61 @@ if __name__ == '__main__':
                                         prime_list.remove(j)
         print circular_prime
         print len(circular_prime)
+
+
+###Problem 36###
+The decimal number, 585 = 10010010012 (binary), is palindromic in both bases.
+Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+(Please note that the palindromic number, in either base, may not include leading zeros.)
+
+
+PS C:\Users\Weihong> cat .\problem_36.py
+def check_palin(number_str):
+        length = len(number_str)
+        if length % 2 == 0:
+                p1 = number_str[:length/2]
+                p2 = number_str[length/2:][::-1]
+                if p1 == p2:
+                        return True
+                else:
+                        return False
+        else:
+                p1 = number_str[:(length-1)/2]
+                p2 = number_str[(length-1)/2 + 1:][::-1]
+                if p1 == p2:
+                        return True
+                else:
+                        return False
+
+
+if __name__ == '__main__':
+        palin_list_ten = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        for i in range(10, 1000001):
+                if check_palin(str(i)):
+                        palin_list_ten.append(i)
+        palin_list_two = []
+        for j in palin_list_ten:
+                number_str = bin(j)[2:]
+                if check_palin(number_str):
+                        palin_list_two.append(j)
+
+        print sum(palin_list_two)
+PS C:\Users\Weihong> python problem_36.py
+872187
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
