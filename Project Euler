@@ -1568,6 +1568,70 @@ PS C:\Users\Weihong> python problem_36.py
 872187
 
 
+###Problem 37###
+The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits from left to right, 
+and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left: 3797, 379, 37, and 3.
+Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
+NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+
+
+PS C:\Users\Weihong> cat problem_37.py
+from eulerlib import is_prime
+
+def check_trun(x):
+        l = len(x)
+        i = 1
+        num_list = []
+        while i <= l:
+                a = x[:i]
+                b = x[i-1:]
+                num_list.append(int(a))
+                num_list.append(int(b))
+                i += 1
+        for num in num_list:
+                if is_prime(num):
+                        continue
+                else:
+                        return False
+        return True
+
+test = 11
+t = 0
+trun = []
+while t <= 10:
+#       print test
+        test_str = str(test)
+        if '0' in test_str  or '4' in test_str or '6' in test_str or '8' in test_str:
+                test += 1
+                continue
+        else:
+                if check_trun(test_str):
+                        print test
+                        trun.append(test)
+                        t += 1
+        test += 1
+
+print sum(trun)
+
+
+PS C:\Users\Weihong> python .\problem_37.py
+23
+37
+53
+73
+313
+317
+373
+797
+3137
+3797
+739397
+748317
+
+
+
+
+
 
 
 
