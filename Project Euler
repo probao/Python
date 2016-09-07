@@ -1629,6 +1629,102 @@ PS C:\Users\Weihong> python .\problem_37.py
 748317
 
 
+###Problem 38###
+Take the number 192 and multiply it by each of 1, 2, and 3:
+192 × 1 = 192
+192 × 2 = 384
+192 × 3 = 576
+By concatenating each product we get the 1 to 9 pandigital, 192384576.
+We will call 192384576 the concatenated product of 192 and (1,2,3)
+The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, 
+giving the pandigital, 918273645, which is the concatenated product of 9 and (1,2,3,4,5).
+What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer with (1,2, ... , n) where n > 1?
+
+
+whwu@master:~/script> cat problem_38.py
+compare = ['1', '2', '3', '4', '5', '6', '7' , '8', '9']
+
+max_num = 0
+for i in range(9234, 9488):
+        test_str = sorted(str(i*1)+str(i*2))
+        test_num = int(str(i*1)+str(i*2))
+        if test_str == compare:
+                if test_num > max_num:
+                        max_num = test_num
+
+print max_num
+whwu@master:~/script> python problem_38.py
+932718654
+
+
+
+###Problem 39###
+If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three solutions for p = 120.
+{20,48,52}, {24,45,51}, {30,40,50}
+For which value of p ≤ 1000, is the number of solutions maximised?
+
+whwu@master:~/script> cat problem_39.py
+L, t_max, p_max = 1000, 0, 0
+
+for p in range(L//4*2, L+1, 2):
+        t = 0
+        for a in range(2, int(p/3.4142) + 1):
+                if p*(p - 2*a) % (2*(p-a)) == 0:
+                        t += 1
+                        if t >= t_max: t_max, p_max = t, p
+
+print "Maximum perimeter, p <=", L, "is", p_max
+print "Triangles in set =", t_max
+
+whwu@master:~/script> python problem_39.py
+Maximum perimeter, p <= 1000 is 840
+Triangles in set = 8
+
+
+###Problem 40###
+An irrational decimal fraction is created by concatenating the positive integers:
+0.123456789101112131415161718192021...
+It can be seen that the 12th digit of the fractional part is 1.
+If dn represents the nth digit of the fractional part, find the value of the following expression.
+d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+
+
+whwu@master:~/script> cat problem_40.py
+num_list = ''
+
+for i in range(1,1000000):
+        num_list = num_list + str(i)
+
+answer = int(num_list[0])*int(num_list[9])*int(num_list[99])*int(num_list[999])*int(num_list[9999])*int(num_list[99999])*int(num_list[999999])
+
+print answer
+whwu@master:~/script> python problem_40.py
+210
+
+
+
+###Problem 41###
+We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once. 
+For example, 2143 is a 4-digit pandigital and is also prime.
+What is the largest n-digit pandigital prime that exists?
+
+
+PS C:\Users\Weihong> cat problem_41.py
+from eulerlib import primes
+
+test = ['1', '2', '3', '4', '5', '6', '7']
+anwser = []
+pan_list = primes(7654321)
+for i in pan_list:
+        if sorted(str(i)) == test:
+                anwser.append(i)
+print max(anwser)
+PS C:\Users\Weihong> python problem_41.py
+7652413
+
+
+
+
 
 
 
