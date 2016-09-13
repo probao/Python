@@ -1840,6 +1840,167 @@ PS C:\Users\Weihong> python problem_45.py
 1533776805
 
 
+###Problem 46###
+It was proposed by Christian Goldbach that every odd composite number can be written as the sum of a prime and twice a square.
+9 = 7 + 2×12
+15 = 7 + 2×22
+21 = 3 + 2×32
+25 = 7 + 2×32
+27 = 19 + 2×22
+33 = 31 + 2×12
+It turns out that the conjecture was false.
+What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+
+
+whwu@master:~/script> cat problem_46.py
+import math
+
+def check_prime(number):
+        if number != 1:
+                for factor in range(2, int(math.sqrt(number))+1):
+                        if number % factor == 0:
+                                return False
+        else:
+                return False
+        return True
+
+def check_gold(number):
+        c = int(math.sqrt(number/2))
+        for i in range(1, c+1):
+                n = number - 2*i*i
+                if check_prime(n):
+                        return True
+        return False
+
+n = 13
+while True:
+        if check_prime(n):
+                n = n + 2
+        else:
+                if check_gold(n):
+                        n = n + 2
+                else:
+                        print n
+                        break
+
+whwu@master:~/script> python problem_46.py
+5777
+
+
+
+###Problem 47###
+The first two consecutive numbers to have two distinct prime factors are:
+14 = 2 × 7
+15 = 3 × 5
+The first three consecutive numbers to have three distinct prime factors are:
+644 = 2² × 7 × 23
+645 = 3 × 5 × 43
+646 = 2 × 17 × 19.
+Find the first four consecutive integers to have four distinct prime factors. What is the first of these numbers?
+
+
+whwu@master:~/script> cat problem_47.py
+import math
+
+def check_prime(number):
+        if number != 1:
+                for f in range(2, int(math.sqrt(number))+ 1):
+                        if number % f == 0:
+                                return False
+        else:
+                return False
+        return True
+
+
+def factors(b):
+        factors = []
+        for i in range(1, int(b/2)):
+                if b % i == 0:
+                        factors.append(i)
+        return factors
+
+
+answer = []
+numbers = []
+for num in range(134043, 134050):
+        if  check_prime(num):
+                answer.append(0)
+                numbers.append(num)
+        else:
+                prime_factor = []
+                fact = factors(num)
+#               print fact
+                for num1 in fact:
+                        if check_prime(num1):
+                                prime_factor.append(num1)
+#                               print prime_factor
+                answer.append(len(prime_factor))
+                numbers.append(num)
+
+answer_str = ''
+for num2 in answer:
+        answer_str = answer_str + str(num2)
+
+find_index = '4444'
+n = answer_str.index(find_index)
+#print answer_str
+print numbers[n]
+
+whwu@master:~/script> python problem_47.py
+134043
+
+nice version
+
+
+PS C:\Users\Weihong> cat problem_47.py
+def euler47(consecutives = 4):
+        def factors():
+                factors, n = {}, 2
+                while True:
+                        if n not in factors:
+                                factors[n+n] = [n]
+                                yield (n, [n])
+                        else:
+                                for f in factors[n]:
+                                        factors.setdefault(f+n, []).append(f)
+                                yield (n, factors.pop(n))
+                        n += 1
+        found, f = 0, factors()
+        while found < consecutives:
+                n, fn = next(f)
+                if len(fn) == consecutives:
+                        found += 1
+                else:
+                        found = 0
+        return n+1-consecutives
+
+print euler47(consecutives = 4)
+
+PS C:\Users\Weihong> python problem_47.py
+134043
+
+
+
+###Problem 48###
+The series, 11 + 22 + 33 + ... + 1010 = 10405071317.
+Find the last ten digits of the series, 11 + 22 + 33 + ... + 10001000.
+
+whwu@master:~/script> cat problem_48.py
+answer = []
+
+for i in range(1, 1000):
+        num = i**i
+        num_multi = int(str(num)[-11:])
+        answer.append(num_multi)
+
+print sum(answer)
+whwu@master:~/script> python problem_48.py
+45419110846700
+
+
+
+
+
 
 
 
