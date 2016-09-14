@@ -1979,6 +1979,29 @@ print euler47(consecutives = 4)
 PS C:\Users\Weihong> python problem_47.py
 134043
 
+setdefault的用法
+>>> d1 = {}
+>>> d1.setdefault('bob_hu', []).append(1)
+>>> d1
+{'bob_hu': [1]}
+>>> d1.setdefault('bob_hu', []).append(2)
+>>> d1
+{'bob_hu': [1, 2]}
+
+
+字典中pop的用法
+>>> factors = {1:[1],2:[2]}
+>>> factors
+{1: [1], 2: [2]}
+>>> factors.pop(1)
+[1]
+>>> factors
+{2: [2]}
+
+
+
+
+
 
 
 ###Problem 48###
