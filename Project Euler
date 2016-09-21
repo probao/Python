@@ -2117,6 +2117,128 @@ print "Project Euler 54 Solution =", sum(hand_rank(hand[:5]) > hand_rank(hand[5:
 
 
 collections库中Counter的应用
+Counter函数
+>>> from collections import Counter
+>>> hand = ['AS', '3S', 'AH', '6S', '5D']
+>>> c = Counter(x[1]  for x in hand)
+>>> c
+Counter({'S': 3, 'H': 1, 'D': 1})
+>>> c = Counter(x[0]  for x in hand)
+>>> c
+Counter({'A': 2, '3': 1, '5': 1, '6': 1})
+>>> c = Counter(x  for x in hand)
+>>> c
+Counter({'3S': 1, 'AH': 1, 'AS': 1, '6S': 1, '5D': 1})
+
+
+Counter的创建
+>>> c = Counter('gallahad')
+>>> c
+Counter({'a': 3, 'l': 2, 'h': 1, 'g': 1, 'd': 1})
+>>> c = Counter({'a':4, 'b':2})
+>>> c
+Counter({'a': 4, 'b': 2})
+>>> c = Counter(a=4, b=2)
+>>> c
+Counter({'a': 4, 'b': 2})
+
+
+计数值的访问与缺失值的键
+>>> c = Counter('abcdefgab')
+>>> c
+Counter({'a': 2, 'b': 2, 'c': 1, 'e': 1, 'd': 1, 'g': 1, 'f': 1})
+>>> c['a']
+2
+>>> c['b']
+2
+>>> c['h']
+0
+
+
+
+计数器的更新
+计数器的增加
+>>> c = Counter('which')
+>>> c
+Counter({'h': 2, 'i': 1, 'c': 1, 'w': 1})
+>>> c.update('witch')
+>>> c
+Counter({'h': 3, 'i': 2, 'c': 2, 'w': 2, 't': 1})
+
+
+
+计数器的减少
+>>> c = Counter('which')
+>>> c
+Counter({'h': 2, 'i': 1, 'c': 1, 'w': 1})
+>>> c.subtract('witch')
+>>> c
+Counter({'h': 1, 'i': 0, 'c': 0, 'w': 0, 't': -1})
+>>> c['h']
+1
+
+
+键的删除
+>>> del c['i']
+>>> c
+Counter({'h': 1, 'c': 0, 'w': 0, 't': -1})
+
+
+
+elements()
+返回一个迭代器。元素被重复了多少次，在该迭代器中就包含多少个该元素。所有元素按照字母序排序，个数小于1的元素不被包含。
+>>> c = Counter(a=4, b=2, c=0, d=2)
+>>> list(c.elements())
+['a', 'a', 'a', 'a', 'b', 'b', 'd', 'd']
+
+
+most_common([n])
+返回一个TopN列表。如果n没有被指定，则返回所有元素。当多个元素计数值相同时，按照字母序排列。
+>>> c = Counter('abracafabra')
+>>> c.most_common()
+[('a', 5), ('r', 2), ('b', 2), ('c', 1), ('f', 1)]
+>>> c.most_common(3)
+[('a', 5), ('r', 2), ('b', 2)]
+
+
+浅拷贝copy
+>>> c = Counter('abcdcba')
+>>> c
+Counter({'a': 2, 'c': 2, 'b': 2, 'd': 1})
+>>> d = c.copy()
+>>> d
+Counter({'a': 2, 'c': 2, 'b': 2, 'd': 1})
+
+
+算术和集合操作
++、-、&、|操作也可以用于Counter。其中&和|操作分别返回两个Counter对象各元素的最小值和最大值。
+需要注意的是，得到的Counter对象将删除小于1的元素。
+>>> c = Counter(a=3, b=1)
+>>> d = Counter(a=1, b=2)
+>>> c+d
+Counter({'a': 4, 'b': 3})
+>>> c - d
+Counter({'a': 2})
+>>> c & d
+Counter({'a': 1, 'b': 1})
+>>> c | d
+Counter({'a': 3, 'b': 2})
+
+
+
+常用操作
+sum(c.values())  # 所有计数的总数
+c.clear()  # 重置Counter对象，注意不是删除
+list(c)  # 将c中的键转为列表
+set(c)  # 将c中的键转为set
+dict(c)  # 将c中的键值对转为字典
+c.items()  # 转为(elem, cnt)格式的列表
+Counter(dict(list_of_pairs))  # 从(elem, cnt)格式的列表转换为Counter类对象
+c.most_common()[:-n:-1]  # 取出计数最少的n个元素
+c += Counter()  # 移除0和负值
+
+
+
 
 zip函数的应用
 zip函数接受任意多个（包括0个和1个）序列作为参数，返回一个tuple列表。
