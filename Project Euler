@@ -2366,6 +2366,43 @@ zip(* [x] * 3)的意思就明确了，zip(x, x, x)
 
 
 
+###Problem 67###
+Find the maximum total from top to bottom in triangle.txt (right click and 'Save Link/Target As...'), 
+a 15K text file containing a triangle with one-hundred rows.
+
+whwu@pigeon:~/script/PE$ cat problem_67.py
+from urllib import urlopen
+
+file_url = 'https://projecteuler.net/project/resources/p067_triangle.txt'
+triangle = [line.split() for line in urlopen(file_url)]
+triangle = [line.split() for line in open("pe67.txt")]
+#print triangle
+
+for i in range(len(triangle)):
+    triangle[i] = [int(num) for num in triangle[i]]
+
+print  triangle
+
+
+i = len(triangle) - 2
+j = 0
+
+while i >= 0:
+    for j in range(len(triangle[i])):
+        number_origin = triangle[i][j]
+        number_1 = triangle[i+1][j]
+        number_2 = triangle[i+1][j+1]
+        larger = max(number_1, number_2)
+        triangle[i][j] = number_origin + larger
+    i = i -1
+
+print triangle[0][0]
+whwu@pigeon:~/script/PE$ python problem_67.py
+7273
+
+
+
+
 
 
 
