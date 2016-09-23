@@ -530,6 +530,432 @@ array([[ 0,  1,  2],
        [ 0, 28, 80]])
 
 
+用于布尔型数组的方法
+>>> import numpy as np
+>>> arr = np.random.randn(100)
+>>> (arr > 0).sum()	# sum经常被用来对布尔型数组
+58
+
+>>> bools = np.array([False, False, True, False])
+>>> bools.any()	# 用于测试有一个或多个True
+True
+>>> bools.all()	# 用于测试数组中是否全是True
+False
+这两个方法也能用于非布尔型数组，所有非0元素会被当做True
+
+
+排序
+>>> arr = np.random.randn(8)
+>>> arr
+array([-1.50790127, -1.22640436, -0.00729792, -0.42537421, -0.93833854,
+       -0.6814844 ,  1.32235945, -0.09862056])
+>>> arr.sort()
+>>> arr
+array([-1.50790127, -1.22640436, -0.93833854, -0.6814844 , -0.42537421,
+       -0.09862056, -0.00729792,  1.32235945])
+
+
+>>> arr = np.random.randn(3,3)
+>>> arr
+array([[-1.61589688, -0.65173118,  0.14666864],
+       [ 0.87499686,  0.50801178, -0.06954368],
+       [ 1.0262651 ,  1.08821325, -0.45640651]])
+>>> arr.sort(1)		# 水平轴向sort
+>>> arr
+array([[-1.61589688, -0.65173118,  0.14666864],
+       [-0.06954368,  0.50801178,  0.87499686],
+       [-0.45640651,  1.0262651 ,  1.08821325]])
+
+
+>>> arr = np.random.randn(3,3)
+>>> arr
+array([[ 1.42633942, -0.48664113,  0.02979959],
+       [ 0.62360729,  0.57903973,  1.68476841],
+       [ 0.94767599, -0.15832117,  0.97161712]])
+>>> np.sort(arr)	# np.sort是已排序数组的副本
+array([[-0.48664113,  0.02979959,  1.42633942],
+       [ 0.57903973,  0.62360729,  1.68476841],
+       [-0.15832117,  0.94767599,  0.97161712]])
+>>> arr
+array([[ 1.42633942, -0.48664113,  0.02979959],
+       [ 0.62360729,  0.57903973,  1.68476841],
+       [ 0.94767599, -0.15832117,  0.97161712]])
+
+>>> large_arr = np.random.randn(1000)	# 计算数组分位数最简单的办法是对其进行排序，然后选取特定位置的值
+>>> large_arr.sort()
+>>> large_arr[int(0.05*len(large_arr))]
+-1.5109867022543568
+
+
+唯一化以及其他的集合逻辑
+>>> import numpy as np
+>>> names = np.array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'])
+>>> names
+array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'],
+      dtype='|S4')
+>>> np.unique(names)	# 找出数组中的唯一值并返回已排序的结果
+array(['Bob', 'Joe', 'Will'],
+      dtype='|S4')
+
+>>> ints = np.array([3, 3, 3, 2, 2, 1, 1, 4, 4])
+>>> np.unique(ints)
+array([1, 2, 3, 4])
+
+
+>>> values = np.array([6, 0, 0, 3, 2, 5, 6])	# 另一个函数np.in1d用于测试一个数组中的
+>>> np.in1d(values, [2, 3, 6])			# 值在另一个数组中的成员资格，返回一个布尔型数组
+array([ True, False, False,  True,  True, False,  True], dtype=bool)
+
+
+线性代数
+
+>>> import numpy as np
+>>> x = np.array([[1, 2, 3], [4, 5, 6]])
+>>> y = np.array([[6, 23], [-1, 7], [8, 9]])
+>>> x
+array([[1, 2, 3],
+       [4, 5, 6]])
+>>> y
+array([[ 6, 23],
+       [-1,  7],
+       [ 8,  9]])
+>>> np.dot(x, y)
+array([[ 28,  64],
+       [ 67, 181]])
+
+
+>>> z = np.ones(3)
+>>> z
+array([ 1.,  1.,  1.])
+>>> x
+array([[1, 2, 3],
+       [4, 5, 6]])
+>>> np.dot(x, z)
+array([  6.,  15.])
+
+
+>>> from numpy.linalg import inv, qr
+>>> X = np.array([[2,3],[4,5]])
+>>> X
+array([[2, 3],
+       [4, 5]])
+>>> M = X.T	# 求X的转置矩阵
+>>> M
+array([[2, 4],	
+       [3, 5]])
+>>> X.T.dot(X)	# 先求X的转置矩阵然后与X点乘，XT*X
+array([[20, 26],
+       [26, 34]])
+
+>>> X
+array([[2, 3],
+       [4, 5]])
+>>> inv(X)	# inv求X的逆矩阵
+array([[-2.5,  1.5],
+       [ 2. , -1. ]])
+>>> inv(X).dot(X)	# 互逆矩阵乘积为I
+array([[ 1.,  0.],
+       [ 0.,  1.]])
+
+
+随机数生成
+>>> nsteps = 1000
+>>> draws = np.random.randint(0, 2, size=nsteps)	# 随机生成100
+>>> steps = np.where(draws > 0, 1, -1)
+>>> walk = steps.cumsum()
+>>> walk.min()
+-24
+>>> walk.max()
+19
+
+
+
+
+###################################
+############pandas入门#############
+###################################
+
+
+>>> from pandas import Series, DataFrame
+>>> import pandas as pd
+>>> obj = Series([4, 7, -5, 3])
+>>> obj
+0    4
+1    7
+2   -5
+3    3
+dtype: int64
+
+>>> obj.values
+array([ 4,  7, -5,  3])
+>>> obj.index
+RangeIndex(start=0, stop=4, step=1)
+>>>
+>>> obj2 = Series([4, 7, -5, 3], index = ['d', 'b', 'a', 'c'])
+>>> obj2
+d    4
+b    7
+a   -5
+c    3
+dtype: int64
+>>> obj2['a']
+-5
+>>> obj2.index
+Index([u'd', u'b', u'a', u'c'], dtype='object')
+
+与普通NumPy数组相比，你可以通过索引的方式选取Series中的单个或一组值：
+>>> from pandas import Series, DataFrame
+>>> import pandas as pd
+>>> obj2 = Series([4, 7, -5, 3], index=['d', 'b', 'a', 'c'])
+>>> obj2['a']
+-5
+>>> obj2['d'] = 10
+>>> obj2
+d    10
+b     7
+a    -5
+c     3
+dtype: int64
+>>> obj2[['c', 'a', 'd']]
+c     3
+a    -5
+d    10
+dtype: int64
+
+
+NumPy数组运算（如根据布尔型数组进行过滤、标量乘法、应用数学函数等）都会保留索引和
+值之间的链接
+>>> obj2
+d    10
+b     7
+a    -5
+c     3
+dtype: int64
+>>> obj2[obj2 > 0]
+d    10
+b     7
+c     3
+dtype: int64
+
+>>> obj2*2
+d    20
+b    14
+a   -10
+c     6
+
+>>> import numpy as np
+>>> np.exp(obj2)
+d    22026.465795
+b     1096.633158
+a        0.006738
+c       20.085537
+
+
+将Series看成是一个定长的有序字典，因为它是索引值到数据值的一个映射。
+它可以用在许多原本需要字典参数的函数中
+>>> 'b' in obj2
+True
+>>> 'e' in obj2
+False
+
+如果数据被放在一个Python字典中，也可以直接通过这个字典来创建Series：
+>>> sdata = {'Ohio': 35000, 'Texas': 71000, 'Oregon' : 16000,
+>>> obj3 = Series(sdata)
+>>> obj3
+Ohio      35000
+Oregon    16000
+Texas     71000
+Utah       5000
+dtype: int64
+
+sdata中跟states索引相匹配的那3个值会被找出来并放到相应
+的位置上，但由于"California"所对应的sdata值找不到，所以其结果为NaN
+>>> states = ['California', 'Ohio', 'Oregon', 'Texas']
+>>> obj4 = Series(sdata, index = states)
+>>> obj4
+California        NaN
+Ohio          35000.0
+Oregon        16000.0
+Texas         71000.0
+dtype: float64
+
+
+pandas的isnull和notnull函数可用于检测缺失数据：
+>>> pd.isnull(obj4)
+California     True
+Ohio          False
+Oregon        False
+Texas         False
+dtype: bool
+>>> pd.notnull(obj4)
+California    False
+Ohio           True
+Oregon         True
+Texas          True
+dtype: bool
+
+
+Series最重要的一个功能是：它在算术运算中会自动
+对齐不同索引的数据
+>>> obj3
+Ohio      35000
+Oregon    16000
+Texas     71000
+Utah       5000
+dtype: int64
+>>> obj4
+California        NaN
+Ohio          35000.0
+Oregon        16000.0
+Texas         71000.0
+dtype: float64
+>>> obj3 + obj4
+California         NaN
+Ohio           70000.0
+Oregon         32000.0
+Texas         142000.0
+Utah               NaN
+dtype: float64
+
+
+Series对象本身及其索引都有一个name属性，该属性跟pandas其他的
+功能非常密切：
+>>> obj4.name = 'population'
+>>> obj4.index.name = 'state'
+>>> obj4
+state
+California        NaN
+Ohio          35000.0
+Oregon        16000.0
+Texas         71000.0
+Name: population, dtype: float64
+
+
+Series的索引可以通过赋值的方式就地修改：
+>>> obj = Series([4, 7, -5, 3])
+>>> obj
+0    4
+1    7
+2   -5
+3    3
+dtype: int64
+>>> obj
+0    4
+1    7
+2   -5
+3    3
+dtype: int64
+>>> obj.index=['Bob', 'Steve', 'Jeff', 'Ryan']
+>>> obj
+Bob      4
+Steve    7
+Jeff    -5
+Ryan     3
+dtype: int64
+
+
+DataFrame表格型数据结构
+>>> data = {'state': ['Ohio', 'Ohio', 'Ohio', 'Nevada', 'Nevada'],
+... 'year': [2000, 2001, 2002, 2001, 2002],
+... 'pop': [1.5, 1.7, 3.6, 2.4, 2.9]}
+>>> frame = DataFrame(data)
+>>> frame
+   pop   state  year
+0  1.5    Ohio  2000
+1  1.7    Ohio  2001
+2  3.6    Ohio  2002
+3  2.4  Nevada  2001
+4  2.9  Nevada  2002
+
+
+如果指定了列序列，则DataFrame的列就会按照指定顺序进行排序
+>>> DataFrame(data, columns = ['year', 'state', 'pop'])
+   year   state  pop
+0  2000    Ohio  1.5
+1  2001    Ohio  1.7
+2  2002    Ohio  3.6
+3  2001  Nevada  2.4
+4  2002  Nevada  2.9
+
+跟Series一样，如果传入的列在数据中找不到，就会产生NA值：
+>>> frame2 = DataFrame(data, columns=['year', 'state', 'pop', 'debt'],
+... index = ['one', 'two', 'three', 'four', 'five'])
+>>> frame2
+       year   state  pop debt
+one    2000    Ohio  1.5  NaN
+two    2001    Ohio  1.7  NaN
+three  2002    Ohio  3.6  NaN
+four   2001  Nevada  2.4  NaN
+five   2002  Nevada  2.9  NaN
+
+
+
+通过类似字典标记的方式或属性的方式，可以将DataFrame的列获取为一个Series：
+>>> frame2['state']
+one        Ohio
+two        Ohio
+three      Ohio
+four     Nevada
+five     Nevada
+Name: state, dtype: object
+>>> frame['year']
+0    2000
+1    2001
+2    2002
+3    2001
+4    2002
+Name: year, dtype: int64
+
+行也可以通过位置或名称的方式进行获取，比如用索引字段ix
+>>> frame2.ix['three']
+year     2002
+state    Ohio
+pop       3.6
+debt      NaN
+
+列可以通过赋值的方式进行修改。
+>>> frame2['debt'] = np.arange(5.)
+>>> frame2
+       year   state  pop  debt
+one    2000    Ohio  1.5   0.0
+two    2001    Ohio  1.7   1.0
+three  2002    Ohio  3.6   2.0
+four   2001  Nevada  2.4   3.0
+five   2002  Nevada  2.9   4.0
+
+
+将列表或数组赋值给某个列时，其长度必须跟DataFrame的长度相匹配。
+>>> val = Series([-1.2, -1.5, -1.7], index=['two', 'four', 'five'])
+>>> frame2['debt'] = val
+>>> frame2
+       year   state  pop  debt
+one    2000    Ohio  1.5   NaN
+two    2001    Ohio  1.7  -1.2
+three  2002    Ohio  3.6   NaN
+four   2001  Nevada  2.4  -1.5
+five   2002  Nevada  2.9  -1.7
+
+
+为不存在的列赋值会创建出一个新列。关键字del用于删除列：
+>>> frame2['eastern'] = frame2.state == 'Ohio'
+>>> frame2
+       year   state  pop  debt eastern
+one    2000    Ohio  1.5   NaN    True
+two    2001    Ohio  1.7  -1.2    True
+three  2002    Ohio  3.6   NaN    True
+four   2001  Nevada  2.4  -1.5   False
+five   2002  Nevada  2.9  -1.7   False
+
+
+另一种常见的数据形式是嵌套字典（也就是字典的字典）
+>>> pop = {'Nevada': {2001: 2.4, 2002: 2.9},
+... 'Ohio':{2000: 1.5, 2001: 1.7, 2002: 3.6}}
+>>> frame3 = DataFrame(pop)
+>>> frame3
+      Nevada  Ohio
+2000     NaN   1.5
+2001     2.4   1.7
+2002     2.9   3.6
 
 
 
