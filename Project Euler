@@ -2074,29 +2074,6 @@ for num1 in prime_list:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ###Problem 50###(maybe some problems)
 The prime 41, can be written as the sum of six consecutive primes:
 41 = 2 + 3 + 5 + 7 + 11 + 13
@@ -2160,6 +2137,45 @@ print times
 #print times[answer.index(max(answer))]
 #print number_list[answer.index(max(answer))]
 print max(answer)
+
+
+
+###Problem 52###
+It can be seen that the number, 125874, and its double, 251748, contain exactly the same digits, but in a different order.
+Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
+
+whwu@owl:~/script/PE$ cat problem_52.py
+f = lambda n:sorted(str(n))
+
+n = 99999
+while not f(n*2) == f(n*3) == f(n*5) == f(n*6): n += 9
+print "Project Euler 52 Solution =", n
+whwu@owl:~/script/PE$ python problem_52.py
+Project Euler 52 Solution = 142857
+
+lambda表达式学习
+
+lambda只是一个表达式，函数体比def简单很多。
+lambda的主体是一个表达式，而不是一个代码块。仅仅能在lambda表达式中封装有限的逻辑进去。
+lambda表达式是起到一个函数速写的作用。允许在代码内嵌入一个函数的定义。
+
+>>> f = lambda x,y,z:x+y+x	# 定义一个lambda函数，求三个数之和
+>>> f(1,2,3)
+4
+>>> f = lambda x,y,z:x+y+z
+>>> f(1,2,3)
+6
+
+
+>>> n = 5
+>>> reduce(lambda x,y:x*y, range(1,n+1))	# reduce函数 reduce(function, sequence, starting_value)：对sequence中的item顺序迭代调用function
+120
+
+
+
+
+
+
 
 
 
