@@ -958,6 +958,270 @@ five   2002  Nevada  2.9  -1.7   False
 2002     2.9   3.6
 
 
+转置
+>>> frame3.T
+        2000  2001  2002
+Nevada   NaN   2.4   2.9
+Ohio     1.5   1.7   3.6
+
+由Series组成的字典差不多也是一样的用法：
+>>> pdata = {'Ohio':frame3['Ohio'][:-1],
+... 'Nevada': frame3['Nevada'][:2]}
+>>> DataFrame(pdata)
+      Nevada  Ohio
+2000     NaN   1.5
+2001     2.4   1.7
+
+
+如果设置了DataFrame的index和columns的name属性，则这些信息也会被显示出来
+>>> frame3.index.name = 'year'
+>>> frame3.columns.name = 'state'
+>>> frame3
+state  Nevada  Ohio
+year
+2000      NaN   1.5
+2001      2.4   1.7
+2002      2.9   3.6
+
+
+跟Series一样，values属性也会以二维ndarray的形式返回DataFrame中的数据：
+>>> frame3.values
+array([[ nan,  1.5],
+       [ 2.4,  1.7],
+       [ 2.9,  3.6]])
+>>> frame2.values
+array([[2000, 'Ohio', 1.5, nan, True],
+       [2001, 'Ohio', 1.7, -1.2, True],
+       [2002, 'Ohio', 3.6, nan, True],
+       [2001, 'Nevada', 2.4, -1.5, False],
+       [2002, 'Nevada', 2.9, -1.7, False]], dtype=object)
+
+
+
+二维ndarry可以输入给DataFrame构造器的数据
+>>> xarr = np.array([[1, 2, 3], [2, 4, 6]])
+>>> xarr
+array([[1, 2, 3],
+       [2, 4, 6]])
+>>> frame5 = DataFrame(xarr)
+>>> frame5
+   0  1  2
+0  1  2  3
+1  2  4  6
+>>> frame5 = DataFrame(xarr, columns=['A', 'B','F'], index = ['C', 'D'])
+>>> frame5
+   A  B  F
+C  1  2  3
+D  2  4  6
+
+索引对象
+>>> obj = Series(range(3), index=['a', 'b', 'c'])
+>>> obj
+a    0
+b    1
+c    2
+dtype: int64
+>>> index = obj.index
+>>> index
+Index([u'a', u'b', u'c'], dtype='object')
+>>> index[1:]
+Index([u'b', u'c'], dtype='object')
+
+Index对象是不可修改的
+>>> index[1]
+'b'
+>>> index[1] = 'd'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/opt/linux/centos/7.x/x86_64/pkgs/python/2.7.5/lib64/python2.7/site-packages/pandas/indexes/base.py", line 1237, in __setitem__
+    raise TypeError("Index does not support mutable operations")
+TypeError: Index does not support mutable operations
+
+不可修改性非常重要，因为这样才能使Index对象在多个数据结构之间安全共享
+>>> obj2 = Series([1.5, -2.5, 0], index=index)
+>>> obj2
+0    1.5
+1   -2.5
+2    0.0
+dtype: float64
+>>> obj2.index is index
+True
+
+
+Index的功能也类似一个固定大小的集合
+>>> import pandas as pd
+>>> from pandas import Series, DataFrame
+>>>
+>>>
+>>> pop = {'Nevada':{2001: 2.4, 2002: 2.9},
+... 'Ohio': {2000: 1.5, 2001: 1.7, 2002: 3.6}}
+>>> frame3 = DataFrame(pop)
+>>> frame3
+      Nevada  Ohio
+2000     NaN   1.5
+2001     2.4   1.7
+2002     2.9   3.6
+>>> 'Ohio' in frame3.columns
+True
+>>> 2003 in frame3.index
+False
+
+
+基本功能
+重新索引 reindex
+>>> obj = Series([4.5, 7.2, -5.3, 3.6], index=['d', 'b', 'a', 'c'])
+>>> obj
+d    4.5
+b    7.2
+a   -5.3
+c    3.6
+dtype: float64
+>>> obj2 = obj.reindex(['a', 'b', 'c', 'd', 'e']) # 调用该Series的reindex将会根据新索引
+>>> obj
+d    4.5
+b    7.2
+a   -5.3
+c    3.6
+dtype: float64
+>>> obj2
+a   -5.3
+b    7.2
+c    3.6
+d    4.5
+e    NaN
+dtype: float64
+>>> obj2 = obj.reindex(['a', 'b', 'c', 'd', 'e'], fill_value=0)# 用fill_value来填充值
+>>> obj2
+a   -5.3
+b    7.2
+c    3.6
+d    4.5
+e    0.0
+dtype: float64
+
+
+对于时间序列这样的有序数据，需要插值处理
+>>> obj3 = Series(['blue', 'purple', 'yellow'], index=[0, 2, 4])	
+>>> obj3.reindex(range(6), method = 'ffill')	# method选项 可进行插值处理 ffill 前向插值，和前面的一样
+0      blue
+1      blue
+2    purple
+3    purple
+4    yellow
+5    yellow
+dtype: object
+
+>>> obj3.reindex(range(5), method = 'bfill')	# bfill 后向引用 和后面的一样
+0      blue
+1    purple
+2    purple
+3    yellow
+4    yellow
+
+
+对于DataFrame，reindex可以修改（行）索引、列，或两个都修改。如果仅转入一个序列，则会重新
+索引行：
+>>> frame = DataFrame(np.arange(9).reshape((3, 3)), index = ['a', 'c', 'd'], columns = ['Ohio', 'Texas', 'California'])
+>>> frame
+   Ohio  Texas  California
+a     0      1           2
+c     3      4           5
+d     6      7           8
+
+
+>>> import numpy as np
+>>> frame = DataFrame(np.arange(9).reshape((3, 3)), index = ['a', '               umns = ['Ohio', 'Texas', 'California'])
+>>> frame
+   Ohio  Texas  California
+a     0      1           2
+c     3      4           5
+d     6      7           8
+>>> frame2 = frame.reindex(['a', 'b', 'c', 'd'])
+>>> frame2
+   Ohio  Texas  California
+a   0.0    1.0         2.0
+b   NaN    NaN         NaN
+c   3.0    4.0         5.0
+d   6.0    7.0         8.0
+>>> states = ['Texas', 'Utah', 'California']
+>>> frame.reindex(columns = states)
+   Texas  Utah  California
+a      1   NaN           2
+c      4   NaN           5
+d      7   NaN           8
+
+也可以同时对行和列进行重新索引，而插值则只能按行引用（即轴0）：
+>>> frame.reindex(index=['a', 'b', 'c', 'd'], method='ffill', columns=states)
+   Texas  Utah  California
+a      1   NaN           2
+b      1   NaN           2
+c      4   NaN           5
+d      7   NaN           8
+
+
+利用ix的标签索引功能，重新索引任务可以变得更简洁：
+>>> frame.ix[['a', 'b', 'c', 'd'], states]
+   Texas  Utah  California
+a    1.0   NaN         2.0
+b    NaN   NaN         NaN
+c    4.0   NaN         5.0
+d    7.0   NaN         8.0
+
+
+丢弃指定轴上的项
+>>> obj = Series(np.arange(5.), index=['a', 'b', 'c', 'd', 'e'])
+>>> obj
+a    0.0
+b    1.0
+c    2.0
+d    3.0
+e    4.0
+dtype: float64
+>>> new_obj = obj.drop('c')	# drop方法返回的是一个在指定轴上删除了指定值的新对象
+>>> new_obj
+a    0.0
+b    1.0
+d    3.0
+e    4.0
+dtype: float64
+>>> obj.drop(['d', 'c'])
+a    0.0
+b    1.0
+e    4.0
+dtype: float64
+
+
+对于DataFrame，可以删除任意轴上的索引值：
+>>> data = DataFrame(np.arange(16).reshape((4, 4)),
+... index=['Ohio', 'Colorado', 'Utah', 'New York'],
+... columns=['one', 'two', 'three', 'four'])
+>>>
+>>> data
+          one  two  three  four
+Ohio        0    1      2     3
+Colorado    4    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+
+>>> data.drop(['Colorado', 'Ohio'])
+          one  two  three  four
+Utah        8    9     10    11
+New York   12   13     14    15
+
+>>> data.drop('two', axis=1)
+          one  three  four
+Ohio        0      2     3
+Colorado    4      6     7
+Utah        8     10    11
+New York   12     14    15
+
+>>> data.drop(['two', 'four'], axis=1)	
+          one  three
+Ohio        0      2
+Colorado    4      6
+Utah        8     10
+New York   12     14
+
 
 
 
