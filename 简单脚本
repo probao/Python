@@ -64,3 +64,28 @@ number:1000
 
 
 
+
+#############################################
+#########从文本文件中提取数据形成行数组#########
+#############################################
+
+PS C:\Users\Weihong> cat .\test.txt
+11,2,3,4
+5,6,7,8
+9,10,11,12
+
+PS C:\Users\Weihong> cat .\summary_1.py
+import numpy as np
+
+number = [line.strip('\n').split(',') for line in open('test.txt')]	# strip()去除某项 split()分隔某项 strip必须在split前面
+
+for i in range(len(number)):
+        number[i] = np.array([int(num) for num in number[i]])	# 形成行数组
+print number
+print number[0]+number[1]	#两行数组相加
+
+
+
+PS C:\Users\Weihong> python .\summary_1.py
+[array([11,  2,  3,  4]), array([5, 6, 7, 8]), array([ 9, 10, 11, 12])]
+[16  8 10 12]
