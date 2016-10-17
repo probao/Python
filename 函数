@@ -148,6 +148,13 @@ def union(*args):
 >>> intersect(s1,s2,s3),union(s1,s2,s3)
 (['S', 'A', 'M'], ['S', 'P', 'A', 'M', 'C', 'L'])
 
+>>> def intersect(*args):	# *args生成的是一个元组
+...     print args
+...
+>>> s1,s2,s3="SPAM","SCAM","SLAM"
+>>> intersect(s1, s2, s3)
+('SPAM', 'SCAM', 'SLAM')
+
 
 lambda表达式
 一般形式：
