@@ -79,6 +79,7 @@ import numpy as np
 
 number = [line.strip('\n').split(',') for line in open('test.txt')]	# strip()去除某项 split()分隔某项 strip必须在split前面
 
+
 for i in range(len(number)):
         number[i] = np.array([int(num) for num in number[i]])	# 形成行数组
 print number
@@ -89,3 +90,32 @@ print number[0]+number[1]	#两行数组相加
 PS C:\Users\Weihong> python .\summary_1.py
 [array([11,  2,  3,  4]), array([5, 6, 7, 8]), array([ 9, 10, 11, 12])]
 [16  8 10 12]
+
+
+
+######################################
+#####从文件中读取数据并输出至文件#######
+######################################
+
+[hlliu@server distribition]$ cat charge.py 
+with open("temp2-onecolumn.data") as f:		# 读取文件
+        a = f.read().split()			# 读取每个元素，按空格分割，列表形式
+        b = map(float, a)			# 使用map函数 把a中元素变成 浮点数形式
+
+
+f1 = open("result.txt", "w")			# 创建一个新的文件，目的是写入（w）
+
+i=0
+j=50176
+while j <= 11239424:
+        result = sum(b[i:j])/50176
+        print >> f1, result			# 输出至新文件
+        i=i+50176
+        j=j+50176
+
+f1.close()
+
+[hlliu@server distribition]$ wc -l result.txt 
+224 result.txt
+
+
