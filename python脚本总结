@@ -168,3 +168,269 @@ PS C:\Users\Weihong> cat .\result.txt
 0.0
 0.0
 
+
+#########################################
+##########遗传算法求解函数最大值###########
+#########################################
+
+import math
+import random
+
+#transform binary to decimal for a number
+def b2d(b):
+        t=0
+        for j in range(len(b)):
+                t += b[j]*(math.pow(2,j))
+        t=float(t*10)/1023
+        return t
+
+
+# transform binary to decimal for one population
+def decodechrom(pop):
+        temp=[]
+        for i in range(len(pop)):
+                t=0
+                for j in range(10):
+                        t+=pop[i][j]*(math.pow(2,j))
+                temp.append(t)
+        return temp
+
+# calculate the value according to the equation
+def calobjvalue(pop):
+        temp1 = []
+        objvalue=[]
+        temp1=decodechrom(pop)
+        for i in range(len(temp1)):
+                x=float(temp1[i])*10/1023
+                objvalue.append(10*math.sin(5*x)+7*math.cos(4*x))
+        return objvalue
+
+# calculate the fit value if value equals to 0, then make it zero
+def calfitvalue(objvalue):
+        fitvalue=[]
+        temp=0.0
+        Cmin=0
+        for i in range(len(objvalue)):
+                if (objvalue[i] + Cmin) > 0:
+                        temp =Cmin + objvalue[i]
+                else:
+                        temp = 0.0
+                fitvalue.append(temp)
+        return fitvalue
+
+# choose the best results
+def best(pop, fitvalue):
+        px=len(pop)
+        bestindividual=[]
+        bestfit=fitvalue[0]
+        for i in range(1, px):
+                if (fitvalue[i] > bestfit):
+                        bestfit=fitvalue[i]
+                        bestindividual=pop[i]
+        return [bestindividual, bestfit]
+
+# selection
+def sum(fitvalue):
+        total=0
+        for i in range(len(fitvalue)):
+                total += fitvalue[i]
+        return total
+
+def cumsum(fitvalue):
+        for i in range(len(fitvalue)):
+                t=0
+                j=0
+                while j<=i:
+                        t += fitvalue[j]
+                        j += 1
+                fitvalue[i] = t
+
+def selection(pop, fitvalue):
+        newfitvalue = []
+        totalfit = sum(fitvalue)
+        for i in range(len(fitvalue)):
+                newfitvalue.append(fitvalue[i]/totalfit)
+        cumsum(newfitvalue)
+        ms=[]
+        poplen=len(pop)
+        for i in range(poplen):
+                ms.append(random.random())
+        ms.sort()
+        fitin = 0
+        newin = 0
+        newpop = pop
+        while newin < poplen:
+                if ms[newin] < newfitvalue[fitin]:
+                        newpop[newin] = pop[fitin]
+                        newin = newin + 1
+                else:
+                        fitin = fitin + 1
+        pop = newpop
+
+def crossover(pop, pc):
+        poplen = len(pop)
+        for i in range(poplen-1):
+                if random.random() < pc:
+                        cpoint = random.randint(0, len(pop[0]))
+                        temp1 = []
+                        temp2 = []
+                        temp1.extend(pop[i][0:cpoint])
+                        temp1.extend(pop[i+1][cpoint:len(pop[i])])
+                        temp2.extend(pop[i+1][0:cpoint])
+                        temp2.extend(pop[i][cpoint:len(pop[i])])
+                        pop[i] = temp1
+                        pop[i+1] = temp2
+
+
+def mutation(pop, pm):
+        px = len(pop)
+        py = len(pop[0])
+        for i in range(px):
+                if random.random() < pm:
+                        mpoint = random.randint(0, py-1)
+                        if (pop[i][mpoint] == 1):
+                                pop[i][mpoint]=0
+                        else:
+                                pop[i][mpoint]=1
+
+
+#initial defination
+popsize=50
+chromlength=10
+pc=0.6
+pm=0.001
+results=[[]]
+bestindividual=[]
+bestfit=0
+fitvalue=[]
+tempop=[[]]
+pop=[[0, 1, 0, 1, 0, 1, 0, 1, 0, 1] for i in range(popsize)]
+
+#main loop
+for i in range(100):
+        objvalue=calobjvalue(pop)
+        fitvalue=calfitvalue(objvalue)
+        [bestindividual, bestfit]=best(pop, fitvalue)
+        results.append([bestfit,b2d(bestindividual)])
+        selection(pop, fitvalue)
+        crossover(pop, pc)
+        mutation(pop, pc)
+
+results.sort()
+print(results[-1])
+
+[hlliu@server GA]$ python GA.py 
+[16.996303434375456, 7.849462365591398]
+
+
+#########################################
+##############计算偏摩尔体积##############
+#########################################
+[hlliu@server Vm]$ cat calc_Vm.py 
+import numpy as np
+
+#set T, p_gc
+p_l=float(raw_input("The liquid P:"))
+T=float(raw_input("The temperture:"))
+p_gc=0
+
+#constant
+pc=3801100
+Tc=424.9
+Tr=0.7
+w=0.193
+s=-0.06413
+R=8.314
+Pi=189.9
+epison=0.000001
+r=5
+theta=np.pi/3
+delta=0.00001
+
+k=0.37464+1.54226*w-0.26992*w*w
+alpha=(1+k*(1-Tr**0.5))**2
+a=0.45724*R*R*Tc*Tc/pc
+b=0.07780*R*Tc/pc
+
+i=0
+T_list=[T]
+d_f_list=[]
+
+#function
+def func_A(p, T):
+        A=a*alpha*p/(R*R*T*T)
+        return A
+
+def func_B(p, T):
+        B=b*p/(R*T)
+        return B
+
+def func_Z(p, T):
+        A=func_A(p, T)
+        B=func_B(p, T)
+        para2=-(1-B)
+        para3=A-3*B*B-2*B
+        para4=-(A*B-B*B-B*B*B)
+        f=np.poly1d([1, para2, para3, para4])
+        result=[]
+        for i in list(f.r):
+                if i > 0 and i.imag == 0:
+                        result.append(i) 
+        return result
+
+
+def func_phi(Z, p, T):
+        A=func_A(p, T)
+        B=func_B(p, T)
+        phi=np.exp( Z-1-np.log(Z-B)-(A/(2*2**0.5*B))*np.log((Z+(1+2**0.5)*B)/(Z+(1-2**0.5)*B)) )
+        return phi
+
+
+def func_f(Z, p, T):
+        phi=func_phi(Z, p, T)
+        f=p*phi
+        return f
+
+while True:
+        fV_l=min(func_Z(p_l, T))*R*T/p_l-s*b
+        while True:
+                p_g=p_l+p_gc
+                fV_g= max(func_Z(p_g, T))*R*T/p_g-s*b
+                sigma=(Pi*(1/(fV_l*1000000)-1/(fV_g*1000000)))**4
+                p_c=1000*1000*2*sigma*np.cos(theta)/r
+                if np.abs(p_c-p_gc) < epison:
+                        break
+                else:
+                        p_gc=(p_c+p_gc)/2
+
+        Z_l=min(func_Z(p_l, T))
+        Z_g=max(func_Z(p_g, T))
+        f_l=func_f(Z_l, p_l, T)
+        f_g=func_f(Z_g, p_g, T)
+        d_f_list.append(abs(f_l-f_g))
+        if np.abs(f_l-f_g) < epison:
+                break
+        else:
+                if i==0:
+                        T=T-0.1
+                        T_list.append(T)
+                        i+=1
+                else:
+                        slope=(d_f_list[i]-d_f_list[i-1])/(T_list[i]-T_list[i-1])
+                        T=T_list[i]-d_f_list[i]/slope
+                        T_list.append(T)
+                        i+=1
+
+print float(p_l)/1000, p_c/1000, T, fV_l*1000, fV_g*1000, i
+
+[hlliu@server Vm]$ python calc_Vm.py 
+The liquid P:34470
+The temperture:354.6
+34.47 1023.59243287 386.006408925 0.120089413866 2.45888281615 8
+
+
+
+
+
+
+
