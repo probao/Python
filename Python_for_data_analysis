@@ -913,6 +913,23 @@ state    Ohio
 pop       3.6
 debt      NaN
 
+>>> frame2
+       year   state  pop debt
+one       1    Ohio  1.5  NaN
+two    2001    Ohio  1.7  NaN
+three  2002    Ohio  3.6  NaN
+four   2001  Nevada  2.4  NaN
+five   2002  Nevada  2.9  NaN
+>>> frame2['debt']['one']=2
+>>> frame2
+       year   state  pop debt
+one       1    Ohio  1.5    2
+two    2001    Ohio  1.7  NaN
+three  2002    Ohio  3.6  NaN
+four   2001  Nevada  2.4  NaN
+five   2002  Nevada  2.9  NaN
+
+
 列可以通过赋值的方式进行修改。
 >>> frame2['debt'] = np.arange(5.)
 >>> frame2
@@ -956,7 +973,6 @@ five   2002  Nevada  2.9  -1.7   False
 2000     NaN   1.5
 2001     2.4   1.7
 2002     2.9   3.6
-
 
 转置
 >>> frame3.T
@@ -1061,10 +1077,25 @@ Index的功能也类似一个固定大小的集合
 2000     NaN   1.5
 2001     2.4   1.7
 2002     2.9   3.6
+
+>>> pdata={'Ohio':frame3['Ohio'][:-1],	# 到最后个为止
+... 'Nevada':frame3['Nevada'][:2]}	# 输出第0个，第1个
+>>> DataFrame(pdata)
+      Nevada  Ohio
+2000     NaN   1.5
+2001     2.4   1.7
+
 >>> 'Ohio' in frame3.columns
 True
 >>> 2003 in frame3.index
 False
+
+
+索引对象
+
+
+
+
 
 
 基本功能
@@ -1090,6 +1121,7 @@ c    3.6
 d    4.5
 e    NaN
 dtype: float64
+
 >>> obj2 = obj.reindex(['a', 'b', 'c', 'd', 'e'], fill_value=0)# 用fill_value来填充值
 >>> obj2
 a   -5.3
@@ -1223,7 +1255,566 @@ Utah        8     10
 New York   12     14
 
 
+索引、选取和过滤
+>>> obj=Series(np.arange(4.), index=['a', 'b', 'c', 'd'])
+>>> obj
+a    0.0
+b    1.0
+c    2.0
+d    3.0
+dtype: float64
+>>> obj['b']
+1.0
+>>> obj[1]
+1.0
+>>> obj[2:4]
+c    2.0
+d    3.0
+dtype: float64
+>>> obj[['b','a','d']]
+b    1.0
+a    0.0
+d    3.0
+dtype: float64
+>>> obj[[1,3]]
+b    1.0
+d    3.0
+dtype: float64
+>>> obj[obj<2]
+a    0.0
+b    1.0
+dtype: float64
 
+利用标签的切片运算与普通的python切片不同，其末端是包含的
+>>> obj['b':'c']=5
+>>> obj
+a    0.0
+b    5.0
+c    5.0
+d    3.0
+dtype: float64
+
+
+>>> data=DataFrame(np.arange(16).reshape((4,4)),
+... index=['Ohio', 'Colorado', 'Utah', 'New York'],
+... columns=['one','two','three','four'])
+>>> data
+          one  two  three  four
+Ohio        0    1      2     3
+Colorado    4    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+>>> data['two']
+Ohio         1
+Colorado     5
+Utah         9
+New York    13
+Name: two, dtype: int32
+>>> data[['three','one']]
+          three  one
+Ohio          2    0
+Colorado      6    4
+Utah         10    8
+New York     14   12
+
+
+>>> data=DataFrame(np.arange(16).reshape((4,4)),
+... index=['Ohio', 'Colorado', 'Utah', 'New York'],
+... columns=['one','two','three','four'])
+>>> data
+          one  two  three  four
+Ohio        0    1      2     3
+Colorado    4    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+>>> data['two']	# 选取DataFrame中的列
+Ohio         1
+Colorado     5
+Utah         9
+New York    13
+Name: two, dtype: int32
+>>> data[['three','one']]	# 选取DataFrame中的两列
+          three  one
+Ohio          2    0
+Colorado      6    4
+Utah         10    8
+New York     14   12
+>>> data[:2]			# 选取data中的两行
+          one  two  three  four
+Ohio        0    1      2     3
+Colorado    4    5      6     7
+>>> data[data['three']>5]	# 布尔运算
+          one  two  three  four
+Colorado    4    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+
+
+这段代码的目的是使DataFrame在语法上更像ndarray
+>>> data<5
+            one    two  three   four
+Ohio       True   True   True   True
+Colorado   True  False  False  False
+Utah      False  False  False  False
+New York  False  False  False  False
+>>>
+>>>
+>>>
+>>> data[data<5]=0
+>>> data
+          one  two  three  four
+Ohio        0    0      0     0
+Colorado    0    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+
+
+为了在DataFrame的行上进行标签索引，引入专门的索引字段ix
+
+>>> data
+          one  two  three  four
+Ohio        0    0      0     0
+Colorado    0    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+>>> data.ix['Colorado', ['two', 'three']]	# Colorado行， two列和three列
+two      5
+three    6
+Name: Colorado, dtype: int32
+>>> data.ix[['Colorado','Utah'],[3, 0, 1]]	# Colorado，Utah行以及3,0,1列
+          four  one  two
+Colorado     7    0    5
+Utah        11    8    9
+
+
+>>> data
+          one  two  three  four
+Ohio        0    0      0     0
+Colorado    0    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+>>> data.ix[2]					# 选取第三行
+one       8
+two       9
+three    10
+four     11
+Name: Utah, dtype: int32
+
+
+>>> data.ix[:'Utah', 'two']			# 从第一行到Utah行的第二列
+Ohio        0
+Colorado    5
+Utah        9
+
+
+>>> data.ix[data.three > 5, :3]			# three列大于5的行，第一列到第三列
+          one  two  three
+Colorado    0    5      6
+Utah        8    9     10
+New York   12   13     14
+>>> data
+          one  two  three  four
+Ohio        0    0      0     0
+Colorado    0    5      6     7
+Utah        8    9     10    11
+New York   12   13     14    15
+>>> data.ix[data.three > 5, :1]
+          one
+Colorado    0
+Utah        8
+New York   12
+>>> data.ix[data.three > 5, :0]
+Empty DataFrame
+Columns: []
+Index: [Colorado, Utah, New York]
+
+
+算术运算和数据对齐
+>>> s1=Series([7.3, -2.5, 3.4, 1.5], index=['a', 'c', 'd', 'e'])
+>>> s2=Series([-2.1, 3.6, -1.5, 4, 3.1], index=['a', 'c', 'e', 'f' ,'g'])
+>>> s1+s2	# 如果直接相加，非重叠部分会显示NaN
+a    5.2
+c    1.1
+d    NaN
+e    0.0
+f    NaN
+g    NaN
+dtype: float64
+>>> s1.add(s2, fill_value=0)	# add方法以及fill_value参数
+a    5.2
+c    1.1
+d    3.4
+e    0.0
+f    4.0
+g    3.1
+dtype: float64
+
+
+DataFrame和Series之间的运算
+>>> arr=np.arange(12.).reshape((3,4))
+>>> arr
+array([[  0.,   1.,   2.,   3.],
+       [  4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.]])
+>>> arr[0]
+array([ 0.,  1.,  2.,  3.])
+>>> arr-arr[0]
+array([[ 0.,  0.,  0.,  0.],
+       [ 4.,  4.,  4.,  4.],
+       [ 8.,  8.,  8.,  8.]])
+
+
+>>> frame=DataFrame(np.arange(12.).reshape((4,3)),columns=list('bde'),
+... index=['Utah', 'Ohio', 'Texas', 'Oregon'])
+>>> series=frame.ix[0]
+>>> frame
+          b     d     e
+Utah    0.0   1.0   2.0
+Ohio    3.0   4.0   5.0
+Texas   6.0   7.0   8.0
+Oregon  9.0  10.0  11.0
+>>> series
+b    0.0
+d    1.0
+e    2.0
+Name: Utah, dtype: float64
+>>> frame-series
+          b    d    e
+Utah    0.0  0.0  0.0
+Ohio    3.0  3.0  3.0
+Texas   6.0  6.0  6.0
+Oregon  9.0  9.0  9.0
+>>> series2=Series(range(3), index=['b', 'e', 'f'])
+>>> frame+series2
+          b   d     e   f
+Utah    0.0 NaN   3.0 NaN
+Ohio    3.0 NaN   6.0 NaN
+Texas   6.0 NaN   9.0 NaN
+Oregon  9.0 NaN  12.0 NaN
+>>> series3=frame['d']
+>>> frame
+          b     d     e
+Utah    0.0   1.0   2.0
+Ohio    3.0   4.0   5.0
+Texas   6.0   7.0   8.0
+Oregon  9.0  10.0  11.0
+>>> series3
+Utah       1.0
+Ohio       4.0
+Texas      7.0
+Oregon    10.0
+Name: d, dtype: float64
+>>> frame.sub(series3)
+        Ohio  Oregon  Texas  Utah   b   d   e
+Utah     NaN     NaN    NaN   NaN NaN NaN NaN
+Ohio     NaN     NaN    NaN   NaN NaN NaN NaN
+Texas    NaN     NaN    NaN   NaN NaN NaN NaN
+Oregon   NaN     NaN    NaN   NaN NaN NaN NaN
+>>> frame.sub(series3, axis=0)	# 匹配行 且在列广播
+          b    d    e
+Utah   -1.0  0.0  1.0
+Ohio   -1.0  0.0  1.0
+Texas  -1.0  0.0  1.0
+Oregon -1.0  0.0  1.0
+
+
+###函数应用和映射###
+
+对DataFrame中各个元素，或一行/列数据进行函数操作
+>>> frame=DataFrame(np.random.randn(4,3), columns=list('bde'),
+... index=['Utah', 'Ohio', 'Texas', 'Oregon'])
+>>> frame
+               b         d         e
+Utah   -1.766152 -2.626653 -0.445074
+Ohio   -0.292650  0.801737 -0.572183
+Texas  -2.034327 -1.394547 -0.839812
+Oregon  0.067651  0.847935 -0.979156
+>>> np.abs(frame)	# NumPy的ufuns（元素级数组方法）也可用于操作pandas对象
+               b         d         e
+Utah    1.766152  2.626653  0.445074
+Ohio    0.292650  0.801737  0.572183
+Texas   2.034327  1.394547  0.839812
+Oregon  0.067651  0.847935  0.979156
+
+
+>>> f = lambda x: x.max()-x.min()	# DataFrame的apply方法即可实现将函数应用到由
+>>> frame.apply(f)			# apply（）各列和行所形成的一维数组上
+b    2.101978
+d    3.474588
+e    0.534083
+dtype: float64
+>>> frame.apply(f, axis=1)
+Utah      2.181580
+Ohio      1.373920
+Texas     1.194515
+Oregon    1.827091
+dtype: float64
+
+
+>>> def f(x):
+...     return Series([x.min(), x.max()], index=['min', 'max'])
+...
+>>> frame.apply(f)			# 传递给apply的函数返回由多个值组成的Series
+            b         d         e
+min -2.034327 -2.626653 -0.979156
+max  0.067651  0.847935 -0.445074
+
+
+>>> format = lambda x: '%.2f' % x	# 得到frame中各个浮点值的格式化字符串用applymap
+>>> frame.applymap(format)
+            b      d      e
+Utah    -1.77  -2.63  -0.45
+Ohio    -0.29   0.80  -0.57
+Texas   -2.03  -1.39  -0.84
+Oregon   0.07   0.85  -0.98
+
+
+>>> frame['e'].map(format)	# Series有一个用于应用元素级函数的map方法
+
+Utah      -0.45
+Ohio      -0.57
+Texas     -0.84
+Oregon    -0.98
+Name: e, dtype: object
+
+
+###排序和排名###
+>>> obj = Series(range(4), index=['d', 'a', 'b', 'c'])
+>>> obj
+d    0
+a    1
+b    2
+c    3
+dtype: int64
+
+>>> obj.sort_index()
+a    1
+b    2
+c    3
+d    0
+dtype: int64
+
+>>> frame=DataFrame(np.arange(8).reshape((2,4)), index=['three', 'one'],	# 对于DataFrame，则可以根据任意一个轴上的索引进行排序
+... columns=['d', 'a', 'b', 'c'])
+>>>
+>>>
+>>> frame
+       d  a  b  c
+three  0  1  2  3
+one    4  5  6  7
+>>> frame.sort_index()
+       d  a  b  c
+one    4  5  6  7
+three  0  1  2  3
+>>> frame.sort_index(axis=1)
+       a  b  c  d
+three  1  2  3  0
+one    5  6  7  4
+
+
+>>> frame.sort_index(axis=1, ascending=False)		# 降序排列
+       d  c  b  a
+three  0  3  2  1
+one    4  7  6  5
+
+
+
+>>> obj=Series([4, 7, -3, 2])
+>>> obj
+0    4
+1    7
+2   -3
+3    2
+dtype: int64
+>>> obj.order()						# Series排序需要用order
+2   -3
+3    2
+0    4
+1    7
+dtype: int64
+>>> obj.order(ascending=False)
+1    7
+0    4
+3    2
+2   -3
+dtype: int64
+
+
+>>> obj = Series([4, np.nan, 7, np.nan, -3, 2])		# 任何缺失值默认都会放到Series的末尾
+>>> obj.order()						# 无论是Series还是DataFrame
+4   -3.0
+5    2.0
+0    4.0
+2    7.0
+1    NaN
+3    NaN
+dtype: float64
+>>> obj.order(ascending=False)
+2    7.0
+0    4.0
+5    2.0
+4   -3.0
+1    NaN
+3    NaN
+dtype: float64
+
+
+>>> frame=DataFrame({'b':[4, 7, -3, 2], 'a':[0,1,0,1]})
+>>> frame
+   a  b
+0  0  4
+1  1  7
+2  0 -3
+3  1  2
+>>> frame.sort_index(by='b')	# 根据一个或多个列中的值进行排序。将一个或多个列的名字传递给by选项
+   a  b
+2  0 -3
+3  1  2
+0  0  4
+1  1  7
+
+
+>>> frame.sort_index(by=['b','a'])	# 先排b列 再排a列
+   a  b
+2  0 -3
+3  1  2
+0  0  4
+1  1  7
+>>> frame.sort_index(by=['a','b'])	# 先排a列 再排b列
+   a  b
+2  0 -3
+0  0  4
+3  1  2
+1  1  7
+
+
+排名（ranking）跟排序关系密切
+>>> obj=Series([1,1,1,1,1,1])	# 从1开始，然后相同的数取平均数。
+>>> obj.rank()
+0    3.5
+1    3.5
+2    3.5
+3    3.5
+4    3.5
+5    3.5
+dtype: float64
+
+>>> obj.rank()			# 从1开始，然后相同的数取平均数。
+0    6.5
+1    1.0
+2    6.5
+3    4.5
+4    3.0
+5    2.0
+6    4.5
+dtype: float64
+>>> obj.rank(method='first')	#根据值在原数据中出现的顺序给出排名
+0    6.0
+1    1.0
+2    7.0
+3    4.0
+4    3.0
+5    2.0
+6    5.0
+dtype: float64
+>>> obj.rank(ascending=False, method='max')	# 降序排名 max使用分组中的最大排名
+0    2.0
+1    7.0
+2    2.0
+3    4.0
+4    5.0
+5    6.0
+6    4.0
+dtype: float64
+
+>>> frame= DataFrame({'b':[4.3, 7, -3, 2], 'a':[0, 1, 0, 1], 'c':[-2, 5, 8, -2.5]})
+>>> frame
+   a    b    c
+0  0  4.3 -2.0
+1  1  7.0  5.0
+2  0 -3.0  8.0
+3  1  2.0 -2.5
+>>> frame.rank(axis=1)
+     a    b    c
+0  2.0  3.0  1.0
+1  1.0  3.0  2.0
+2  2.0  1.0  3.0
+3  2.0  3.0  1.0
+
+
+###带有重复值的轴索引###
+>>> obj=Series(range(5), index=['a', 'a', 'b', 'b', 'c'])
+>>> obj
+a    0
+a    1
+b    2
+b    3
+c    4
+dtype: int64
+>>> obj.index.is_unique
+False
+
+>>> obj['a']		# 如果某个索引对应多个值，则返回一个Series
+a    0
+a    1
+dtype: int64
+>>> obj['c']		# 对应单个值，则返回一个标量值
+4
+
+>>> df = DataFrame(np.random.randn(4, 3), index=['a', 'a', 'b', 'b'])
+>>> df
+          0         1         2
+a -0.761022  0.228550 -1.123073
+a  0.668955 -1.197281 -0.328058
+b -0.038427  2.159243  0.187048
+b -0.588112  0.232811  0.859724
+>>> df.ix['b']
+          0         1         2
+b -0.038427  2.159243  0.187048
+b -0.588112  0.232811  0.859724
+
+
+汇总和计算描述统计
+>>> from pandas import DataFrame
+>>> import numpy as np
+>>> df=DataFrame([[1.4, np.nan], [7.1, -4.5], [np.nan, np.nan], [0.75, -1.3]],
+... index=['a', 'b', 'c', 'd'], columns=['one', 'two'])
+>>> df
+    one  two
+a  1.40  NaN
+b  7.10 -4.5
+c   NaN  NaN
+d  0.75 -1.3
+>>> df.sum()	# 按列进行求和
+one    9.25
+two   -5.80
+dtype: float64
+>>> df.sum(axis=1)	# 按行进行求和
+a    1.40
+b    2.60
+c     NaN
+d   -0.55
+dtype: float64
+
+
+>>> df
+    one  two
+a  1.40  NaN
+b  7.10 -4.5
+c   NaN  NaN
+d  0.75 -1.3
+>>> df.mean(axis=1, skipna=False)		# 禁止对于Na值的排除
+a      NaN
+b    1.300
+c      NaN
+d   -0.275
+dtype: float64
+>>> df.mean(axis=1)				# 
+a    1.400
+b    1.300
+c      NaN
+d   -0.275
+dtype: float64
 
 
 
