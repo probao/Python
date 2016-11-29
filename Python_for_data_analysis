@@ -1817,7 +1817,125 @@ d   -0.275
 dtype: float64
 
 
+>>> df				# 返回间接统计（比如达到最小值或最大值的索引）
+    one  two
+a  1.40  NaN
+b  7.10 -4.5
+c   NaN  NaN
+d  0.75 -1.3
 
+>>> df.idxmax()
+one    b
+two    d
+dtype: object
+
+>>> df.idxmax()			# 累加
+one    b
+two    d
+dtype: object
+>>> df.cumsum()
+    one  two
+a  1.40  NaN
+b  8.50 -4.5
+c   NaN  NaN
+d  9.25 -5.8
+
+
+相关系数和协方差
+>>> import pandas.io.data as web
+>>> from pandas import Series
+>>> from pandas import DataFrame
+>>> all_data={}			# 创建一个空字典
+>>> for ticker in ['AAPL', 'IBM']:
+...     all_data[ticker]=web.get_data_yahoo(ticker, '1/1/2000', '1/10/2000')	# 从yahoofinance中提取AAPL和IBM的股票
+>>> all_data									# all_data字典中key是'AAPL' 或'IBM' value是一个DataFrame的数据结构
+{'AAPL':                   Open        High         Low       Close     Volume  \
+Date
+2000-01-03  104.874997  112.499998  101.687501  111.937502  133949200
+2000-01-04  108.250001  110.625002  101.187503  102.500003  128094400
+2000-01-05  103.749998  110.562497  103.000001  103.999997  194580400
+2000-01-06  106.124999  106.999999   94.999998   94.999998  191993200
+2000-01-07   96.499999  101.000002   95.500003   99.500001  115183600
+2000-01-10  101.999998  102.249997   94.749999   97.750001  126266000
+
+ Adj Close
+Date
+2000-01-03   3.641362
+2000-01-04   3.334358
+2000-01-05   3.383153
+2000-01-06   3.090380
+2000-01-07   3.236767
+
+>>> price=DataFrame({tic:data['Adj Close'] for tic, data in all_data.iteritems()})	# iteritems 2.X python有itervalues()这一组函数 
+>>> price										# 用于返回一个 iterator 
+                AAPL        IBM
+Date
+2000-01-03  3.641362  88.455060
+2000-01-04  3.334358  85.452544
+2000-01-05  3.383153  88.455060
+2000-01-06  3.090380  86.929973
+2000-01-07  3.236767  86.548701
+2000-01-10  3.179838  89.980147
+
+
+>>> returns=price.pct_change()			# 计算百分数变化
+>>> returns
+                AAPL       IBM
+Date
+2000-01-03       NaN       NaN
+2000-01-04 -0.084310 -0.033944
+2000-01-05  0.014634  0.035137
+2000-01-06 -0.086539 -0.017241
+2000-01-07  0.047369 -0.004386
+2000-01-10 -0.017588  0.039648
+>>> price
+                AAPL        IBM
+Date
+2000-01-03  3.641362  88.455060
+2000-01-04  3.334358  85.452544
+2000-01-05  3.383153  88.455060
+2000-01-06  3.090380  86.929973
+2000-01-07  3.236767  86.548701
+2000-01-10  3.179838  89.980147
+>>> returns.tail()				# 无NaN行
+                AAPL       IBM
+Date
+2000-01-04 -0.084310 -0.033944
+2000-01-05  0.014634  0.035137
+2000-01-06 -0.086539 -0.017241
+2000-01-07  0.047369 -0.004386
+2000-01-10 -0.017588  0.039648
+
+
+>>> returns.AAPL.std()
+0.059513194146709428
+>>> returns.IBM.std()
+0.032409034043103566
+>>> returns.AAPL.corr(returns.IBM)
+0.57663870858430299
+>>> returns.AAPL.cov(returns.IBM)
+0.0011122006366748758
+>>> returns.IBM.std()*returns.AAPL.std()*returns.AAPL.corr(returns.IBM)	# 两列数的协方差等于两个标准差乘以相关系数
+0.0011122006366748756
+
+
+>>> returns.corr()							# DataFrame的corr和cov返回完整的相关系数和协方差矩阵
+          AAPL       IBM
+AAPL  1.000000  0.576639
+IBM   0.576639  1.000000
+>>> returns.cov()
+          AAPL       IBM
+AAPL  0.003542  0.001112
+IBM   0.001112  0.001050
+
+
+>>> returns.corrwith(returns.IBM)					# corrwith可以计算一个DataFrame和另一个series和DataFrame之间的相关系数
+AAPL    0.576639
+IBM     1.000000
+dtype: float64
+
+
+唯一值、值计数以及成员资格
 
 
 
