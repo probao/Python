@@ -1936,6 +1936,1663 @@ dtype: float64
 
 
 唯一值、值计数以及成员资格
+>>> obj=Series(['c','a','d','a','a','b','b','c','c'])	# 第一个函数是unique
+>>> uniques=obj.unique()				# 它可以得到Series中的唯一值数组
+>>> uniques
+array(['c', 'a', 'd', 'b'], dtype=object)
+
+
+>>> uniques = obj.unique()
+>>> uniques
+array(['c', 'a', 'd', 'b'], dtype=object)
+>>> obj.value_counts()	# value_counts用于计算一个Series中各值出现的频率
+c    3
+a    3
+b    2
+d    1
+dtype: int64
+
+
+>>> mask=obj.isin(['b', 'c'])		# 用于判断矢量化集合的成员资格
+>>> mask				# 可用于选取Series中或DataFrame列中数据的子集
+0     True
+1    False
+2    False
+3    False
+4    False
+5     True
+6     True
+7     True
+8     True
+dtype: bool
+>>> obj[mask]
+0    c
+5    b
+6    b
+7    c
+8    c
+dtype: object
+
+
+>>> data=DataFrame({'Qu1':[1, 3, 4, 3, 4],
+... 'Qu2':[2, 3, 1, 2, 3],
+... 'Qu3':[1, 5, 2, 4, 4]})
+>>> data
+   Qu1  Qu2  Qu3
+0    1    2    1
+1    3    3    5
+2    4    1    2
+3    3    2    4
+4    4    3    4
+>>> result=data.apply(pd.value_counts).fillna(0)	# 对data中的列apply pd.value_counts函数
+>>> result
+   Qu1  Qu2  Qu3
+1  1.0  1.0  1.0
+2  0.0  2.0  1.0
+3  2.0  2.0  0.0
+4  2.0  0.0  2.0
+5  0.0  0.0  1.0
+
+>>> result=data.apply(pd.value_counts, axis=1).fillna(0)
+>>> result
+     1    2    3    4    5
+0  2.0  1.0  0.0  0.0  0.0
+1  0.0  0.0  2.0  0.0  1.0
+2  1.0  1.0  0.0  1.0  0.0
+3  0.0  1.0  1.0  1.0  0.0
+4  0.0  0.0  1.0  2.0  0.0
+
+
+处理缺失数据
+>>> string_data=Series(['aardvark', 'artichoke', np.nan, 'avocado'])		# NaN表示浮点和非浮点数组中的缺失数据
+>>> string_data
+0     aardvark
+1    artichoke
+2          NaN
+3      avocado
+dtype: object
+>>> string_data.isnull()
+0    False
+1    False
+2     True
+3    False
+dtype: bool
+>>> string_data[0]=None
+>>> string_data
+0         None
+1    artichoke
+2          NaN
+3      avocado
+dtype: object
+>>> string_data.isnull()
+0     True
+1    False
+2     True
+3    False
+dtype: bool
+>>>
+
+
+滤除缺失数据
+>>> from numpy import nan as NA
+>>> data=Series([1, NA, 3.5, NA, 7])
+>>> data.dropna()
+0    1.0
+2    3.5
+4    7.0
+dtype: float64
+
+>>> data[data.notnull()]	# 也可以通过布尔型索引达到这个目的
+0    1.0
+2    3.5
+4    7.0
+dtype: float64
+
+
+>>> data=DataFrame([[1.0, 6.5, 3.0], [1.0, NA, NA],
+... [NA, NA, NA], [NA, 6.5, 3.0]])
+>>> data
+     0    1    2
+0  1.0  6.5  3.0
+1  1.0  NaN  NaN
+2  NaN  NaN  NaN
+3  NaN  6.5  3.0
+>>> cleaned=data.dropna()		# dropna默认丢弃任何有缺失值的行
+>>> cleaned
+     0    1    2
+0  1.0  6.5  3.0
+
+
+>>> data.dropna(how='all')		# how=‘all’将只丢弃全为NA的那些行
+     0    1    2
+0  1.0  6.5  3.0
+1  1.0  NaN  NaN
+3  NaN  6.5  3.0
+
+
+>>> data
+     0    1    2   4
+0  1.0  6.5  3.0 NaN
+1  1.0  NaN  NaN NaN
+2  NaN  NaN  NaN NaN
+3  NaN  6.5  3.0 NaN
+>>> data.dropna(axis=1,how='all')		# 丢弃整列都是NA值
+     0    1    2
+0  1.0  6.5  3.0
+1  1.0  NaN  NaN
+2  NaN  NaN  NaN
+3  NaN  6.5  3.0
+
+
+>>> df=DataFrame(np.random.randn(7,3))
+>>> df.ix[:4, 1]=NA
+>>> df.ix[:2, 2]=NA
+>>> df
+          0         1         2
+0 -0.842856       NaN       NaN
+1 -0.862389       NaN       NaN
+2  1.149765       NaN       NaN
+3  0.520349       NaN -1.481892
+4 -1.130664       NaN -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+>>> df.dropna(thresh=3)		# 至少每行有三个非NA
+          0         1         2
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+>>> df.dropna(thresh=1)
+          0         1         2
+0 -0.842856       NaN       NaN
+1 -0.862389       NaN       NaN
+2  1.149765       NaN       NaN
+3  0.520349       NaN -1.481892
+4 -1.130664       NaN -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+>>> df.dropna(thresh=2)
+          0         1         2
+3  0.520349       NaN -1.481892
+4 -1.130664       NaN -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+
+
+填充缺失数据
+>>> df.fillna(0)
+          0         1         2
+0 -0.842856  0.000000  0.000000
+1 -0.862389  0.000000  0.000000
+2  1.149765  0.000000  0.000000
+3  0.520349  0.000000 -1.481892
+4 -1.130664  0.000000 -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+
+>>> df.fillna({1:0.5, 2:-1})		# 通过一个字典调用fillna，就可以实现对不同的列填充不同的值
+          0         1         2
+0 -0.842856  0.500000 -1.000000
+1 -0.862389  0.500000 -1.000000
+2  1.149765  0.500000 -1.000000
+3  0.520349  0.500000 -1.481892
+4 -1.130664  0.500000 -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+
+>>> _=df.fillna(0, inplace=True)		# fillna返回新对象，但也可以对现有对象进行就地修改
+>>> df
+          0         1         2
+0 -0.842856  0.000000  0.000000
+1 -0.862389  0.000000  0.000000
+2  1.149765  0.000000  0.000000
+3  0.520349  0.000000 -1.481892
+4 -1.130664  0.000000 -0.200879
+5  0.350709 -0.828031 -0.507767
+6 -0.358415  0.606560  1.027162
+
+>>> df = DataFrame(np.random.randn(6, 3))
+>>> df.ix[2:, 1]=NA
+>>> df.ix[4:, 2]=NA
+>>> df
+          0         1         2
+0 -0.601720  0.868540  0.730089
+1 -0.585113  1.390372  1.030539
+2  1.208324       NaN  1.434392
+3 -2.173415       NaN -0.340178
+4 -0.028685       NaN       NaN
+5  0.384403       NaN       NaN
+>>> df.fillna(method='ffill')
+          0         1         2
+0 -0.601720  0.868540  0.730089
+1 -0.585113  1.390372  1.030539
+2  1.208324  1.390372  1.434392
+3 -2.173415  1.390372 -0.340178
+4 -0.028685  1.390372 -0.340178
+5  0.384403  1.390372 -0.340178
+>>> df.fillna(method='ffill', limit=2)
+          0         1         2
+0 -0.601720  0.868540  0.730089
+1 -0.585113  1.390372  1.030539
+2  1.208324  1.390372  1.434392
+3 -2.173415  1.390372 -0.340178
+4 -0.028685       NaN -0.340178
+5  0.384403       NaN -0.340178
+
+>>> data=Series([1.0, NA, 3.5, NA, 7])
+>>> data.fillna(data.mean())
+0    1.000000
+1    3.833333
+2    3.500000
+3    3.833333
+4    7.000000
+dtype: float64
+
+
+层次化索引
+
+>>> import  numpy as np
+>>> import pandas as pd
+>>> from pandas import Series
+>>> from pandas import DataFrame
+>>> data=Series(np.random.randn(10),
+... index=[['a','a','a','b','b','b','c','c','d','d'],
+... [1,2,3,1,2,3,1,2,2,3]])
+>>> data
+a  1   -0.386136
+   2   -1.933462
+   3    1.564141
+b  1   -0.031232
+   2   -0.305060
+   3    0.524174
+c  1    3.111645
+   2    0.247871
+d  2    0.722982
+   3   -0.256762
+dtype: float64
+
+>>> data.index
+MultiIndex(levels=[[u'a', u'b', u'c', u'd'], [1, 2, 3]],
+           labels=[[0, 0, 0, 1, 1, 1, 2, 2, 3, 3], [0, 1, 2, 0, 1, 2, 0, 1, 1, 2]])
+
+
+>>> data['b']		# 对于层次化索引对象，选取数据子集
+1   -0.031232
+2   -0.305060
+3    0.524174
+dtype: float64
+
+
+>>> data['b':'c']
+b  1   -0.031232
+   2   -0.305060
+   3    0.524174
+c  1    3.111645
+   2    0.247871
+dtype: float64
+>>> data.ix[['b','d']]
+b  1   -0.031232
+   2   -0.305060
+   3    0.524174
+d  2    0.722982
+   3   -0.256762
+dtype: float64
+>>> data['b':'d']
+b  1   -0.031232
+   2   -0.305060
+   3    0.524174
+c  1    3.111645
+   2    0.247871
+d  2    0.722982
+   3   -0.256762
+dtype: float64
+
+>>> data[:,2]		# 在“内层”中进行选取
+a   -1.933462
+b   -0.305060
+c    0.247871
+d    0.722982
+dtype: float64
+
+
+>>> data.unstack()		#通过unstack方法重新安排到一个DataFrame中
+          1         2         3
+a -0.386136 -1.933462  1.564141
+b -0.031232 -0.305060  0.524174
+c  3.111645  0.247871       NaN
+d       NaN  0.722982 -0.256762
+
+
+>>> data.unstack().stack()		# unstack的逆运算是stack
+a  1   -0.386136
+   2   -1.933462
+   3    1.564141
+b  1   -0.031232
+   2   -0.305060
+   3    0.524174
+c  1    3.111645
+   2    0.247871
+d  2    0.722982
+   3   -0.256762
+dtype: float64
+
+
+>>> frame=DataFrame(np.arange(12).reshape((4,3)),index=[['a','a','b','b'],[1, 2, 1, 2]],
+... columns=[['Ohio', 'Ohio', 'Colorado'], ['Green', 'Red', 'Green']])
+>>> frame		# 一个DataFrame， 每条轴都可以有分层索引
+     Ohio     Colorado
+    Green Red    Green
+a 1     0   1        2
+  2     3   4        5
+b 1     6   7        8
+  2     9  10       11
+
+
+>>> frame.index.names=['key1', 'key2']		# 索引名称
+>>> frame.columns.names=['state', 'color']
+>>> frame
+state      Ohio     Colorado
+color     Green Red    Green
+key1 key2
+a    1        0   1        2
+     2        3   4        5
+b    1        6   7        8
+     2        9  10       11
+
+>>> frame['Ohio']
+color      Green  Red
+key1 key2
+a    1         0    1
+     2         3    4
+b    1         6    7
+     2         9   10
+
+
+###重排分级顺序###
+>>> frame
+state      Ohio     Colorado
+color     Green Red    Green
+key1 key2
+a    1        0   1        2
+     2        3   4        5
+b    1        6   7        8
+     2        9  10       11
+>>> frame.swaplevel('key1', 'key2')	# swaplevel接受两个级别编号或名称，并返回一个
+state      Ohio     Colorado		# 互换了级别的新对象（但数据不会发生变化）
+color     Green Red    Green
+key2 key1
+1    a        0   1        2
+2    a        3   4        5
+1    b        6   7        8
+2    b        9  10       11
+
+swaplevel的应用
+>>> frame1
+state            Ohio            Colorado
+color           Green       Red     Green
+keys1 keys2
+a     3     -0.026843 -0.557449  2.983456
+      1     -0.303709  0.950943 -1.699359
+      2      0.201512  0.610445  0.289560
+c     1      0.690963  1.475376 -1.451312
+b     1     -0.422497  0.284796 -0.990737
+
+>>> frame1.swaplevel('keys1', 'keys2')
+state            Ohio            Colorado
+color           Green       Red     Green
+keys2 keys1
+3     a     -0.026843 -0.557449  2.983456
+1     a     -0.303709  0.950943 -1.699359
+2     a      0.201512  0.610445  0.289560
+1     c      0.690963  1.475376 -1.451312
+      b     -0.422497  0.284796 -0.990737
+
+>>> frame1
+state            Ohio            Colorado
+color           Green       Red     Green
+keys1 keys2
+a     3     -0.026843 -0.557449  2.983456
+      1     -0.303709  0.950943 -1.699359
+      2      0.201512  0.610445  0.289560
+c     1      0.690963  1.475376 -1.451312
+b     1     -0.422497  0.284796 -0.990737
+
+>>> frame1.sortlevel(0)				# sortlevel根据单个级别中的值对数据进行排序
+state            Ohio            Colorado
+color           Green       Red     Green
+keys1 keys2
+a     1     -0.303709  0.950943 -1.699359
+      2      0.201512  0.610445  0.289560
+      3     -0.026843 -0.557449  2.983456
+b     1     -0.422497  0.284796 -0.990737
+c     1      0.690963  1.475376 -1.451312
+
+>>> frame1.sortlevel(1)
+state            Ohio            Colorado
+color           Green       Red     Green
+keys1 keys2
+a     1     -0.303709  0.950943 -1.699359
+b     1     -0.422497  0.284796 -0.990737
+c     1      0.690963  1.475376 -1.451312
+a     2      0.201512  0.610445  0.289560
+      3     -0.026843 -0.557449  2.983456
+
+###根据级别汇总统计###
+
+我们可以根据行或列上的级别来进行求和
+>>> frame
+state      Ohio     Colorado
+color     Green Red    Green
+key1 key2
+a    1        0   1        2
+     2        3   4        5
+b    1        6   7        8
+     2        9  10       11
+>>> frame.sum(level='key2')	# 按行进行求和，按key2来求和，相同key2结合在一起
+state  Ohio     Colorado
+color Green Red    Green
+key2
+1         6   8       10
+2        12  14       16
+>>> frame.sum(level='color', axis=1)	# 按列中的color进行求和
+color      Green  Red
+key1 key2
+a    1         2    1
+     2         8    4
+b    1        14    7
+     2        20   10
+
+###使用DataFrame的列###
+
+人们经常想要将DataFrame的一个或者多个列当做行索引来用
+或者可能希望将行索引变成DataFrame的列。
+
+>>> frame=DataFrame({'a':range(7), 'b':range(7, 0, -1),
+... 'c':['one', 'one', 'one', 'two', 'two', 'two', 'two'],
+... 'd':[0, 1, 2, 0, 1, 2, 3]})
+>>> frame
+   a  b    c  d
+0  0  7  one  0
+1  1  6  one  1
+2  2  5  one  2
+3  3  4  two  0
+4  4  3  two  1
+5  5  2  two  2
+6  6  1  two  3
+>>> frame.loc[0:3]	# 行索引将
+   a  b    c  d
+0  0  7  one  0
+1  1  6  one  1
+2  2  5  one  2
+3  3  4  two  0
+>>> frame[0:2]		# 行索引
+   a  b    c  d
+0  0  7  one  0
+1  1  6  one  1
+>>> frame[['a','b']]	# 列索引
+   a  b
+0  0  7
+1  1  6
+2  2  5
+3  3  4
+4  4  3
+5  5  2
+6  6  1
+
+>>> frame2=frame.set_index(['c', 'd'])		# set_index函数会将其一个或多个列转换为行索引，并创建一个新的DataFrame 
+>>> frame2
+       a  b
+c   d
+one 0  0  7
+    1  1  6
+    2  2  5
+two 0  3  4
+    1  4  3
+    2  5  2
+    3  6  1
+
+>>> frame.set_index(['c', 'd'], drop=False)	# 那些列会从DataFrame中移除，但也可以将其保留
+       a  b    c  d
+c   d
+one 0  0  7  one  0
+    1  1  6  one  1
+    2  2  5  one  2
+two 0  3  4  two  0
+    1  4  3  two  1
+    2  5  2  two  2
+    3  6  1  two  3
+
+>>> frame2.reset_index()	# reset_index的功能跟set_index刚好相反，层次化
+     c  d  a  b			# 索引的级别会被转移到列里面
+0  one  0  0  7
+1  one  1  1  6
+2  one  2  2  5
+3  two  0  3  4
+4  two  1  4  3
+5  two  2  5  2
+6  two  3  6  1
+
+
+###其他有关pandas的话题###
+
+整数索引
+>>> ser=Series(np.arange(3.))
+>>> ser
+0    0.0
+1    1.0
+2    2.0
+dtype: float64
+>>> ser[-1]	# 直接整数索引会有bug
+KeyError: -1L
+>>> ser2=Series(np.arange(3.), index=['a', 'b', 'c'])
+>>> ser2[-1]
+2.0
+
+>>> ser.ix[::-1]		# 如果你的轴索引含有索引器 ix进行切片
+2    2.0
+1    1.0
+0    0.0
+
+
+>>> ser3=Series(range(3), index=[-5, 1, 3])
+>>> ser3.iget_value(2)		# Series使用iget_value方法
+2
+>>> frame=DataFrame(np.arange(6).reshape(3, 2), index=[2, 0, 1])
+>>> frame.irow(0)		# frame.irow返回的是一个Series
+__main__:1: FutureWarning: irow(i) is deprecated. Please use .iloc[i]
+0    0
+1    1
+Name: 2, dtype: int32
+>>> frame.irow(0).icol(0)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "D:\python\pandas\core\generic.py", line 2672, in __getattr__
+    return object.__getattribute__(self, name)
+AttributeError: 'Series' object has no attribute 'icol'
+>>> frame.irow(0).iget_value(0)		# 第一列第一行
+0
+
+###面板数据###
+>>> pdata=pd.Panel(dict((stk, web.get_data_yahoo(stk, '1/1/2009', '6/1/2012'))		#Panel可以看做一个三维版的DataFrame
+... for stk in ['AAPL', 'GOOG', 'MSFT', 'DELL']))
+>>> pdata
+<class 'pandas.core.panel.Panel'>
+Dimensions: 4 (items) x 868 (major_axis) x 6 (minor_axis)
+Items axis: AAPL to MSFT
+Major_axis axis: 2009-01-02 00:00:00 to 2012-06-01 00:00:00
+Minor_axis axis: Open to Adj Close
+
+>>> pdata=pdata.swapaxes('items', 'minor')		# 两个坐标轴互换
+>>> pdata
+<class 'pandas.core.panel.Panel'>
+Dimensions: 6 (items) x 868 (major_axis) x 4 (minor_axis)
+Items axis: Open to Adj Close
+Major_axis axis: 2009-01-02 00:00:00 to 2012-06-01 00:00:00
+Minor_axis axis: AAPL to MSFT
+
+>>> pdata.ix['Adj Close', '5/28/2012':'6/1/2012', :]	# 指定每个维度的值以及指定日期或日期范围
+                 AAPL      DELL        GOOG       MSFT
+Date
+2012-05-28        NaN  12.05319         NaN        NaN
+2012-05-29  74.464493  12.24666  296.873645  26.072491
+2012-05-30  75.362333  12.14992  293.821674  25.878448
+2012-05-31  75.174961  11.92743  290.140354  25.746145
+2012-06-01  72.996726  11.67592  285.205295  25.093451
+
+>>> stacked=pdata.ix[:,'5/30/2012':, :].to_frame()	# 通过to_frame形成堆积式的DataFrame
+>>> stacked
+                        Open        High         Low       Close       Volume  \
+Date       minor
+2012-05-30 AAPL   569.199997  579.989990  566.559990  579.169998  132357400.0
+           DELL    12.590000   12.700000   12.460000   12.560000   19787800.0
+           GOOG   588.161028  591.901014  583.530999  588.230992    3827600.0
+           MSFT    29.350000   29.480000   29.120001   29.340000   41585500.0
+2012-05-31 AAPL   580.740021  581.499985  571.460022  577.730019  122918600.0
+           DELL    12.530000   12.540000   12.330000   12.330000   19955600.0
+           GOOG   588.720982  590.001032  579.001013  580.860990    5958800.0
+           MSFT    29.299999   29.420000   28.940001   29.190001   39134000.0
+2012-06-01 AAPL   569.159996  572.650009  560.520012  560.989983  130246900.0
+           DELL    12.150000   12.300000   12.045000   12.070000   19397600.0
+           GOOG   571.790972  572.650996  568.350996  570.981000    6138700.0
+           MSFT    28.760000   28.959999   28.440001   28.450001   56634300.0
+
+                   Adj Close
+Date       minor
+2012-05-30 AAPL    75.362333
+           DELL    12.149920
+           GOOG   293.821674
+           MSFT    25.878448
+2012-05-31 AAPL    75.174961
+           DELL    11.927430
+           GOOG   290.140354
+           MSFT    25.746145
+2012-06-01 AAPL    72.996726
+           DELL    11.675920
+           GOOG   285.205295
+           MSFT    25.093451
+
+>>> stacked.to_panel()		# to_frame的逆运算
+<class 'pandas.core.panel.Panel'>
+Dimensions: 6 (items) x 3 (major_axis) x 4 (minor_axis)
+Items axis: Open to Adj Close
+Major_axis axis: 2012-05-30 00:00:00 to 2012-06-01 00:00:00
+Minor_axis axis: AAPL to MSFT
+
+
+
+########################################
+########数据加载，存储与文件格式########
+########################################
+
+###读写文本格式的数据###
+PS C:\Users\Weihong> type ex1.csv
+a,b,c,d,message
+1,2,3,4,hello
+5,6,7,8,world
+9,10,11,12,foo
+
+>>> df=pd.read_csv('ex1.csv')	# 用read_csv将其读入一个DataFrame
+>>> df
+   a   b   c   d message
+0  1   2   3   4   hello
+1  5   6   7   8   world
+2  9  10  11  12     foo
+
+>>> pd.read_table('ex1.csv', sep=',')	# 用read_table只不过需要指定分隔符
+   a   b   c   d message
+0  1   2   3   4   hello
+1  5   6   7   8   world
+2  9  10  11  12     foo
+
+
+>>> df=pd.read_csv('ex2.csv')		# 如果不设定，read_csv会把第一行默认是column name
+>>> df
+   1   2   3   4  hello
+0  5   6   7   8  world
+1  9  10  11  12    foo
+>>> df=pd.read_csv('ex2.csv', header=None)	# 自动加 0 1 2.。。
+>>> df
+   0   1   2   3      4
+0  1   2   3   4  hello
+1  5   6   7   8  world
+2  9  10  11  12    foo
+
+>>> df=pd.read_csv('ex2.csv', names=['a', 'b', 'c', 'd', 'message'])	# 命名每列的名字
+>>> df
+   a   b   c   d message
+0  1   2   3   4   hello
+1  5   6   7   8   world
+2  9  10  11  12     foo
+
+>>> names=['a', 'b', 'c', 'd', 'message']
+>>> pd.read_csv('ex2.csv', names=names, index_col='message')		# 希望将message列做成DataFrame的索引d
+         a   b   c   d
+message
+hello    1   2   3   4
+world    5   6   7   8
+foo      9  10  11  12
+
+
+>>> parsed=pd.read_csv('csv_mindex.csv', index_col=['key1', 'key2'])	# 将多个列做成一个层次化索引
+>>> parsed								# 只需传入由列编号或列名组成的列表即可
+           value1  value2
+key1 key2
+one  a          1       2
+     b          3       4
+     c          5       6
+     d          7       8
+two  a          9      10
+     b         11      12
+
+
+
+	A	B	C		# 文件各个字段由数量不定的空白分隔符
+aaa   -0.264  -1.026   -0.619		# 可以用正则表达式\s+表示
+bbb    0.927   0.302    0.0323		
+ccc    0.264   0.386   -0.217
+ddd    -0.871  0.348    1.1004
+
+>>> list(open('ex3.txt'))
+['\tA\tB\tC\n', 'aaa   -0.264  -1.026   -0.619\n',
+, 'ddd    -0.871  0.348    1.1004']
+>>> result=pd.read_table('ex3.txt', sep='\s+')	#\s+表示一个或多个空白
+>>> result					# 由于列名比数据行的数量少，所以read_table腿短第一列是DataFrame的索引
+         A      B       C
+aaa -0.264 -1.026 -0.6190
+bbb  0.927  0.302  0.0323
+ccc  0.264  0.386 -0.2170
+ddd -0.871  0.348  1.1004
+
+
+#hey
+a,b,c,d,message
+#just wanted 
+#who reads CSV
+1,2,3,4,hello
+5,6,7,8,world
+9,10,11,12,foo
+>>> pd.read_csv('ex4.csv', skiprows=[0, 2, 3])		# 跳过文件的第一行、第三行和第四行
+   a   b   c   d message
+0  1   2   3   4   hello
+1  5   6   7   8   world
+2  9  10  11  12     foo
+
+
+>>> result=pd.read_csv('ex5.csv')
+>>> result
+  something  a   b     c   d message
+0       one  1   2   3.0   4     NaN
+1       two  5   6   NaN   8   world
+2     three  9  10  11.0  12     foo
+>>> result=pd.read_csv('ex5.csv', na_values=['NULL'])
+>>> result
+  something  a   b     c   d message
+0       one  1   2   3.0   4     NaN
+1       two  5   6   NaN   8   world
+2     three  9  10  11.0  12     foo
+
+>>> result=pd.read_csv('ex5.csv', na_values=['one'])	# 指定某个值变成NaN
+>>> result
+  something  a   b     c   d message
+0       NaN  1   2   3.0   4     NaN
+1       two  5   6   NaN   8   world
+2     three  9  10  11.0  12     foo
+
+
+###逐块读取文本文件###
+>>> result=pd.read_csv('ex6.csv', nrows=5)	# 通过nrows进行指定即可
+>>> result
+        one       two     three      four key
+0  0.467976 -0.038649 -0.295344 -1.824726   L
+1 -0.358893  1.404453  0.704965 -0.200638   B
+2 -0.501840  0.659254 -0.421691 -0.057688   G
+3  0.204886  1.074134  1.388361 -0.982404   R
+4  0.354628 -0.133116  0.283763 -0.837063   Q
+
+
+>>> chunker=pd.read_csv('ex6.csv', chunksize=1000)	# read_csv所返回的这个对象使我们可以根据chunksize对文件逐块迭代
+>>> chunker
+<pandas.io.parsers.TextFileReader object at 0x05637CF0>
+>>> chunker=pd.read_csv('ex6.csv', chunksize=10)
+>>> for piece in chunker:				# 每次读十行
+...     print piece
+...
+        one       two     three      four key
+0  0.467976 -0.038649 -0.295344 -1.824726   L
+1 -0.358893  1.404453  0.704965 -0.200638   B
+2 -0.501840  0.659254 -0.421691 -0.057688   G
+3  0.204886  1.074134  1.388361 -0.982404   R
+4  0.354628 -0.133116  0.283763 -0.837063   Q
+5  1.817480  0.742273  0.419395 -2.251035   Q
+6 -0.776764  0.935518 -0.332872 -1.875641   U
+7 -0.913135  1.530624 -0.572657  0.477252   K
+8  0.358480 -0.497572 -0.367016  0.507702   S
+9 -1.740877 -1.160417 -1.637830  2.172201   G
+        one       two     three      four key
+0  0.240564 -0.328249  1.252155  1.072796   8
+1  0.764018  1.165476 -0.639544  1.495258   R
+2  0.571035 -0.310537  0.582437 -0.298765   1
+3  2.317658  0.430710 -1.334216  0.199679   P
+4  1.547771 -1.119753 -2.277634  0.329586   J
+5 -1.310608  0.401719 -1.000987  1.156708   E
+6 -0.088496  0.634712  0.153324  0.415335   B
+7 -0.018663 -0.247487 -1.446522  0.750938   A
+8 -0.070127 -1.579097  0.120892  0.671432   F
+9 -0.194678 -0.492039  2.359605  0.319810   H
+
+>>> tot=Series([])
+>>> for piece in chunker:
+...     tot=tot.add(piece['key'].value_counts(), fill_value=0)		#piece['key']得到的一个Series，因此可以用value_counts()
+...
+>>> tot=tot.order(ascending=False)
+__main__:1: FutureWarning: order is deprecated, use sort_values(...)
+>>> tot[:10]								#value_counts计数
+E    368.0
+X    364.0
+L    346.0
+O    343.0
+Q    340.0
+M    338.0
+J    337.0
+F    335.0
+K    334.0
+H    330.0
+dtype: float64
+
+
+###将数据写到文本格式###
+>>> data=pd.read_csv('ex5.csv')
+>>> data
+  something  a   b     c   d message
+0       one  1   2   3.0   4     NaN
+1       two  5   6   NaN   8   world
+2     three  9  10  11.0  12     foo
+
+>>> data.to_csv('out.csv')		# 我们将数据输出写到一个以逗号分隔的文件中
+
+,something,a,b,c,d,message		# 缺失值会表示空字符串
+0,one,1,2,3.0,4,
+1,two,5,6,,8,world
+2,three,9,10,11.0,12,foo
+
+>>> data.to_csv(sys.stdout, sep='|')	#使用其他分隔符，这里直接写到sys.stdout
+|something|a|b|c|d|message		# 所以仅仅是打印出文本结果而已
+0|one|1|2|3.0|4|
+1|two|5|6||8|world
+2|three|9|10|11.0|12|foo
+
+
+>>> data.to_csv(sys.stdout, na_rep=7)	# 可以将空字符表示为别的标记值
+,something,a,b,c,d,message
+0,one,1,2,3.0,4,7
+1,two,5,6,7,8,world
+2,three,9,10,11.0,12,foo
+
+>>> data.to_csv(sys.stdout, index=False, header=False)	# 行和列的标签都可以被禁用
+one,1,2,3.0,4,
+two,5,6,,8,world
+three,9,10,11.0,12,foo
+
+
+>>> dates=pd.date_range('1/1/2000', periods=7)
+>>> dates
+DatetimeIndex(['2000-01-01', '2000-01-02', '2000-01-03', '2000-01-04',
+               '2000-01-05', '2000-01-06', '2000-01-07'],
+              dtype='datetime64[ns]', freq='D')
+>>> ts=Series(np.arange(7), index=dates)
+>>> ts
+2000-01-01    0
+2000-01-02    1
+2000-01-03    2
+2000-01-04    3
+2000-01-05    4
+2000-01-06    5
+2000-01-07    6
+Freq: D, dtype: int32
+>>> ts.to_csv('ts_series.csv')	# Series也有一个to_csv方法 输出的方法
+
+ts_series.csv
+2000-01-01,0
+2000-01-02,1
+2000-01-03,2
+2000-01-04,3
+2000-01-05,4
+2000-01-06,5
+2000-01-07,6
+
+>>> Series.from_csv('ts_series.csv', parse_dates=True)		# 能用from_csv将CSV文件读取为Series
+2000-01-01    0
+2000-01-02    1
+2000-01-03    2
+2000-01-04    3
+2000-01-05    4
+2000-01-06    5
+2000-01-07    6
+dtype: int64
+
+
+###手工处理分隔符格式###
+
+>>> obj="""		# JSON数据
+... {"name": "Wes",
+... "places_lived":["United States", "Spain", "Germany"],
+... "pet":null,
+... "siblings":[{"name":"Scott", "age":25, "pet": "Zuko"},
+... {"name":"Katie", "age":33, "pet":"Cisco"}]
+... }
+...
+... """
+>>> obj
+'\n{"name": "Wes",\n"places_lived":["United States", "Spain", "Germany"],\n"pet":null,\n"sib
+e":25, "pet": "Zuko"},\n{"name":"Katie", "age":33, "pet":"Cisco"}]\n}\n\n'
+>>> import json
+>>> result=json.loads(obj)
+>>> result
+{u'pet': None, u'siblings': [{u'pet': u'Zuko', u'age': 25, u'name': u'Scott'}, {u'pet': u'Ci
+'Katie'}], u'name': u'Wes', u'places_lived': [u'United States', u'Spain', u'Germany']}
+>>> asjson=json.dumps(result)		# python格式转为JSON格式
+
+>>> siblings=DataFrame(result['siblings'])
+>>> siblings
+   age   name    pet
+0   25  Scott   Zuko
+1   33  Katie  Cisco
+
+
+###XML和HTML:Web信息收集###
+p185 有问题！！！！
+
+
+
+###读取Microsoft Excel文件###
+>>> xls_file=pd.ExcelFile('data.xlsx')		# 创建一个ExcelFile的实例
+>>> xls_file
+<pandas.io.excel.ExcelFile object at 0x0591DAF0>
+>>> table=xls_file.parse('Sheet1')		# 通过parse读取到DataFrame中的数据，sheet表示表格形式1
+>>> table
+   1  2
+0  3  4
+1  5  6
+2  7  8
+>>> table=xls_file.parse()
+>>> table
+   1  2
+0  3  4
+1  5  6
+2  7  8
+>>> table=xls_file.parse('Sheet1', header=None)
+>>> table
+   0  1
+0  1  2
+1  3  4
+2  5  6
+3  7  8
+
+>>> table=xls_file.parse('Sheet1', header=None)		# 如果没有会生成NaN
+>>> table
+     0  1    2
+0  1.0  2  2.0
+1  3.0  4  NaN
+2  5.0  6  NaN
+3  7.0  8  NaN
+4  NaN  3  NaN
+p192 这一章节没有好好看
+
+
+
+
+
+
+
+##########################
+#######数据规整化#########
+#########################
+
+###数据库风格的DataFrame合并###
+>>> import pandas as pd
+>>> from pandas import DataFrame
+>>> df1=DataFrame({'key':['b', 'b', 'a', 'c', 'a', 'a', 'b'],
+... 'data1':range(7)})
+>>> df1
+   data1 key
+0      0   b
+1      1   b
+2      2   a
+3      3   c
+4      4   a
+5      5   a
+6      6   b
+>>> df2=DataFrame({'key':['a', 'b', 'd'], 'data2':range(3)})
+>>> df2
+   data2 key
+0      0   a
+1      1   b
+2      2   d
+
+>>> df4=pd.merge(df1, df2)	# 多对一合并，如果没有指定，merge就会将重叠列的列名当做键
+>>> df4				# 最好显示指定一下
+   data1 key  data2
+0      0   b      1
+1      1   b      1
+2      6   b      1
+3      2   a      0
+4      4   a      0
+5      5   a      0
+
+>>> pd.merge(df1, df2, on='key')
+   data1 key  data2
+0      0   b      1
+1      1   b      1
+2      6   b      1
+3      2   a      0
+4      4   a      0
+5      5   a      0
+
+>>> df4=DataFrame(df4, columns=['key', 'data1', 'data2'])	# 改变列的位置顺序
+>>> df4
+  key  data1  data2
+0   b      0      1
+1   b      1      1
+2   b      6      1
+3   a      2      0
+4   a      4      0
+5   a      5      0
+
+>>> df4=DataFrame({'rkey':['a', 'b', 'd'], 'data2':range(3)})		# 两个对象的列名不同，也可以分别进行指定
+>>> df3=DataFrame({'lkey':['b', 'b', 'a', 'c', 'a', 'a', 'b'], 'data1': range(7)})	# 先指定那个元素，就先列出那个元素
+>>> pd.merge(df3, df4, left_on='lkey', right_on='rkey')
+   data1 lkey  data2 rkey
+0      0    b      1    b
+1      1    b      1    b
+2      6    b      1    b
+3      2    a      0    a
+4      4    a      0    a
+5      5    a      0    a
+>>> pd.merge(df4, df3, left_on='rkey', right_on='lkey')
+   data2 rkey  data1 lkey
+0      0    a      2    a
+1      0    a      4    a
+2      0    a      5    a
+3      1    b      0    b
+4      1    b      1    b
+5      1    b      6    b
+
+>>> pd.merge(df1, df2, how='outer')	# 外连接求取的是键的并集
+   data1 key  data2
+0    0.0   b    1.0
+1    1.0   b    1.0
+2    6.0   b    1.0
+3    2.0   a    0.0
+4    4.0   a    0.0
+5    5.0   a    0.0
+6    3.0   c    NaN
+7    NaN   d    2.0
+
+>>> pd.merge(df4, df3, left_on='rkey', right_on='lkey', how='outer')
+   data2 rkey  data1 lkey
+0    0.0    a    2.0    a
+1    0.0    a    4.0    a
+2    0.0    a    5.0    a
+3    1.0    b    0.0    b
+4    1.0    b    1.0    b
+5    1.0    b    6.0    b
+6    2.0    d    NaN  NaN
+7    NaN  NaN    3.0    c
+
+多对多的合并操作
+>>> df1=DataFrame({'key':['b', 'b', 'a', 'c', 'a', 'b'],
+... 'data1':range(6)})
+>>> df2=DataFrame({'key':['a', 'b', 'a', 'b', 'd'], 'data2':range(5)})
+>>> df1
+   data1 key
+0      0   b
+1      1   b
+2      2   a
+3      3   c
+4      4   a
+5      5   b
+>>> df2
+   data2 key
+0      0   a
+1      1   b
+2      2   a
+3      3   b
+4      4   d
+
+>>> pd.merge(df1, df2, on='key', how='left')	# 每种组会都排列出来
+    data1 key  data2
+0       0   b    1.0
+1       0   b    3.0
+2       1   b    1.0
+3       1   b    3.0
+4       2   a    0.0
+5       2   a    2.0
+6       3   c    NaN
+7       4   a    0.0
+8       4   a    2.0
+9       5   b    1.0
+10      5   b    3.0
+
+###根据多个建进行合并###
+>>> left=DataFrame({'key1':['foo', 'foo', 'bar'],
+... 'key2':['one', 'two', 'one'],
+... 'lval':[1, 2, 3]})
+>>> right=DataFrame({'key1':['foo', 'foo', 'bar', 'bar'],
+... 'key2':['one', 'one', 'one', 'two'],
+... 'rval':[4, 5, 6, 7]})
+>>> left
+  key1 key2  lval
+0  foo  one     1
+1  foo  two     2
+2  bar  one     3
+>>> right
+  key1 key2  rval
+0  foo  one     4
+1  foo  one     5
+2  bar  one     6
+3  bar  two     7
+>>> pd.merge(left, right, on=['key1', 'key2'], how='outer')
+  key1 key2  lval  rval
+0  foo  one   1.0   4.0
+1  foo  one   1.0   5.0
+2  foo  two   2.0   NaN
+3  bar  one   3.0   6.0
+4  bar  two   NaN   7.0
+>>> pd.merge(left, right, on=['key1'])
+  key1 key2_x  lval key2_y  rval
+0  foo    one     1    one     4
+1  foo    one     1    one     5
+2  foo    two     2    one     4
+3  foo    two     2    one     5
+4  bar    one     3    one     6
+5  bar    one     3    two     7
+
+>>> pd.merge(left, right, on=['key1'], suffixes=('_left', '_right'))	# 列名重叠后缀
+  key1 key2_left  lval key2_right  rval
+0  foo       one     1        one     4
+1  foo       one     1        one     5
+2  foo       two     2        one     4
+3  foo       two     2        one     5
+4  bar       one     3        one     6
+5  bar       one     3        two     7
+
+
+###索引上的合并###
+>>> left1=DataFrame({'key':['a', 'b', 'a', 'a', 'b', 'c'], 'value':range(6)})
+>>> right1=DataFrame({'group_val':[3.5, 7]}, index=['a', 'b'])
+>>> left1
+  key  value
+0   a      0
+1   b      1
+2   a      2
+3   a      3
+4   b      4
+5   c      5
+>>> right1
+   group_val
+a        3.5
+b        7.0
+>>> pd.merge(left1, right1, left_on='key', right_index=True)
+  key  value  group_val
+0   a      0        3.5
+2   a      2        3.5
+3   a      3        3.5
+1   b      1        7.0
+4   b      4        7.0
+>>> pd.merge(left1, right1, left_on='key', right_index=True, how='outer')	# 得到并集
+  key  value  group_val
+0   a      0        3.5
+2   a      2        3.5
+3   a      3        3.5
+1   b      1        7.0
+4   b      4        7.0
+5   c      5        NaN
+
+###层次化索引的数据###
+>>> left=DataFrame({'key1':['Ohio', 'Ohio', 'Ohio', 'Nevada', 'Nevada'],
+... 'key2':[2000, 2001, 2002, 2001, 2002],
+... 'data':np.arange(5.)})
+>>> righth=DataFrame(np.arange(12).reshape((6, 2)),
+... index=[['Nevada', 'Nevada', 'Ohio', 'Ohio', 'Ohio', 'Ohio'],
+... [2001, 2000, 2000, 2000, 2001, 2002]],
+... columns=['event1', 'event2'])
+>>> left
+   data    key1  key2
+0   0.0    Ohio  2000
+1   1.0    Ohio  2001
+2   2.0    Ohio  2002
+3   3.0  Nevada  2001
+4   4.0  Nevada  2002
+>>> righth
+             event1  event2
+Nevada 2001       0       1
+       2000       2       3
+Ohio   2000       4       5
+       2000       6       7
+       2001       8       9
+       2002      10      11
+>>> pd.merge(left, righth, left_on=['key1', 'key2'], right_index=True)
+   data    key1  key2  event1  event2
+0   0.0    Ohio  2000       4       5
+0   0.0    Ohio  2000       6       7
+1   1.0    Ohio  2001       8       9
+2   2.0    Ohio  2002      10      11
+3   3.0  Nevada  2001       0       1
+
+>>> pd.merge(left, righth, left_on=['key1', 'key2'], right_index=True, how='outer')
+   data    key1    key2  event1  event2
+0   0.0    Ohio  2000.0     4.0     5.0
+0   0.0    Ohio  2000.0     6.0     7.0
+1   1.0    Ohio  2001.0     8.0     9.0
+2   2.0    Ohio  2002.0    10.0    11.0
+3   3.0  Nevada  2001.0     0.0     1.0
+4   4.0  Nevada  2002.0     NaN     NaN
+4   NaN  Nevada  2000.0     2.0     3.0
+
+###合并双方的索引###
+>>> left2=DataFrame([[1, 2], [3, 4],[5, 6]], index=['a', 'c', 'e'],
+... columns=['Ohio', 'Nevada'])
+>>> right2=DataFrame([[7, 8], [9, 10], [11, 12],  [13, 14]],
+... index=['b', 'c', 'd', 'e'], columns=['Missouri', 'Alabama'])
+>>> left2
+   Ohio  Nevada
+a     1       2
+c     3       4
+e     5       6
+>>> right2
+   Missouri  Alabama
+b         7        8
+c         9       10
+d        11       12
+e        13       14
+>>> pd.merge(left2, right2, how='outer', left_index=True, right_index=True)
+   Ohio  Nevada  Missouri  Alabama
+a   1.0     2.0       NaN      NaN
+b   NaN     NaN       7.0      8.0
+c   3.0     4.0       9.0     10.0
+d   NaN     NaN      11.0     12.0
+e   5.0     6.0      13.0     14.0
+
+>>> left2.join(right2, how='outer')		# join实例方法
+   Ohio  Nevada  Missouri  Alabama
+a   1.0     2.0       NaN      NaN
+b   NaN     NaN       7.0      8.0
+c   3.0     4.0       9.0     10.0
+d   NaN     NaN      11.0     12.0
+e   5.0     6.0      13.0     14.0
+
+>>> left1.join(right1, on='key')		# join支持DataFrame的某个列之间的链接
+  key  value  group_val
+0   a      0        3.5
+1   b      1        7.0
+2   a      2        3.5
+3   a      3        3.5
+4   b      4        7.0
+5   c      5        NaN
+
+>>> another=DataFrame([[7., 8.], [9. ,10.], [11., 12.], [16. ,17.]],
+... index=['a', 'c', 'e', 'f'], columns=['New York', 'Oregon'])
+>>> another
+   New York  Oregon
+a       7.0     8.0
+c       9.0    10.0
+e      11.0    12.0
+f      16.0    17.0
+>>> left2.join([right2, another])		# 还可以向join传入一组DataFrame
+   Ohio  Nevada  Missouri  Alabama  New York  Oregon
+a     1       2       NaN      NaN       7.0     8.0
+c     3       4       9.0     10.0       9.0    10.0
+e     5       6      13.0     14.0      11.0    12.0
+
+
+###轴向连接###
+>>> arr=np.array(np.arange(12).reshape(3,4))
+>>> arr
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+>>> np.concatenate([arr, arr], axis=1)		# 行连接 Numpy合并
+array([[ 0,  1,  2,  3,  0,  1,  2,  3],
+       [ 4,  5,  6,  7,  4,  5,  6,  7],
+       [ 8,  9, 10, 11,  8,  9, 10, 11]])
+>>> np.concatenate([arr, arr], axis=0)		# 列连接
+array([[ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11],
+       [ 0,  1,  2,  3],
+       [ 4,  5,  6,  7],
+       [ 8,  9, 10, 11]])
+
+###DataFrame连接###
+>>> s1=Series([0, 1], index=['a', 'b'])
+>>> s2=Series([2, 3, 4], index=['c', 'd', 'e'])
+>>> s3=Series([5, 6], index=['f', 'g'])
+>>> pd.concat([s1, s2, s3])
+a    0
+b    1
+c    2
+d    3
+e    4
+f    5
+g    6
+dtype: int64
+>>> s1
+a    0
+b    1
+dtype: int64
+>>> s2
+c    2
+d    3
+e    4
+dtype: int64
+>>> s3
+f    5
+g    6
+dtype: int64
+>>> pd.concat([s1, s2, s3], axis=1)
+     0    1    2
+a  0.0  NaN  NaN
+b  1.0  NaN  NaN
+c  NaN  2.0  NaN
+d  NaN  3.0  NaN
+e  NaN  4.0  NaN
+f  NaN  NaN  5.0
+g  NaN  NaN  6.0
+
+>>> s4=pd.concat([s1*5, s3])
+>>> s4
+a    0
+b    5
+f    5
+g    6
+
+>>> pd.concat([s1, s4], axis=1, join='inner')	# join='inner'即可得到它们的交集
+   0  1
+a  0  0
+b  1  5
+
+>>> pd.concat([s1, s4], axis=1, join_axes=[['a', 'c', 'b', 'f']])	# 通过join_axes指定要在其他轴上使用的索引
+     0    1
+a  0.0  0.0
+c  NaN  NaN
+b  1.0  5.0
+f  NaN  5.0
+
+>>> result=pd.concat([s1, s1, s3], keys=['one', 'two' ,'three'])
+>>> result
+one    a    0
+       b    1
+two    a    0
+       b    1
+three  f    5
+       g    6
+dtype: int64
+
+
+>>> result=pd.concat([s1, s1, s3], keys=['one', 'two' ,'three'])	# 假设你想要在连接轴上创建一个层次化
+>>> result								# 将参与连接的片段在结果中区分开
+one    a    0
+       b    1
+two    a    0
+       b    1
+three  f    5
+       g    6
+dtype: int64
+>>> result.unstack()		# unstack函数
+         a    b    f    g
+one    0.0  1.0  NaN  NaN
+two    0.0  1.0  NaN  NaN
+three  NaN  NaN  5.0  6.0
+
+>>> pd.concat([s1, s2, s3], axis=1, keys=['one', 'two', 'three'])	# 沿着axis=1对Series进行合并
+   one  two  three							# 则keys就会成为DataFrame的列头
+a  0.0  NaN    NaN
+b  1.0  NaN    NaN
+c  NaN  2.0    NaN
+d  NaN  3.0    NaN
+e  NaN  4.0    NaN
+f  NaN  NaN    5.0
+g  NaN  NaN    6.0
+
+
+>>> df1=DataFrame(np.arange(6).reshape(3, 2), index=['a', 'b', 'c'],
+... columns=['one', 'two'])
+>>> df2=DataFrame(5+np.arange(4).reshape(2,2), index=['a','c'],
+... columns=['three', 'four'])
+>>> df1
+   one  two
+a    0    1
+b    2    3
+c    4    5
+>>> df2
+   three  four
+a      5     6
+c      7     8
+>>> pd.concat([df1, df2], axis=1, keys=['level1', 'level2'])	#
+  level1     level2
+     one two  three four
+a      0   1    5.0  6.0
+b      2   3    NaN  NaN
+c      4   5    7.0  8.0
+
+>>> pd.concat({'level1':df1, 'level2':df2}, axis=1)		# 传入的不是列表而是一个字典
+  level1     level2						# 则字典的键就会被当做keys选项的值
+     one two  three four
+a      0   1    5.0  6.0
+b      2   3    NaN  NaN
+c      4   5    7.0  8.0
+
+>>> pd.concat([df1, df2], axis=1, keys=['level1', 'level2'], names=['upper', 'lower'])	# 管理层次化索引创建方式的参数
+upper level1     level2
+lower    one two  three four
+a          0   1    5.0  6.0
+b          2   3    NaN  NaN
+c          4   5    7.0  8.0
+
+
+>>> df1=DataFrame(np.random.randn(3,4), columns=['a', 'b', 'c', 'd'])
+>>> df2=DataFrame(np.random.randn(2,3), columns=['b', 'd', 'a'])
+>>> df1
+          a         b         c         d
+0  0.425610 -0.301489  1.098388  1.082600
+1 -0.526522  0.443978 -0.620161 -0.432289
+2  0.287441 -0.479613  0.214522  0.036117
+>>> df2
+          b         d         a
+0  0.535586  1.977750  1.278601
+1 -0.508055 -0.111801  0.086542
+>>> pd.concat([df1, df2])
+          a         b         c         d
+0  0.425610 -0.301489  1.098388  1.082600
+1 -0.526522  0.443978 -0.620161 -0.432289
+2  0.287441 -0.479613  0.214522  0.036117
+0  1.278601  0.535586       NaN  1.977750
+1  0.086542 -0.508055       NaN -0.111801
+>>> pd.concat([df1, df2], ignore_index=True)	# 处理与当前工作无关的DataFrame行索引
+          a         b         c         d
+0  0.425610 -0.301489  1.098388  1.082600
+1 -0.526522  0.443978 -0.620161 -0.432289
+2  0.287441 -0.479613  0.214522  0.036117
+3  1.278601  0.535586       NaN  1.977750
+4  0.086542 -0.508055       NaN -0.111801
+
+###合并重叠数据###
+
+>>> a=Series([np.nan, 2.5, np.nan, 3.5, 4.5, np.nan], index=['f', 'e', 'd', 'c', 'b', 'a'])
+>>> a
+f    NaN
+e    2.5
+d    NaN
+c    3.5
+b    4.5
+a    NaN
+dtype: float64
+
+>>> b=Series(np.arange(len(a), dtype=np.float64), index=['f', 'e', 'd', 'c', 'b', 'a'])
+>>> b
+f    0.0
+e    1.0
+d    2.0
+c    3.0
+b    4.0
+a    5.0
+dtype: float64
+
+>>> b[-1]=np.nan
+>>> b
+f    0.0
+e    1.0
+d    2.0
+c    3.0
+b    4.0
+a    NaN
+dtype: float64
+
+>>> np.where(pd.isnull(a), b, a)	# 如果pd.isnull()是nan 则输出b中的数，否则输出a中的数
+array([ 0. ,  2.5,  2. ,  3.5,  4.5,  nan])
+
+>>> b[:-2].combine_first(a[2:])		# b[:-2]中没有，则用a[2:]中的数值
+a    NaN
+b    4.5
+c    3.0
+d    2.0
+e    1.0
+f    0.0
+dtype: float64
+
+>>> a.combine_first(b)
+f    0.0
+e    2.5
+d    2.0
+c    3.5
+b    4.5
+a    NaN
+dtype: float64
+
+>>> df1=DataFrame({'a':[1, np.nan, 5., np.nan],
+... 'b':[np.nan, 2., np.nan, 6.],
+... 'c':range(2, 18, 4)})
+>>> df2=DataFrame({'a':[5., 4., np.nan, 3., 7.],
+... 'b':[np.nan, 3., 4., 6., 8.]})
+>>> df1
+     a    b   c
+0  1.0  NaN   2
+1  NaN  2.0   6
+2  5.0  NaN  10
+3  NaN  6.0  14
+>>> df2
+     a    b
+0  5.0  NaN
+1  4.0  3.0
+2  NaN  4.0
+3  3.0  6.0
+4  7.0  8.0
+>>> df1.combine_first(df2)	# 用参数对象中的数据为调用者对象的缺失数据“打补丁”
+     a    b     c
+0  1.0  NaN   2.0
+1  4.0  2.0   6.0
+2  5.0  4.0  10.0
+3  3.0  6.0  14.0
+4  7.0  8.0   NaN
+p211
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####数据处理####
+
+###从网络获得数据###
+>>> import pandas as pd
+>>> from pandas import DataFrame
+>>> from pandas import Series
+>>> data_url = "https://raw.githubusercontent.com/alstat/Analysis-with-Programming/master/2014/Python/Numerical-Descript
+ions-of-the-Data/data.csv"
+>>> df=pd.read_csv(data_url)
+>>> df
+
+
+>>> print df.head()	# head of data 默认5行
+    Abra  Apayao  Benguet  Ifugao  Kalinga
+0   1243    2934      148    3300    10553
+1   4158    9235     4287    8063    35257
+2   1787    1922     1955    1074     4544
+3  17152   14501     3536   19607    31687
+4   1266    2385     2530    3315     8520
+>>> print df.head(4)
+    Abra  Apayao  Benguet  Ifugao  Kalinga
+0   1243    2934      148    3300    10553
+1   4158    9235     4287    8063    35257
+2   1787    1922     1955    1074     4544
+3  17152   14501     3536   19607    31687
+
+>>> print df.tail(7)	# tail of the data
+     Abra  Apayao  Benguet  Ifugao  Kalinga
+72   6209    6335     3530   15560    24385
+73  13316   38613     2585    7746    66148
+74   2505   20878     3519   19737    16513
+75  60303   40065     7062   19422    61808
+76   6311    6756     3561   15910    23349
+77  13345   38902     2583   11096    68663
+78   2623   18264     3745   16787    16900
+
+
+>>> print df.columns	# extract columns name
+Index([u'Abra', u'Apayao', u'Benguet', u'Ifugao', u'Kalinga'], dtype='object')
+>>> print df.index	# extract index name
+RangeIndex(start=0, stop=79, step=1)
+
+###打印第一列的前5行
+>>> print df.ix[:, 0].head()
+0     1243
+1     4158
+2     1787
+3    17152
+4     1266
+Name: Abra, dtype: int64
+
+
+>>> print df.ix[10:20, 0:3]	# 为了取出从11到20行的前3列数据
+     Abra  Apayao  Benguet
+10    981    1311     2560
+11  27366   15093     3039
+12   1100    1701     2382
+13   7212   11001     1088
+14   1048    1427     2847
+15  25679   15661     2942
+16   1055    2191     2119
+17   5437    6461      734
+18   1029    1183     2302
+19  23710   12222     2598
+20   1091    2343     2654
+
+
+>>> print df.describe()		# 通过describe属性，对数据的统计特性进行描述
+               Abra        Apayao      Benguet        Ifugao       Kalinga
+count     79.000000     79.000000    79.000000     79.000000     79.000000
+mean   12874.379747  16860.645570  3237.392405  12414.620253  30446.417722
+std    16746.466945  15448.153794  1588.536429   5034.282019  22245.707692
+min      927.000000    401.000000   148.000000   1074.000000   2346.000000
+25%     1524.000000   3435.500000  2328.000000   8205.000000   8601.500000
+50%     5790.000000  10588.000000  3202.000000  13044.000000  24494.000000
+75%    13330.500000  33289.000000  3918.500000  16099.500000  52510.500000
+max    60303.000000  54625.000000  8813.000000  21031.000000  68663.000000
+
+>>> from scipy import stats as ss
+>>> print ss.ttest_1samp(a=df.ix[:, 'Abra'], popmean=15000)
+Ttest_1sampResult(statistic=-1.1281738488299586, pvalue=0.26270472069109496)
+看到p值是0.267远大于α等于0.05 拒绝H0
+
+
+
+
+
+
+
+
+
+###数据可视化###
+
+水平bar图
+PS C:\Users\Weihong> cat pyplot_1.py
+"""
+Simple demo of a horizontal bar chart.
+"""
+
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import numpy as np
+
+# Example data
+#cols = ['blue', 'green', 'red', 'cyan', 'yellow']	# 可以通过颜色列表的方式给每个bar添加颜色
+people=('Tom', 'Dick','Harry', 'Slim', 'Jim')
+y_pos=np.arange(len(people))	
+#y_pos=np.arange(1,6)
+performance=3+10*np.random.rand(len(people))
+color=cm.jet(performance/max(performance))		# 也可以通过colormap来给bar添加颜色
+error=np.random.rand(len(people))
+
+#plt.barh(y_pos, performance, xerr=error, align='center', alpha=0.4)
+plt.barh(y_pos, performance, xerr=error, linewidth=0, color=color, ecolor='red', align='center', alpha=0.4)	# xerr表示误差 alpha表示透明度
+plt.yticks(y_pos, people)				# y轴上的命名
+plt.xlabel('Performance')
+plt.title('How fast do you want to go today?')
+
+plt.show()
+
+
 
 
 
