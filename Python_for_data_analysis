@@ -3453,7 +3453,117 @@ dtype: float64
 2  5.0  4.0  10.0
 3  3.0  6.0  14.0
 4  7.0  8.0   NaN
-p211
+
+###重塑和轴向旋转###
+
+###重塑层次化索引###
+>>> from pandas import DataFrame
+>>> data=DataFrame(np.arange(6).reshape((2,3)), index=pd.Index(['Ohio', 'Colorado'], name='state'), columns=pd.Index(['
+ne', 'two', 'three'], name='number'))
+>>> data
+number    one  two  three
+state
+Ohio        0    1      2
+Colorado    3    4      5
+>>> result=data.stack()		# 使用该数据的stack方法即可将列转换为行，得到一个Series
+>>> result
+state     number
+Ohio      one       0
+          two       1
+          three     2
+Colorado  one       3
+          two       4
+          three     5
+dtype: int32
+>>> result.unstack()
+number    one  two  three	# 对于一个层次化索引的Series
+state				# 可以用unstack将其重排为一个DataFrame
+Ohio        0    1      2
+Colorado    3    4      5
+
+>>> result.unstack(1)		# 默认情况下，unstack操作的是最内层
+number    one  two  three	# unstack（1）操作最内层
+state
+Ohio        0    1      2
+Colorado    3    4      5
+>>> result.unstack(0)		# 外层
+state   Ohio  Colorado
+number
+one        0         3
+two        1         4
+three      2         5
+
+>>> s1=Series([0, 1, 2, 3], index=['a', 'b', 'c', 'd'])
+>>> s2=Series([4, 5, 6], index=['c', 'd', 'e'])
+>>> data2=pd.concat([s1, s2], keys=['one', 'two'])
+>>> data2
+one  a    0
+     b    1
+     c    2
+     d    3
+two  c    4
+     d    5
+     e    6
+dtype: int64
+>>> data2.unstack()	# unstack操作可能会引入缺失数据
+       a    b    c    d    e
+one  0.0  1.0  2.0  3.0  NaN
+two  NaN  NaN  4.0  5.0  6.0
+
+>>> data2.unstack().stack()	#stack默认会滤除缺失数据，因此该运算时可逆的
+one  a    0.0
+     b    1.0
+     c    2.0
+     d    3.0
+two  c    4.0
+     d    5.0
+     e    6.0
+dtype: float64
+
+>>> data2.unstack().stack(dropna=False)
+one  a    0.0
+     b    1.0
+     c    2.0
+     d    3.0
+     e    NaN
+two  a    NaN
+     b    NaN
+     c    4.0
+     d    5.0
+     e    6.0
+dtype: float64
+
+>>> df=DataFrame({'left':result, 'right':result+5}, columns=pd.Index(['left', 'right'], name='side'))
+>>> df
+side             left  right
+state    number
+Ohio     one        0      5
+         two        1      6
+         three      2      7
+Colorado one        3      8
+         two        4      9
+         three      5     10
+>>> df.unstack('state')		# 旋转轴的级别将会是结果中的最低级别
+side   left          right
+state  Ohio Colorado  Ohio Colorado
+number
+one       0        3     5        8
+two       1        4     6        9
+three     2        5     7       10
+
+>>> df.unstack('state').stack('side')
+state         Ohio  Colorado
+number side
+one    left      0         3
+       right     5         8
+two    left      1         4
+       right     6         9
+three  left      2         5
+       right     7        10
+
+
+
+
 
 
 
