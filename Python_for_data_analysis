@@ -3643,6 +3643,252 @@ new_df=pd.read_csv('new.csv', names=['date', 'item', 'value'])
 print new_df[:10]
 
 
+>>> ldata=pd.read_csv('new.csv', names=['date', 'item', 'value'])
+>>> ldata[:10]
+         date     item     value
+0  1959-03-31  realgdp  2710.349
+1  1959-03-31     infl     0.000
+2  1959-03-31    unemp     5.800
+3  1959-06-30  realgdp  2778.801
+4  1959-06-30     infl     2.340
+5  1959-06-30    unemp     5.100
+6  1959-09-30  realgdp  2775.488
+7  1959-09-30     infl     2.740
+8  1959-09-30    unemp     5.300
+9  1959-12-31  realgdp  2785.204
+>>> pivoted=ldata.pivot('date', 'item', 'value')	# 前两个参数值分别用作行和列索引的列名，最后一个参数则是
+>>> pivoted.head()					# 填充DataFrame的数据列的列名
+item        infl   realgdp  unemp
+date
+1959-03-31  0.00  2710.349    5.8
+1959-06-30  2.34  2778.801    5.1
+1959-09-30  2.74  2775.488    5.3
+1959-12-31  0.27  2785.204    5.6
+1960-03-31  2.31  2847.699    5.2
+
+>>> ldata['value2']=np.random.randn(len(ldata))		# 增加一列
+>>> ldata[:10]
+         date     item     value    value2
+0  1959-03-31  realgdp  2710.349 -0.538073
+1  1959-03-31     infl     0.000 -0.959795
+2  1959-03-31    unemp     5.800 -1.380172
+3  1959-06-30  realgdp  2778.801 -0.731581
+4  1959-06-30     infl     2.340  1.231449
+5  1959-06-30    unemp     5.100  1.240695
+6  1959-09-30  realgdp  2775.488 -0.797257
+7  1959-09-30     infl     2.740  0.880758
+8  1959-09-30    unemp     5.300 -1.134288
+9  1959-12-31  realgdp  2785.204 -0.310144
+
+>>> pivoted=ldata.pivot('date', 'item')		# 忽略最后一个参数，得到DataFrame就会带有层次化的列
+>>> pivoted[:5]		
+           value                    value2
+item        infl   realgdp unemp      infl   realgdp     unemp
+date
+1959-03-31  0.00  2710.349   5.8 -0.959795 -0.538073 -1.380172
+1959-06-30  2.34  2778.801   5.1  1.231449 -0.731581  1.240695
+1959-09-30  2.74  2775.488   5.3  0.880758 -0.797257 -1.134288
+1959-12-31  0.27  2785.204   5.6  0.031874 -0.310144 -1.437487
+1960-03-31  2.31  2847.699   5.2 -2.354331 -0.104462  2.100655
+
+>>> pivoted['value'][:5]
+item        infl   realgdp  unemp
+date
+1959-03-31  0.00  2710.349    5.8
+1959-06-30  2.34  2778.801    5.1
+1959-09-30  2.74  2775.488    5.3
+1959-12-31  0.27  2785.204    5.6
+1960-03-31  2.31  2847.699    5.2
+
+>>> unstacked=ldata.set_index(['date', 'item']).unstack('item')		# 用set_index创建层次化索引，再用unstack重塑
+>>> unstacked[:7]
+           value                    value2
+item        infl   realgdp unemp      infl   realgdp     unemp
+date
+1959-03-31  0.00  2710.349   5.8 -0.959795 -0.538073 -1.380172
+1959-06-30  2.34  2778.801   5.1  1.231449 -0.731581  1.240695
+1959-09-30  2.74  2775.488   5.3  0.880758 -0.797257 -1.134288
+1959-12-31  0.27  2785.204   5.6  0.031874 -0.310144 -1.437487
+1960-03-31  2.31  2847.699   5.2 -2.354331 -0.104462  2.100655
+1960-06-30  0.14  2834.390   5.2  0.629474 -1.149575 -1.441395
+1960-09-30  2.70  2839.022   5.6 -0.208390 -0.751707  1.276936
+
+
+
+############
+##数据转换##
+############
+
+###移除重复数据###
+>>> data=DataFrame({'k1':['one']*3+['two']*4, 'k2':[1, 1, 2, 3, 3, 4, 4]})
+>>> data
+    k1  k2
+0  one   1
+1  one   1
+2  one   2
+3  two   3
+4  two   3
+5  two   4
+6  two   4
+>>> data.duplicated()	# 返回一个布尔型Series，表示各行是否重复
+0    False
+1     True
+2    False
+3    False
+4     True
+5    False
+6     True
+dtype: bool
+
+>>> data.drop_duplicates()	# 返回一个自出了重复行的DataFrame
+    k1  k2
+0  one   1
+2  one   2
+3  two   3
+5  two   4
+
+>>> data['v1']=range(7)
+>>> data
+    k1  k2  v1
+0  one   1   0
+1  one   1   1
+2  one   2   2
+3  two   3   3
+4  two   3   4
+5  two   4   5
+6  two   4   6
+>>> data.drop_duplicates(['k1'])	# 删除k1列中重复的行
+    k1  k2  v1
+0  one   1   0
+3  two   3   3
+>>> data.drop_duplicates(['k1', 'k2'])
+    k1  k2  v1
+0  one   1   0
+2  one   2   2
+3  two   3   3
+5  two   4   5
+>>> data.drop_duplicates(['k1', 'k2'], keep='last')	# 传入keep=‘last’则保留最后一个
+    k1  k2  v1
+1  one   1   1
+2  one   2   2
+4  two   3   4
+6  two   4   6
+
+
+###利用函数或映射进行数据转换###
+>>> data
+          food  ounces
+0        bacon     4.0
+1  pulled pork     3.0
+2        bacon    12.0
+3     Pastrami     6.0
+4  corned beef     7.5
+5        Bacon     8.0
+6     pastrami     3.0
+7    honey ham     5.0
+8     nova lox     6.0
+
+>>> meat_to_animal
+{'pastrami': 'cow', 'bacon': 'pig', 'pulled pork': 'pig', 'corned beef': 'cow', 'nova lox': 'salmon', 'honey ham': 'pig'
+}
+>>> data['animal']=data['food'].map(str.lower).map(meat_to_animal)	# map()也是element-wise的，对Series中的每个数据调用一次函数。
+>>> data
+          food  ounces  animal
+0        bacon     4.0     pig
+1  pulled pork     3.0     pig
+2        bacon    12.0     pig
+3     Pastrami     6.0     cow
+4  corned beef     7.5     cow
+5        Bacon     8.0     pig
+6     pastrami     3.0     cow
+7    honey ham     5.0     pig
+8     nova lox     6.0  salmon
+>>>
+
+>>> data['food'].map(lambda x: meat_to_animal[x.lower()])	# 也可以传入一个能够完成全部这些工作的函数
+0       pig
+1       pig
+2       pig
+3       cow
+4       cow
+5       pig
+6       cow
+7       pig
+8    salmon
+Name: food, dtype: object
+>>> data
+          food  ounces  animal
+0        bacon     4.0     pig
+1  pulled pork     3.0     pig
+2        bacon    12.0     pig
+3     Pastrami     6.0     cow
+4  corned beef     7.5     cow
+5        Bacon     8.0     pig
+6     pastrami     3.0     cow
+7    honey ham     5.0     pig
+8     nova lox     6.0  salmon
+
+
+###替换值###
+>>> data=Series([1, -999, 2, -999, -1000, 3])
+>>> data
+0       1
+1    -999
+2       2
+3    -999
+4   -1000
+5       3
+dtype: int64
+>>> data.replace(-999, np.nan)	# replace产生一个新的Series
+0       1.0
+1       NaN
+2       2.0
+3       NaN
+4   -1000.0
+5       3.0
+dtype: float64
+>>> data
+0       1
+1    -999
+2       2
+3    -999
+4   -1000
+5       3
+dtype: int64
+>>> data.replace([-999, -1000], np.nan)		# 一次性替换多个值
+0    1.0
+1    NaN
+2    2.0
+3    NaN
+4    NaN
+5    3.0
+dtype: float64
+
+>>> data.replace([-999, -1000],[np.nan, 0])	# 关系列表
+0    1.0
+1    NaN
+2    2.0
+3    NaN
+4    0.0
+5    3.0
+dtype: float64
+
+>>> data.replace({-999:np.nan, -1000: 0})	# 传入参数可以是字典
+0    1.0
+1    NaN
+2    2.0
+3    NaN
+4    0.0
+5    3.0
+dtype: float64
+p219
+
+
+
+
+
+
+
 
 
 
