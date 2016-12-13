@@ -3562,6 +3562,94 @@ three  left      2         5
        right     7        10
 
 
+###将“长格式”旋转为“宽格式”###
+>>> import pandas as pd
+>>> from datetime import *
+>>> from pandas import DataFrame
+>>> data=pd.read_csv('macrodata.csv')		# 读取csv文件
+>>> temp_data=DataFrame(data, columns=['year', 'quarter', 'realgdp', 'unemp'])	# 从data中读取相应行
+>>> temp_data[:2]
+     year  quarter   realgdp  unemp
+0  1959.0      1.0  2710.349    5.8
+1  1959.0      2.0  2778.801    5.1
+
+>>> for i in range(len(temp_data.index)):
+...     if int(temp_data[i:i+1].quarter) == 1:
+...             temp_data.loc[i, 'date']=datetime(temp_data[i:i+1].year, 3, 31)
+...     elif int(temp_data[i:i+1].quarter) == 2:
+...             temp_data.loc[i, 'date']=datetime(temp_data[i:i+1].year, 6, 30)
+...     elif int(temp_data[i:i+1].quarter) == 3:
+...             temp_data.loc[i, 'date']=datetime(temp_data[i:i+1].year, 9, 30)
+...     elif int(temp_data[i:i+1].quarter) == 4:
+...             temp_data.loc[i, 'date']=datetime(temp_data[i:i+1].year, 12, 31)
+...
+>>> temp_data[0:4]
+     year  quarter   realgdp  unemp                 date
+0  1959.0      1.0  2710.349    5.8  1959-03-31 00:00:00
+1  1959.0      2.0  2778.801    5.1  1959-06-30 00:00:00
+2  1959.0      3.0  2775.488    5.3  1959-09-30 00:00:00
+3  1959.0      4.0  2785.204    5.6  1959-12-31 00:00:00
+
+>>> temp_data=temp_data.drop(['year', 'quarter'], 1).set_index('date').stack()
+>>> temp_data[0:4]
+date
+1959-03-31  realgdp    2710.349
+            unemp         5.800
+1959-06-30  realgdp    2778.801
+            unemp         5.100
+dtype: float64
+
+###文本转换程序###
+PS C:\Users\Weihong> python generateTable.py
+     year  quarter   realgdp  infl  unemp       date
+0  1959.0      1.0  2710.349  0.00    5.8 1959-03-31
+1  1959.0      2.0  2778.801  2.34    5.1 1959-06-30
+2  1959.0      3.0  2775.488  2.74    5.3 1959-09-30
+3  1959.0      4.0  2785.204  0.27    5.6 1959-12-31
+         date     item     value
+0  1959-03-31  realgdp  2710.349
+1  1959-03-31     infl     0.000
+2  1959-03-31    unemp     5.800
+3  1959-06-30  realgdp  2778.801
+4  1959-06-30     infl     2.340
+5  1959-06-30    unemp     5.100
+6  1959-09-30  realgdp  2775.488
+7  1959-09-30     infl     2.740
+8  1959-09-30    unemp     5.300
+9  1959-12-31  realgdp  2785.204
+PS C:\Users\Weihong> cat .\generateTable.py
+import pandas as pd
+from pandas import DataFrame
+from datetime import *
+
+df=pd.read_csv('macrodata.csv')
+temp_data=DataFrame(df, columns=['year', 'quarter', 'realgdp', 'infl', 'unemp'])
+
+for i in range(len(temp_data.index)):
+        if int(temp_data.loc[i, 'quarter'])==1:
+                temp_data.loc[i, 'date']=datetime(int(temp_data[i:i+1].year), 3, 31)
+        if int(temp_data.loc[i, 'quarter'])==2:
+                temp_data.loc[i, 'date']=datetime(int(temp_data[i:i+1].year), 6, 30)
+        if int(temp_data.loc[i, 'quarter'])==3:
+                temp_data.loc[i, 'date']=datetime(int(temp_data[i:i+1].year), 9, 30)
+        if int(temp_data.loc[i, 'quarter'])==4:
+                temp_data.loc[i, 'date']=datetime(int(temp_data[i:i+1].year), 12, 31)
+
+print temp_data[:4]
+temp_data=temp_data.drop(['year', 'quarter'], axis=1).set_index('date').stack()
+
+temp_data.to_csv('new.csv')
+new_df=pd.read_csv('new.csv', names=['date', 'item', 'value'])
+print new_df[:10]
+
+
+
+
+
+
+
+
+
 
 
 
